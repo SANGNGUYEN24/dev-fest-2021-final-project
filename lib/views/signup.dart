@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_maker_app/helper/functions.dart';
 import 'package:quiz_maker_app/services/auth.dart';
 import 'package:quiz_maker_app/views/signin.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
@@ -13,7 +14,9 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   AuthService authService = new AuthService();
-  String name, email, password;
+  String name;
+  String email;
+  String password;
   bool _isLoading = false;
 
   signUp() async {
@@ -26,6 +29,8 @@ class _SignUpState extends State<SignUp> {
           setState(() {
             _isLoading = false;
           });
+          HelperFunctions.saveUserLoggedInDetail(isLoggedIn: true);
+          Future<bool> x = HelperFunctions.getUserLoggedInDetail();
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => Home()));
         }
@@ -53,7 +58,7 @@ class _SignUpState extends State<SignUp> {
                 key: _formKey,
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 24),
-                  child: ListView(
+                  child: Column(
                     children: [
                       Spacer(),
                       TextFormField(
@@ -103,19 +108,9 @@ class _SignUpState extends State<SignUp> {
                         onTap: () {
                           signUp();
                         },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(vertical: 18),
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width - 48,
-                          child: Text(
-                            "Sign Up",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                        ),
+                        child: blueButton(
+                            context: context,
+                            label: "Sign up"),
                       ),
                       SizedBox(
                         height: 20,
@@ -151,6 +146,5 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ));
-    ;
   }
 }

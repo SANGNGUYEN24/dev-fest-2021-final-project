@@ -4,8 +4,17 @@ import 'package:quiz_maker_app/models/user.dart';
 class AuthService {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
+  // User object based on FirebaseUser
   User _userFromFirebaseUser(FirebaseUser user) {
+    // ignore: unnecessary_null_comparison
     return user != null ? User(uid: user.uid) : null;
+  }
+
+  // auth change user stream
+  Stream<User> get user{
+    return _auth.onAuthStateChanged
+        //map((FirebaseUser user) => _userFromFirebaseUser(user));
+        .map(_userFromFirebaseUser); // 2 lines are the same
   }
 
   Future signInEmailAndPass(String email, String password) async {
@@ -15,7 +24,11 @@ class AuthService {
       FirebaseUser firebaseUser = authResult.user;
       return _userFromFirebaseUser(firebaseUser);
     } catch (e) {
-      print(e.toString());
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
     }
   }
 
@@ -27,6 +40,7 @@ class AuthService {
       return _userFromFirebaseUser(firebaseUser);
     } catch (e) {
       print(e.toString());
+      return null;
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_maker_app/helper/functions.dart';
 import 'package:quiz_maker_app/services/auth.dart';
 import 'package:quiz_maker_app/views/home.dart';
 import 'package:quiz_maker_app/views/signup.dart';
@@ -11,8 +12,9 @@ class SignIn extends StatefulWidget {
 }
 
 class _State extends State<SignIn> {
-  final _formKey = GlobalKey<FormState>();
-  String email, password;
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String email;
+  String password;
   AuthService authService = new AuthService();
   bool _isLoading = false;
 
@@ -25,6 +27,8 @@ class _State extends State<SignIn> {
         setState(() {
           _isLoading = false;
         });
+        HelperFunctions.saveUserLoggedInDetail(isLoggedIn: true);
+        Future<bool> x = HelperFunctions.getUserLoggedInDetail();
         Navigator.pushReplacement(context, MaterialPageRoute(
             builder: (context) => Home()
         ));
@@ -53,7 +57,7 @@ class _State extends State<SignIn> {
           key: _formKey,
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 24),
-            child: ListView(
+            child: Column(
               children: [
                 Spacer(),
                 TextFormField(
@@ -89,22 +93,9 @@ class _State extends State<SignIn> {
                   onTap: () {
                     signIn();
                   },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 18),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    alignment: Alignment.center,
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width - 48,
-                    child: Text(
-                      "Sign in",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                  ),
+                  child: blueButton(
+                      context: context,
+                      label: "Sign in")
                 ),
                 SizedBox(
                   height: 10,
