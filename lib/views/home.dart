@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,15 +24,16 @@ class _HomeState extends State<Home> {
           return snapshot.data == null
               ? Container()
               : ListView.builder(
-                  itemCount: snapshot.data.documents.length,
+                  itemCount: snapshot.data.docs.length,
                   itemBuilder: (context, index) {
                     return QuizCard(
                         imageUrl:
-                            snapshot.data.documents[index].data["quizImageUrl"],
-                        title: snapshot.data.documents[index].data["quizTitle"],
+                            // snapshot.data.documents[index].data["quizImageUrl"]
+                            snapshot.data.docs[index]["quizImageUrl"],
+                        title: snapshot.data.docs[index]["quizTitle"],
                         description: snapshot
-                            .data.documents[index].data["quizDescription"],
-                    quizId: snapshot.data.documents[index].data["quizId"],);
+                            .data.docs[index]["quizDescription"],
+                    quizId: snapshot.data.docs[index]["quizId"],);
                   },
                 );
         },
@@ -76,13 +76,16 @@ class _HomeState extends State<Home> {
 }
 
 class QuizCard extends StatelessWidget {
+  //add uid for each quiz
+  //final String uid;
   final String imageUrl;
   final String title;
   final String description;
   final String quizId;
 
   QuizCard(
-      {@required this.imageUrl,
+      {//@required this.uid,
+        @required this.imageUrl,
       @required this.title,
       @required this.description,
       @required this.quizId});

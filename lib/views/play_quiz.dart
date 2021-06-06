@@ -29,19 +29,20 @@ class _PlayQuizState extends State<PlayQuiz> {
       DocumentSnapshot questionSnapshot) {
     QuestionModel questionModel = new QuestionModel();
 
-    questionModel.question = questionSnapshot.data["question"];
+    questionModel.question = questionSnapshot["question"];
     List<String> options = [
-      questionSnapshot.data["option1"],
-      questionSnapshot.data["option2"],
-      questionSnapshot.data["option3"],
-      questionSnapshot.data["option4"],
+      // TODO change the way to get data
+      questionSnapshot["option1"], //  questionSnapshot.data["option1"] -> questionSnapshot["option1"]
+      questionSnapshot["option2"],
+      questionSnapshot["option3"],
+      questionSnapshot["option4"],
     ];
     options.shuffle(); // random the elements in the list options
     questionModel.option1 = options[0];
     questionModel.option2 = options[1];
     questionModel.option3 = options[2];
     questionModel.option4 = options[3];
-    questionModel.correctOption = questionSnapshot.data["option1"];
+    questionModel.correctOption = questionSnapshot["option1"];
     questionModel.answered = false; // only allows user choose the answer once
 
     return questionModel;
@@ -55,7 +56,7 @@ class _PlayQuizState extends State<PlayQuiz> {
       _notAttempted = 0;
       _correct = 0;
       _incorrect = 0;
-      total = questionSnapshot.documents.length; // get the number of questions
+      total = questionSnapshot.docs.length; // get the number of questions
 
       print("---------$total this is total ${widget.quizId}--------");
 
@@ -89,11 +90,11 @@ class _PlayQuizState extends State<PlayQuiz> {
                       padding: EdgeInsets.symmetric(horizontal: 24),
                       shrinkWrap: true,
                       physics: ClampingScrollPhysics(),
-                      itemCount: questionSnapshot.documents.length,
+                      itemCount: questionSnapshot.docs.length,
                       itemBuilder: (context, index) {
                         return QuizPlayTile(
                           questionModel: getQuestionModelFromSnapshot(
-                              questionSnapshot.documents[index]),
+                              questionSnapshot.docs[index]),
                           index: index,
                         );
                       }),
