@@ -3,9 +3,10 @@ import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
 
 class AddQuestion extends StatefulWidget {
+  final String userID;
   final String quizId;
 
-  AddQuestion(this.quizId);
+  AddQuestion(this.userID, this.quizId);
 
   @override
   _AddQuestionState createState() => _AddQuestionState();
@@ -29,8 +30,9 @@ class _AddQuestionState extends State<AddQuestion> {
         "option3": option3,
         "option4": option4,
       };
-      await databaseService.addQuestionData(questionData, widget.quizId).then((value){
+      await databaseService.addQuestionData(questionData, widget.userID, widget.quizId).then((value){
         setState(() {
+
           _isLoading = false;
         });
       });

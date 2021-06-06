@@ -3,7 +3,6 @@ import 'package:quiz_maker_app/helper/functions.dart';
 import 'package:quiz_maker_app/services/auth.dart';
 import 'package:quiz_maker_app/views/signin.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
-
 import 'home.dart';
 
 class SignUp extends StatefulWidget {
@@ -31,6 +30,7 @@ class _SignUpState extends State<SignUp> {
           });
           HelperFunctions.saveUserLoggedInDetail(isLoggedIn: true);
           Future<bool> x = HelperFunctions.getUserLoggedInDetail();
+
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => Home()));
         }

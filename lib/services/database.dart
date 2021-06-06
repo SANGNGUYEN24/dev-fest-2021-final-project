@@ -2,32 +2,60 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseService {
 
-  final String uid;
-  DatabaseService({this.uid});
+  bool hadQuiz = false; // hadQuiz to check if the user had a quiz in your account (for display home screen),
+  // the problem is cannot create a empty collection User quiz data to reference
 
-  // reference to Quiz collection
-  // final CollectionReference quizCollection = Firestore.instance.collection("Quiz");
-  //
-  // Future updateUserData(String name)async{
-  //   return await quizCollection.document(uid).setData({
-  //     "name" : name
+  final String userID;
+  DatabaseService({this.userID});
+
+  //reference to Quiz collection
+  final CollectionReference quizCollection = FirebaseFirestore.instance.collection("Quiz");
+
+  Future updateUserData(String name, bool hadQuiz) async {
+    return await quizCollection.doc(userID).set({
+      "name" : name,
+      "hadQuiz": hadQuiz,
+    });
+  }
+
+  // addQuizData for each user
+  // Future<void> addQuizData(Map quizData, String quizId) async {
+  //   await FirebaseFirestore.instance
+  //       .collection("Quiz")
+  //       .doc(quizId)  // documents -> doc
+  //       .set(quizData) // setData -> set
+  //       .catchError((e) {
+  //     print(e.toString());
   //   });
   // }
-
-  Future<void> addQuizData(Map quizData, String quizId) async {
+  Future<void> addQuizData(Map quizData, String userID, String quizId) async {
     await FirebaseFirestore.instance
         .collection("Quiz")
-        .doc(quizId)  // documents -> doc
+        .doc(userID).collection("User quiz data").doc(quizId) // documents -> doc
         .set(quizData) // setData -> set
         .catchError((e) {
       print(e.toString());
     });
   }
+  
+  
 
-  Future<void> addQuestionData(Map questionData, String quizId) async {
+  // add question and answer for each quiz
+  // Future<void> addQuestionData(Map questionData, String quizId) async {
+  //   await FirebaseFirestore.instance
+  //       .collection("Quiz")
+  //       .doc(quizId) // document -> doc
+  //       .collection("QNA")
+  //       .add(questionData)
+  //       .catchError((e) {
+  //     print(e.toString());
+  //   });
+  // }
+
+  Future<void> addQuestionData(Map questionData,String userID, String quizId) async {
     await FirebaseFirestore.instance
         .collection("Quiz")
-        .doc(quizId) // document -> doc
+        .doc(userID).collection("User quiz data").doc(quizId)
         .collection("QNA")
         .add(questionData)
         .catchError((e) {

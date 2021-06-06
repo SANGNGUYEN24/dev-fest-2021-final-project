@@ -1,6 +1,6 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:quiz_maker_app/services/auth.dart';
 import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/views/create_quiz.dart';
 import 'package:quiz_maker_app/views/play_quiz.dart';
@@ -14,6 +14,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   Stream quizStream;
   DatabaseService databaseService = new DatabaseService();
+  // get uid from Firebase
+  String userID = AuthService().getUserID();
 
   Widget quizList() {
     return Container(
@@ -21,19 +23,26 @@ class _HomeState extends State<Home> {
       child: StreamBuilder(
         stream: quizStream,
         builder: (context, snapshot) {
-          return snapshot.data == null
+          return snapshot.data.docs(userID)["hadQuiz"] == false
               ? Container()
               : ListView.builder(
-                  itemCount: snapshot.data.docs.length,
+                  itemCount: snapshot.data.docs(userID).collection("User quiz data").docs.length,
                   itemBuilder: (context, index) {
                     return QuizCard(
-                        imageUrl:
+                      //uid: ,
+                        //imageUrl:
                             // snapshot.data.documents[index].data["quizImageUrl"]
-                            snapshot.data.docs[index]["quizImageUrl"],
-                        title: snapshot.data.docs[index]["quizTitle"],
-                        description: snapshot
-                            .data.docs[index]["quizDescription"],
-                    quizId: snapshot.data.docs[index]["quizId"],);
+                    ///        snapshot.data.docs[index]["quizImageUrl"],
+                    ///    title: snapshot.data.docs[index]["quizTitle"],
+                    ///     description: snapshot
+                    ///         .data.docs[index]["quizDescription"],
+                    /// quizId: snapshot.data.docs[index]["quizId"],
+                      imageUrl: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizImageUrl"],
+                      title: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizTitle"],
+                      description: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizDescription"],
+                      quizId: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizId"],
+
+                        );
                   },
                 );
         },

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_maker_app/services/auth.dart';
 import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/views/add_question.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
 import 'package:random_string/random_string.dart';
 
 class CreateQuiz extends StatefulWidget {
-  const CreateQuiz({Key key}) : super(key: key);
 
   @override
   _CreateQuizState createState() => _CreateQuizState();
@@ -17,6 +17,7 @@ class _CreateQuizState extends State<CreateQuiz> {
   DatabaseService databaseService = new DatabaseService();
 
   bool _isLoading = false;
+  String userID = AuthService().getUserID();
 
   CreateAQuiz() async {
     if (_formKey.currentState.validate()) {
@@ -25,17 +26,18 @@ class _CreateQuizState extends State<CreateQuiz> {
       });
       quizId = randomAlphaNumeric(16); // create a random Id
       Map<String, String> quizMap = {
+        "userID": userID,
         "quizId": quizId,
         "quizImageUrl": quizImageUrl,
         "quizTitle": quizTitle,
         "quizDescription": quizDescription
       };
 
-      await databaseService.addQuizData(quizMap, quizId).then((value) => {
+      await databaseService.addQuizData(quizMap, userID, quizId).then((value) => {
             setState(() {
               _isLoading = false;
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => AddQuestion(quizId)));
+                  MaterialPageRoute(builder: (context) => AddQuestion(userID, quizId)));
             })
           });
     }

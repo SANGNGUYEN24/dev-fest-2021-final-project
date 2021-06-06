@@ -1,16 +1,18 @@
-# quiz_maker_app
+quiz maker app flutter
 
-A new Flutter project.
+project này muốn tạo trong collection "Quiz" các documents chính là các userID để dễ quản lý
+và display màn hình home của mỗi người.
 
-## Getting Started
+Đang còn gặp lỗi chưa reference dc tới document là các userID đó, chưa bt làm sao :((
 
-This project is a starting point for a Flutter application.
+snapshot.data.docs(userID)["hadQuiz"] == false
 
-A few resources to get you started if this is your first Flutter project:
+cái docs(userID) đang bị lỗixs
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+error:
+Class 'List<_JsonQueryDocumentSnapshot>' has no instance method 'call'.
+Receiver: Instance(length:1) of '_GrowableList'
+Tried calling: call("DBdurWBV27MKU1wFoAHMpKPzRKz2")
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+T mệt mõi quá aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!
+

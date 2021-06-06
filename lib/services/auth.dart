@@ -1,8 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:quiz_maker_app/models/user.dart';
 
+import 'database.dart';
+
 class AuthService {
+
   FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String getUserID() {
+    final User user =  _auth.currentUser;
+    String uid = user.uid;
+    return uid;
+  }
 
   // User object based on FirebaseUser
   Userne _userFromFirebaseUser(User user) {
@@ -38,8 +47,8 @@ class AuthService {
           email: email, password: password);
       User firebaseUser = authResult.user;
 
-      // create a new document for user with uid
-      //await DatabaseService(uid: firebaseUser.uid).updateUserData("Sang");
+      // create a new document for user with uid and the name of the user
+      await DatabaseService(userID: firebaseUser.uid).updateUserData("Sang", false);
 
       return _userFromFirebaseUser(firebaseUser);
     } catch (e) {

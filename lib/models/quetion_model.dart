@@ -1,3 +1,6 @@
+
+// The structure of a question
+
 class QuestionModel{
   String question;
   String option1;
