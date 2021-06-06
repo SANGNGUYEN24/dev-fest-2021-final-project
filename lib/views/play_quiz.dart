@@ -75,28 +75,30 @@ class _PlayQuizState extends State<PlayQuiz> {
         iconTheme: IconThemeData(color: Colors.black87),
         brightness: Brightness.light,
       ),
-      body: Container(
-        child: Column(
-          children: [
-            questionSnapshot == null
-                ? Container(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
-                : ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 24),
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
-                    itemCount: questionSnapshot.documents.length,
-                    itemBuilder: (context, index) {
-                      return QuizPlayTile(
-                        questionModel: getQuestionModelFromSnapshot(
-                            questionSnapshot.documents[index]),
-                        index: index,
-                      );
-                    }),
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: [
+              questionSnapshot == null
+                  ? Container(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : ListView.builder(
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
+                      itemCount: questionSnapshot.documents.length,
+                      itemBuilder: (context, index) {
+                        return QuizPlayTile(
+                          questionModel: getQuestionModelFromSnapshot(
+                              questionSnapshot.documents[index]),
+                          index: index,
+                        );
+                      }),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

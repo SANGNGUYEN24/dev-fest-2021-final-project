@@ -1,6 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseService {
+
+  // reference to Quiz collection
+  final CollectionReference quizCollection = Firestore.instance.collection("Quiz");
+
+  //Future updateUserData
+
+
+
   Future<void> addQuizData(Map quizData, String quizId) async {
     await Firestore.instance
         .collection("Quiz")
