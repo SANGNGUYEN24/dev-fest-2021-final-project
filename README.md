@@ -1,4 +1,4 @@
-quiz maker app flutter
+# Trying to fix get user record
 
 project này muốn tạo trong collection "Quiz" các documents chính là các userID để dễ quản lý
 và display màn hình home của mỗi người.
@@ -13,6 +13,3 @@ error:
 Class 'List<_JsonQueryDocumentSnapshot>' has no instance method 'call'.
 Receiver: Instance(length:1) of '_GrowableList'
 Tried calling: call("DBdurWBV27MKU1wFoAHMpKPzRKz2")
-
-T mệt mõi quá aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!
-
