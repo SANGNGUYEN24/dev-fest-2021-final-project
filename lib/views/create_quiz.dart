@@ -19,7 +19,7 @@ class _CreateQuizState extends State<CreateQuiz> {
   bool _isLoading = false;
   String userID = AuthService().getUserID();
 
-  CreateAQuiz() async {
+  createAQuiz() async {
     if (_formKey.currentState.validate()) {
       setState(() {
         _isLoading = true;
@@ -33,7 +33,11 @@ class _CreateQuizState extends State<CreateQuiz> {
         "quizDescription": quizDescription
       };
 
-      await databaseService.addQuizData(quizMap, userID, quizId).then((value) => {
+      Map<String, String> userIdMap = {
+        "userID": userID,
+      };
+
+      await databaseService.addQuizData(quizMap, userIdMap, userID, quizId).then((value) => {
             setState(() {
               _isLoading = false;
               Navigator.pushReplacement(context,
@@ -111,7 +115,7 @@ class _CreateQuizState extends State<CreateQuiz> {
                     ),
                     GestureDetector(
                         onTap: () {
-                          CreateAQuiz();
+                          createAQuiz();
                           //AddQuestion(quizId);
                         },
                         child: blueButton(

@@ -1,19 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DatabaseService {
-
-  bool hadQuiz = false; // hadQuiz to check if the user had a quiz in your account (for display home screen),
+  bool hadQuiz =
+      false; // hadQuiz to check if the user had a quiz in your account (for display home screen),
   // the problem is cannot create a empty collection User quiz data to reference
 
   final String userID;
+
   DatabaseService({this.userID});
 
   //reference to Quiz collection
-  final CollectionReference quizCollection = FirebaseFirestore.instance.collection("Quiz");
+  final CollectionReference quizCollection =
+      FirebaseFirestore.instance.collection("Quiz");
 
   Future updateUserData(String name, bool hadQuiz) async {
     return await quizCollection.doc(userID).set({
-      "name" : name,
+      "name": name,
       "hadQuiz": hadQuiz,
     });
   }
@@ -28,17 +31,22 @@ class DatabaseService {
   //     print(e.toString());
   //   });
   // }
-  Future<void> addQuizData(Map quizData, String userID, String quizId) async {
+  Future<void> addQuizData(
+      Map quizData, Map userIdMap, String userID, String quizId) async {
     await FirebaseFirestore.instance
         .collection("Quiz")
-        .doc(userID).collection("User quiz data").doc(quizId) // documents -> doc
+        .doc(userID)
+        .set(userIdMap);
+    await FirebaseFirestore.instance
+        .collection("Quiz")
+        .doc(userID)
+        .collection("User quiz data")
+        .doc(quizId) // documents -> doc
         .set(quizData) // setData -> set
         .catchError((e) {
       print(e.toString());
     });
   }
-  
-  
 
   // add question and answer for each quiz
   // Future<void> addQuestionData(Map questionData, String quizId) async {
@@ -52,10 +60,13 @@ class DatabaseService {
   //   });
   // }
 
-  Future<void> addQuestionData(Map questionData,String userID, String quizId) async {
+  Future<void> addQuestionData(
+      Map questionData, String userID, String quizId) async {
     await FirebaseFirestore.instance
         .collection("Quiz")
-        .doc(userID).collection("User quiz data").doc(quizId)
+        .doc(userID)
+        .collection("User quiz data")
+        .doc(quizId)
         .collection("QNA")
         .add(questionData)
         .catchError((e) {
@@ -63,15 +74,17 @@ class DatabaseService {
     });
   }
 
-  getQuizData() async {
-    return await FirebaseFirestore.instance.collection("Quiz").snapshots();
-  }
+  // getQuizDataStream() async {
+  //   return await FirebaseFirestore.instance.collection("Quiz").doc(userID).collection("User quiz data").snapshots();
+  // }
 
   getQuizDataToPlay(String quizId) async {
     return await FirebaseFirestore.instance
         .collection("Quiz")
-        .doc(quizId) // document -> doc
+        .doc(userID)
+        .collection("User quiz data")
+        .doc(quizId)
         .collection("QNA")
-        .get(); // getDocuments -> get
+        .get();
   }
 }

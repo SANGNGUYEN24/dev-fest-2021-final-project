@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_maker_app/models/quetion_model.dart';
+import 'package:quiz_maker_app/services/auth.dart';
 import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/views/result.dart';
 import 'package:quiz_maker_app/widgets/quiz_play_widgets.dart';
@@ -9,8 +11,9 @@ import 'package:quiz_maker_app/widgets/widgets.dart';
 
 class PlayQuiz extends StatefulWidget {
   final String quizId;
+  final String userID;
 
-  PlayQuiz({this.quizId});
+  PlayQuiz({this.quizId, this.userID});
 
   @override
   _PlayQuizState createState() => _PlayQuizState();
@@ -24,6 +27,8 @@ int _notAttempted = 0;
 class _PlayQuizState extends State<PlayQuiz> {
   DatabaseService databaseService = new DatabaseService();
   QuerySnapshot questionSnapshot;
+  AuthService authService = new AuthService();
+
 
   QuestionModel getQuestionModelFromSnapshot(
       DocumentSnapshot questionSnapshot) {
@@ -32,7 +37,8 @@ class _PlayQuizState extends State<PlayQuiz> {
     questionModel.question = questionSnapshot["question"];
     List<String> options = [
       // TODO change the way to get data
-      questionSnapshot["option1"], //  questionSnapshot.data["option1"] -> questionSnapshot["option1"]
+      questionSnapshot["option1"],
+      //  questionSnapshot.data["option1"] -> questionSnapshot["option1"]
       questionSnapshot["option2"],
       questionSnapshot["option3"],
       questionSnapshot["option4"],
@@ -50,8 +56,9 @@ class _PlayQuizState extends State<PlayQuiz> {
 
   @override
   void initState() {
-    print("${widget.quizId}");
+    print("----------${widget.quizId}---------");
     databaseService.getQuizDataToPlay(widget.quizId).then((value) {
+      //print('quizId-----------------${widget.quizId}--------------');
       questionSnapshot = value;
       _notAttempted = 0;
       _correct = 0;
@@ -77,41 +84,67 @@ class _PlayQuizState extends State<PlayQuiz> {
         brightness: Brightness.light,
       ),
       body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: [
-              questionSnapshot == null
-                  ? Container(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
-                  : ListView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: 24),
-                      shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
-                      itemCount: questionSnapshot.docs.length,
-                      itemBuilder: (context, index) {
-                        return QuizPlayTile(
-                          questionModel: getQuestionModelFromSnapshot(
-                              questionSnapshot.docs[index]),
-                          index: index,
-                        );
-                      }),
-            ],
+            child: Container(
+              child: Column(
+                children: [
+                  questionSnapshot == null
+                      ? Container(
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
+                      : ListView.builder(
+                          padding: EdgeInsets.symmetric(horizontal: 24),
+                          shrinkWrap: true,
+                          physics: ClampingScrollPhysics(),
+                          itemCount: questionSnapshot.docs.length,
+                          itemBuilder: (context, index) {
+                            return QuizPlayTile(
+                              questionModel: getQuestionModelFromSnapshot(
+                                  questionSnapshot.docs[index]),
+                              index: index,
+                            );
+                          }),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+
+      // TODO test stream builder to get quiz question :(( huhu chưa get đc cái câu hỏi ở mỗi quiz
+      //     StreamBuilder(
+      //   stream: FirebaseFirestore.instance
+      //       .collection("Quiz")
+      //       .doc(widget.userID)
+      //       .collection("User quiz data")
+      //       .doc(widget.quizId)
+      //       .collection("QNA")
+      //       .snapshots(),
+      //   builder: (context, snapshot) {
+      //     return !snapshot.hasData
+      //         ? Container()
+      //         : ListView.builder(
+      //             itemCount: snapshot.data.docs.length,
+      //             itemBuilder: (context, index) {
+      //               return QuizPlayTile(
+      //                 questionModel: getQuestionModelFromSnapshot(
+      //                     questionSnapshot.docs[index]),
+      //                 index: index,
+      //               );
+      //             },
+      //           );
+      //   },
+      // ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.check),
-        onPressed: (){
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>
-              Results(
-                correct: _correct,
-                incorrect: _incorrect,
-                total: total,
-              )
-          ));
+        onPressed: () {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Results(
+                        correct: _correct,
+                        incorrect: _incorrect,
+                        total: total,
+                      )));
         },
       ),
     );
@@ -137,8 +170,9 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Q${widget.index + 1}: ${widget.questionModel.question}",
-           style: TextStyle(fontSize: 20, color: Colors.black87),
+          Text(
+            "Q${widget.index + 1}: ${widget.questionModel.question}",
+            style: TextStyle(fontSize: 20, color: Colors.black87),
           ),
           SizedBox(
             height: 12,

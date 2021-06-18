@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_maker_app/services/auth.dart';
@@ -12,35 +13,41 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Stream quizStream;
   DatabaseService databaseService = new DatabaseService();
   // get uid from Firebase
   String userID = AuthService().getUserID();
+  var collectionRef = FirebaseFirestore.instance.collection("Quiz");
 
   Widget quizList() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 24),
       child: StreamBuilder(
-        stream: quizStream,
+        stream: FirebaseFirestore.instance
+            .collection("Quiz")
+            .doc(userID)
+            .collection("User quiz data")
+            .snapshots(),
+
         builder: (context, snapshot) {
-          return snapshot.data.docs(userID)["hadQuiz"] == false
+          return !snapshot.hasData
               ? Container()
               : ListView.builder(
-                  itemCount: snapshot.data.docs(userID).collection("User quiz data").docs.length,
+                  itemCount: snapshot.data.docs.length,
                   itemBuilder: (context, index) {
                     return QuizCard(
-                      //uid: ,
-                        //imageUrl:
-                            // snapshot.data.documents[index].data["quizImageUrl"]
-                    ///        snapshot.data.docs[index]["quizImageUrl"],
-                    ///    title: snapshot.data.docs[index]["quizTitle"],
-                    ///     description: snapshot
-                    ///         .data.docs[index]["quizDescription"],
-                    /// quizId: snapshot.data.docs[index]["quizId"],
-                      imageUrl: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizImageUrl"],
-                      title: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizTitle"],
-                      description: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizDescription"],
-                      quizId: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizId"],
+                      ///DocumentSnapshot ds = snapshot.data.docs[index];
+                      uid: userID,
+                        imageUrl:
+                            //snapshot.data.documents[index].data["quizImageUrl"]
+                           snapshot.data.docs[index]["quizImageUrl"],
+                        title: snapshot.data.docs[index]["quizTitle"],
+                         description: snapshot
+                             .data.docs[index]["quizDescription"],
+                     quizId: snapshot.data.docs[index]["quizId"],
+                    //   imageUrl: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizImageUrl"],
+                    //   title: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizTitle"],
+                    //   description: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizDescription"],
+                    //   quizId: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizId"],
 
                         );
                   },
@@ -48,16 +55,6 @@ class _HomeState extends State<Home> {
         },
       ),
     );
-  }
-
-  @override
-  void initState() {
-    databaseService.getQuizData().then((val) {
-      setState(() {
-        quizStream = val;
-      });
-    });
-    super.initState();
   }
 
   @override
@@ -86,14 +83,14 @@ class _HomeState extends State<Home> {
 
 class QuizCard extends StatelessWidget {
   //add uid for each quiz
-  //final String uid;
+  final String uid;
   final String imageUrl;
   final String title;
   final String description;
   final String quizId;
 
   QuizCard(
-      {//@required this.uid,
+      {@required this.uid,
         @required this.imageUrl,
       @required this.title,
       @required this.description,
@@ -104,7 +101,7 @@ class QuizCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PlayQuiz(quizId: quizId,)));
+            context, MaterialPageRoute(builder: (context) => PlayQuiz(quizId: quizId,userID: uid,)));
       },
       child: Container(
         margin: EdgeInsets.only(bottom: 8),
