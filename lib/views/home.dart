@@ -89,7 +89,7 @@ class QuizCard extends StatelessWidget {
   final String description;
   final String quizId;
 
-  QuizCard(
+   QuizCard(
       {@required this.uid,
         @required this.imageUrl,
       @required this.title,

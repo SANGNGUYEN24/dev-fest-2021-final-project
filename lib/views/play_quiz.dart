@@ -28,10 +28,9 @@ class _PlayQuizState extends State<PlayQuiz> {
   DatabaseService databaseService = new DatabaseService();
   QuerySnapshot questionSnapshot;
   AuthService authService = new AuthService();
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
-
-  QuestionModel getQuestionModelFromSnapshot(
-      DocumentSnapshot questionSnapshot) {
+  QuestionModel getQuestionModelFromSnapshot(DocumentSnapshot questionSnapshot) {
     QuestionModel questionModel = new QuestionModel();
 
     questionModel.question = questionSnapshot["question"];
@@ -54,18 +53,24 @@ class _PlayQuizState extends State<PlayQuiz> {
     return questionModel;
   }
 
+  String getUserID() {
+    final User user =  _auth.currentUser;
+    String uid = user.uid;
+    return uid;
+  }
+
   @override
   void initState() {
-    print("----------${widget.quizId}---------");
     databaseService.getQuizDataToPlay(widget.quizId).then((value) {
-      //print('quizId-----------------${widget.quizId}--------------');
+      //print('quizId ----------------- ${widget.quizId} --------------');
       questionSnapshot = value;
+      print('questionSnapshot ---------- $questionSnapshot -----------');
       _notAttempted = 0;
       _correct = 0;
       _incorrect = 0;
       total = questionSnapshot.docs.length; // get the number of questions
 
-      print("---------$total this is total ${widget.quizId}--------");
+      print("---------$total total ---- ${widget.quizId} --------");
 
       setState(() {});
     });
@@ -83,57 +88,35 @@ class _PlayQuizState extends State<PlayQuiz> {
         iconTheme: IconThemeData(color: Colors.black87),
         brightness: Brightness.light,
       ),
-      body: SingleChildScrollView(
-            child: Container(
-              child: Column(
-                children: [
-                  questionSnapshot == null
-                      ? Container(
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        )
-                      : ListView.builder(
-                          padding: EdgeInsets.symmetric(horizontal: 24),
-                          shrinkWrap: true,
-                          physics: ClampingScrollPhysics(),
-                          itemCount: questionSnapshot.docs.length,
-                          itemBuilder: (context, index) {
-                            return QuizPlayTile(
-                              questionModel: getQuestionModelFromSnapshot(
-                                  questionSnapshot.docs[index]),
-                              index: index,
-                            );
-                          }),
-                ],
+      body:
+          SingleChildScrollView(
+                child: Container(
+                  child: Column(
+                    children: [
+                      questionSnapshot == null
+                          ? Container(
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            )
+                          : ListView.builder(
+                              padding: EdgeInsets.symmetric(horizontal: 24),
+                              shrinkWrap: true,
+                              physics: ClampingScrollPhysics(),
+                              itemCount: questionSnapshot.docs.length,
+                              itemBuilder: (context, index) {
+                                return QuizPlayTile(
+                                  questionModel: getQuestionModelFromSnapshot(
+                                      questionSnapshot.docs[index]),
+                                  index: index,
+                                );
+                              }),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
 
-      // TODO test stream builder to get quiz question :(( huhu chưa get đc cái câu hỏi ở mỗi quiz
-      //     StreamBuilder(
-      //   stream: FirebaseFirestore.instance
-      //       .collection("Quiz")
-      //       .doc(widget.userID)
-      //       .collection("User quiz data")
-      //       .doc(widget.quizId)
-      //       .collection("QNA")
-      //       .snapshots(),
-      //   builder: (context, snapshot) {
-      //     return !snapshot.hasData
-      //         ? Container()
-      //         : ListView.builder(
-      //             itemCount: snapshot.data.docs.length,
-      //             itemBuilder: (context, index) {
-      //               return QuizPlayTile(
-      //                 questionModel: getQuestionModelFromSnapshot(
-      //                     questionSnapshot.docs[index]),
-      //                 index: index,
-      //               );
-      //             },
-      //           );
-      //   },
-      // ),
+
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.check),
         onPressed: () {

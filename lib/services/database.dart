@@ -11,8 +11,17 @@ class DatabaseService {
   DatabaseService({this.userID});
 
   //reference to Quiz collection
+
   final CollectionReference quizCollection =
       FirebaseFirestore.instance.collection("Quiz");
+
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String getUserID() {
+    final User user = _auth.currentUser;
+    String uid = user.uid;
+    return uid;
+  }
 
   Future updateUserData(String name, bool hadQuiz) async {
     return await quizCollection.doc(userID).set({
@@ -21,16 +30,6 @@ class DatabaseService {
     });
   }
 
-  // addQuizData for each user
-  // Future<void> addQuizData(Map quizData, String quizId) async {
-  //   await FirebaseFirestore.instance
-  //       .collection("Quiz")
-  //       .doc(quizId)  // documents -> doc
-  //       .set(quizData) // setData -> set
-  //       .catchError((e) {
-  //     print(e.toString());
-  //   });
-  // }
   Future<void> addQuizData(
       Map quizData, Map userIdMap, String userID, String quizId) async {
     await FirebaseFirestore.instance
@@ -48,18 +47,6 @@ class DatabaseService {
     });
   }
 
-  // add question and answer for each quiz
-  // Future<void> addQuestionData(Map questionData, String quizId) async {
-  //   await FirebaseFirestore.instance
-  //       .collection("Quiz")
-  //       .doc(quizId) // document -> doc
-  //       .collection("QNA")
-  //       .add(questionData)
-  //       .catchError((e) {
-  //     print(e.toString());
-  //   });
-  // }
-
   Future<void> addQuestionData(
       Map questionData, String userID, String quizId) async {
     await FirebaseFirestore.instance
@@ -74,17 +61,17 @@ class DatabaseService {
     });
   }
 
-  // getQuizDataStream() async {
-  //   return await FirebaseFirestore.instance.collection("Quiz").doc(userID).collection("User quiz data").snapshots();
-  // }
 
   getQuizDataToPlay(String quizId) async {
-    return await FirebaseFirestore.instance
-        .collection("Quiz")
-        .doc(userID)
-        .collection("User quiz data")
-        .doc(quizId)
-        .collection("QNA")
-        .get();
+    print('user ID------------${getUserID()}--------------');
+      return await FirebaseFirestore.instance
+          .collection("Quiz")
+          .doc(getUserID())
+          .collection("User quiz data")
+          .doc(quizId)
+          .collection("QNA")
+          .get();
   }
+
+
 }
