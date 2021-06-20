@@ -1,15 +1,20 @@
-# Trying to fix get user record
+# Data for each user registering to quizMaker app
 
-project này muốn tạo trong collection "Quiz" các documents chính là các userID để dễ quản lý
-và display màn hình home của mỗi người.
+### Successfully uploaded and get data for each user
 
-Đang còn gặp lỗi chưa reference dc tới document là các userID đó, chưa bt làm sao :((
+Bingooooooooooooooooooooooooooooooooo!
 
-snapshot.data.docs(userID)["hadQuiz"] == false
 
-cái docs(userID) đang bị lỗixs
+![image](https://user-images.githubusercontent.com/78266241/122664809-c8112600-d1cd-11eb-9346-bad71b3a5cb6.png)
 
-error:
-Class 'List<_JsonQueryDocumentSnapshot>' has no instance method 'call'.
-Receiver: Instance(length:1) of '_GrowableList'
-Tried calling: call("DBdurWBV27MKU1wFoAHMpKPzRKz2")
+![image](https://user-images.githubusercontent.com/78266241/122664816-db23f600-d1cd-11eb-98ba-36b48f8830f0.png)
+
+![image](https://user-images.githubusercontent.com/78266241/122664822-e7a84e80-d1cd-11eb-8f60-5da10775197f.png)
+
+![image](https://user-images.githubusercontent.com/78266241/122664828-f2fb7a00-d1cd-11eb-9e4c-50cabc26cf9c.png)
+
+![image](https://user-images.githubusercontent.com/78266241/122664849-ff7fd280-d1cd-11eb-8814-bce3844278a0.png)
+
+
+
+
