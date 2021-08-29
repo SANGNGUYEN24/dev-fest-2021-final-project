@@ -18,7 +18,7 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
   AuthService authService = new AuthService();
-  DatabaseService databaseService = DatabaseService();
+  DatabaseService databaseService = DatabaseService(uid: '');
   String userName = "";
   String email = "";
   String password = "";
@@ -86,7 +86,7 @@ class _SignUpState extends State<SignUp> {
   }
 
   // User object based on FirebaseUser
-  UserObject _userFromFirebaseUser(User user) {
+  UserObject? _userFromFirebaseUser(User user) {
     // ignore: unnecessary_null_comparison
     return user != null ? UserObject(uid: user.uid) : null;
   }
@@ -95,19 +95,17 @@ class _SignUpState extends State<SignUp> {
     try {
       UserCredential authResult = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      User firebaseUser = authResult.user;
+      User? firebaseUser = authResult.user;
 
-      return _userFromFirebaseUser(firebaseUser);
+      return _userFromFirebaseUser(firebaseUser!);
     } catch (e) {
-      if (e.code == 'email-already-in-use')
-        showSnackBarMessage(
-            "The email address is already in use by another account");
+      print(e.toString());
       return null;
     }
   }
 
   signUp() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       showSnackBarLoading();
       dynamic val = await signUpEmailAndPassword(email, password);
       if (val != null) {
@@ -156,7 +154,7 @@ class _SignUpState extends State<SignUp> {
                     Spacer(),
                     TextFormField(
                       validator: (val) {
-                        return val.isEmpty ? "Enter name!" : null;
+                        return val!.isEmpty ? "Enter name!" : null;
                       },
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -181,7 +179,7 @@ class _SignUpState extends State<SignUp> {
                         hintText: "Email",
                       ),
                       validator: (email) {
-                        return !EmailValidator.validate(email)
+                        return !EmailValidator.validate(email!)
                             ? "Enter a valid email!"
                             : null;
                       },
@@ -198,7 +196,7 @@ class _SignUpState extends State<SignUp> {
                       keyboardType: TextInputType.visiblePassword,
                       obscureText: true,
                       validator: (val) {
-                        return val.length < 6
+                        return val!.length < 6
                             ? "Password at least 6 characters"
                             : null;
                       },

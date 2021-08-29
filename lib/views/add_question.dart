@@ -13,17 +13,17 @@ class AddQuestion extends StatefulWidget {
 }
 
 class _AddQuestionState extends State<AddQuestion> {
-  String question, option1, option2, option3, option4;
+  late String question, option1, option2, option3, option4;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  DatabaseService databaseService = new DatabaseService();
+  DatabaseService databaseService = new DatabaseService(uid: '');
   bool _isLoading = false;
 
   uploadQuestion() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
-      Map<String, String> questionData = {
+      Map<String, dynamic> questionData = {
         "question": question,
         "option1": option1,
         "option2": option2,
@@ -66,7 +66,7 @@ class _AddQuestionState extends State<AddQuestion> {
                     children: [
                       TextFormField(
                         validator: (val) =>
-                            val.isEmpty ? "Enter Question" : null,
+                            val!.isEmpty ? "Enter Question" : null,
                         decoration: InputDecoration(
                           hintText: "Question",
                         ),
@@ -79,7 +79,7 @@ class _AddQuestionState extends State<AddQuestion> {
                       ),
                       TextFormField(
                         validator: (val) =>
-                            val.isEmpty ? "Enter option 1" : null,
+                            val!.isEmpty ? "Enter option 1" : null,
                         decoration: InputDecoration(
                           hintText: "Option 1",
                         ),
@@ -92,7 +92,7 @@ class _AddQuestionState extends State<AddQuestion> {
                       ),
                       TextFormField(
                         validator: (val) =>
-                            val.isEmpty ? "Enter option 2" : null,
+                            val!.isEmpty ? "Enter option 2" : null,
                         decoration: InputDecoration(
                           hintText: "Option 2",
                         ),
@@ -105,7 +105,7 @@ class _AddQuestionState extends State<AddQuestion> {
                       ),
                       TextFormField(
                         validator: (val) =>
-                            val.isEmpty ? "Enter option 3" : null,
+                            val!.isEmpty ? "Enter option 3" : null,
                         decoration: InputDecoration(
                           hintText: "Option 3",
                         ),
@@ -118,7 +118,7 @@ class _AddQuestionState extends State<AddQuestion> {
                       ),
                       TextFormField(
                         validator: (val) =>
-                            val.isEmpty ? "Enter option 4" : null,
+                            val!.isEmpty ? "Enter option 4" : null,
                         decoration: InputDecoration(
                           hintText: "Option 4",
                         ),

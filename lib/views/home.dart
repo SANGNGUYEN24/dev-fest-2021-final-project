@@ -18,7 +18,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  DatabaseService databaseService = new DatabaseService();
+  DatabaseService databaseService = new DatabaseService(uid: '');
 
   // get uid from Firebase
   FirebaseAuth _user = FirebaseAuth.instance;
@@ -50,16 +50,16 @@ class _HomeState extends State<Home> {
   Widget quizList() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16),
-      child: StreamBuilder(
+      child: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection("Quiz")
             .doc(userID)
             .collection("User quiz data")
             .snapshots(),
-        builder: (context, snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           return (snapshot.data == null)
               ? Center(child: CircularProgressIndicator())
-              : ((snapshot.data.docs.length <= 0)
+              : ((snapshot.data!.docs.length <= 0)
                   ? Container(
                       child: Center(
                         child: Column(
@@ -84,18 +84,18 @@ class _HomeState extends State<Home> {
                       ),
                     )
                   : ListView.builder(
-                      itemCount: snapshot.data.docs.length,
+                      itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
                         return QuizCard(
                           ///DocumentSnapshot ds = snapshot.data.docs[index];
                           uid: userID,
                           imageUrl:
                               //snapshot.data.documents[index].data["quizImageUrl"]
-                              snapshot.data.docs[index]["quizImageUrl"],
-                          title: snapshot.data.docs[index]["quizTitle"],
-                          description: snapshot.data.docs[index]
+                              snapshot.data!.docs[index]["quizImageUrl"],
+                          title: snapshot.data!.docs[index]["quizTitle"],
+                          description: snapshot.data!.docs[index]
                               ["quizDescription"],
-                          quizId: snapshot.data.docs[index]["quizId"],
+                          quizId: snapshot.data!.docs[index]["quizId"],
                           //   imageUrl: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizImageUrl"],
                           //   title: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizTitle"],
                           //   description: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizDescription"],
@@ -136,7 +136,10 @@ class _HomeState extends State<Home> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CreateQuiz()),
+            MaterialPageRoute(
+                builder: (context) => CreateQuiz(
+                      key: null,
+                    )),
           );
         },
       ),
@@ -153,11 +156,11 @@ class QuizCard extends StatelessWidget {
   final String quizId;
 
   QuizCard(
-      {@required this.uid,
-      @required this.imageUrl,
-      @required this.title,
-      @required this.description,
-      @required this.quizId});
+      {required this.uid,
+      required this.imageUrl,
+      required this.title,
+      required this.description,
+      required this.quizId});
 
   @override
   Widget build(BuildContext context) {

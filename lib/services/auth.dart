@@ -7,19 +7,19 @@ class AuthService {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   String getUserID() {
-    final User user = _auth.currentUser;
-    String uid = user.uid;
+    final User? user = _auth.currentUser;
+    String uid = user!.uid;
     return uid;
   }
 
   // User object based on FirebaseUser
-  UserObject _userFromFirebaseUser(User user) {
+  UserObject? _userFromFirebaseUser(User? user) {
     // ignore: unnecessary_null_comparison
     return user != null ? UserObject(uid: user.uid) : null;
   }
 
   // auth change user stream
-  Stream<UserObject> get user {
+  Stream<UserObject?> get user {
     return _auth
         .authStateChanges()
         //map((FirebaseUser user) => _userFromFirebaseUser(user));

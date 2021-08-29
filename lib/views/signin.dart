@@ -18,11 +18,11 @@ class SignIn extends StatefulWidget {
 
 class _State extends State<SignIn> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String email;
-  String password;
+  late String email;
+  late String password;
 
   FirebaseAuth _auth = FirebaseAuth.instance;
-  DatabaseService databaseService = DatabaseService();
+  DatabaseService databaseService = DatabaseService(uid: '');
 
   final _user = FirebaseAuth.instance.currentUser;
 
@@ -30,7 +30,7 @@ class _State extends State<SignIn> {
   final googleSignIn = GoogleSignIn();
 
   // User object based on FirebaseUser
-  UserObject _userFromFirebaseUser(User user) {
+  UserObject? _userFromFirebaseUser(User user) {
     // ignore: unnecessary_null_comparison
     return user != null ? UserObject(uid: user.uid) : null;
   }
@@ -134,10 +134,7 @@ class _State extends State<SignIn> {
       showSnackBarMessage("An email has been sent to you");
       return await _auth.sendPasswordResetEmail(email: email);
     } catch (e) {
-      if (e.code == "unknown")
-        showSnackBarMessage("Please provide a valid email");
-      if (e.code == "invalid-email")
-        showSnackBarMessage("Invalid email, try again");
+      showSnackBarMessage("Please provide a valid email");
     }
   }
 
@@ -149,24 +146,19 @@ class _State extends State<SignIn> {
       UserCredential authResult = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
 
-      User firebaseUser = authResult.user;
+      User? firebaseUser = authResult.user;
 
-      return _userFromFirebaseUser(firebaseUser);
+      return _userFromFirebaseUser(firebaseUser!);
     } catch (e) {
-      if (e.code == 'wrong-password')
-        showSnackBarMessage(
-            "The password is invalid or the user does not have a password");
-      else if (e.code == 'user-not-found') {
-        showSnackBarMessage(
-            "There is no user record corresponding to this identifier. The user may have been deleted");
-      }
+      showSnackBarMessage(
+          "Something wrong with your email or password. Please try again!");
       return null;
     }
   }
 
   // Sign In function which call firebase function service
   signInEmailAndPass() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       showSnackBarLoading();
 
       dynamic result = await signInEmailAndPassword(email, password);
@@ -250,7 +242,7 @@ class _State extends State<SignIn> {
                       //decoration: kBoxDecorationStyle,
                       child: TextFormField(
                         validator: (email) {
-                          return !EmailValidator.validate(email)
+                          return !EmailValidator.validate(email!)
                               ? "Enter a valid email!"
                               : null;
                         },
@@ -277,7 +269,7 @@ class _State extends State<SignIn> {
                       child: TextFormField(
                         obscureText: true,
                         validator: (val) {
-                          return val.isEmpty ? "Enter password!" : null;
+                          return val!.isEmpty ? "Enter password!" : null;
                         },
                         decoration: InputDecoration(
                           border: OutlineInputBorder(

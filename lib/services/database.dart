@@ -3,13 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class DatabaseService {
   final String uid;
-  DatabaseService({this.uid});
+  DatabaseService({required this.uid});
 
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   String getUserID() {
-    final User user = _auth.currentUser;
-    String uid = user.uid;
+    final User? user = _auth.currentUser;
+    String uid = user!.uid;
     return uid;
   }
 
@@ -21,7 +21,7 @@ class DatabaseService {
         .set(userInfo);
   }
 
-  Future<void> addQuizData(Map quizData, String quizId) async {
+  Future<void> addQuizData(Map<String, dynamic> quizData, String quizId) async {
     await FirebaseFirestore.instance
         .collection("Quiz")
         .doc(getUserID())
@@ -33,7 +33,8 @@ class DatabaseService {
     });
   }
 
-  Future<void> addQuestionData(Map questionData, String quizId) async {
+  Future<void> addQuestionData(
+      Map<String, dynamic> questionData, String quizId) async {
     await FirebaseFirestore.instance
         .collection("Quiz")
         .doc(getUserID())

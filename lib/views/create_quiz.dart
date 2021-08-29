@@ -6,7 +6,7 @@ import 'package:quiz_maker_app/widgets/widgets.dart';
 import 'package:random_string/random_string.dart';
 
 class CreateQuiz extends StatefulWidget {
-  const CreateQuiz({Key key}) : super(key: key);
+  const CreateQuiz({required Key? key}) : super(key: key);
 
   @override
   _CreateQuizState createState() => _CreateQuizState();
@@ -14,19 +14,19 @@ class CreateQuiz extends StatefulWidget {
 
 class _CreateQuizState extends State<CreateQuiz> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String quizId, quizImageUrl, quizTitle, quizDescription;
-  DatabaseService databaseService = new DatabaseService();
+  late String quizId, quizImageUrl, quizTitle, quizDescription;
+  DatabaseService databaseService = new DatabaseService(uid: '');
 
   bool _isLoading = false;
   String userID = AuthService().getUserID();
 
   createAQuiz() async {
-    if (_formKey.currentState.validate()) {
+    if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
       quizId = randomAlphaNumeric(16); // create a random Id
-      Map<String, String> quizMap = {
+      Map<String, dynamic> quizData = {
         "userID": userID,
         "quizId": quizId,
         "quizImageUrl": quizImageUrl,
@@ -34,7 +34,7 @@ class _CreateQuizState extends State<CreateQuiz> {
         "quizDescription": quizDescription
       };
 
-      await databaseService.addQuizData(quizMap, quizId).then((value) => {
+      await databaseService.addQuizData(quizData, quizId).then((value) => {
             setState(() {
               _isLoading = false;
               Navigator.pushReplacement(
@@ -71,7 +71,7 @@ class _CreateQuizState extends State<CreateQuiz> {
                   children: [
                     TextFormField(
                       validator: (val) =>
-                          val.isEmpty ? "Enter Image URL" : null,
+                          val!.isEmpty ? "Enter Image URL" : null,
                       decoration: InputDecoration(
                         hintText: "Quiz image URL",
                       ),
@@ -85,7 +85,7 @@ class _CreateQuizState extends State<CreateQuiz> {
                     ),
                     TextFormField(
                       validator: (val) =>
-                          val.isEmpty ? "Quiz title must not empty" : null,
+                          val!.isEmpty ? "Quiz title must not empty" : null,
                       decoration: InputDecoration(
                         hintText: "Quiz title",
                       ),
@@ -98,7 +98,7 @@ class _CreateQuizState extends State<CreateQuiz> {
                       height: 6,
                     ),
                     TextFormField(
-                      validator: (val) => val.isEmpty
+                      validator: (val) => val!.isEmpty
                           ? "Quiz description must not empty"
                           : null,
                       decoration: InputDecoration(

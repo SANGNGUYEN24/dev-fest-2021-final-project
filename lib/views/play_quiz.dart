@@ -13,7 +13,7 @@ class PlayQuiz extends StatefulWidget {
   final String quizId;
   final String userID;
 
-  PlayQuiz({this.quizId, this.userID});
+  PlayQuiz({required this.quizId, required this.userID});
 
   @override
   _PlayQuizState createState() => _PlayQuizState();
@@ -25,12 +25,13 @@ int _incorrect = 0;
 int _notAttempted = 0;
 
 class _PlayQuizState extends State<PlayQuiz> {
-  DatabaseService databaseService = new DatabaseService();
-  QuerySnapshot questionSnapshot;
+  DatabaseService databaseService = new DatabaseService(uid: '');
+  QuerySnapshot? questionSnapshot;
   AuthService authService = new AuthService();
   FirebaseAuth _auth = FirebaseAuth.instance;
 
-  QuestionModel getQuestionModelFromSnapshot(DocumentSnapshot questionSnapshot) {
+  QuestionModel getQuestionModelFromSnapshot(
+      DocumentSnapshot questionSnapshot) {
     QuestionModel questionModel = new QuestionModel();
 
     questionModel.question = questionSnapshot["question"];
@@ -54,8 +55,8 @@ class _PlayQuizState extends State<PlayQuiz> {
   }
 
   String getUserID() {
-    final User user =  _auth.currentUser;
-    String uid = user.uid;
+    final User? user = _auth.currentUser;
+    String uid = user!.uid;
     return uid;
   }
 
@@ -68,7 +69,7 @@ class _PlayQuizState extends State<PlayQuiz> {
       _notAttempted = 0;
       _correct = 0;
       _incorrect = 0;
-      total = questionSnapshot.docs.length; // get the number of questions
+      total = questionSnapshot!.docs.length; // get the number of questions
 
       print("---------$total total ---- ${widget.quizId} --------");
 
@@ -88,35 +89,32 @@ class _PlayQuizState extends State<PlayQuiz> {
         iconTheme: IconThemeData(color: Colors.black87),
         brightness: Brightness.light,
       ),
-      body:
-          SingleChildScrollView(
-                child: Container(
-                  child: Column(
-                    children: [
-                      questionSnapshot == null
-                          ? Container(
-                              child: Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            )
-                          : ListView.builder(
-                              padding: EdgeInsets.symmetric(horizontal: 24),
-                              shrinkWrap: true,
-                              physics: ClampingScrollPhysics(),
-                              itemCount: questionSnapshot.docs.length,
-                              itemBuilder: (context, index) {
-                                return QuizPlayTile(
-                                  questionModel: getQuestionModelFromSnapshot(
-                                      questionSnapshot.docs[index]),
-                                  index: index,
-                                );
-                              }),
-                    ],
-                  ),
-                ),
-              ),
-
-
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: [
+              questionSnapshot == null
+                  ? Container(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                  : ListView.builder(
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
+                      itemCount: questionSnapshot!.docs.length,
+                      itemBuilder: (context, index) {
+                        return QuizPlayTile(
+                          questionModel: getQuestionModelFromSnapshot(
+                              questionSnapshot!.docs[index]),
+                          index: index,
+                        );
+                      }),
+            ],
+          ),
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.check),
         onPressed: () {
@@ -138,7 +136,7 @@ class QuizPlayTile extends StatefulWidget {
   final QuestionModel questionModel;
   final int index;
 
-  QuizPlayTile({this.questionModel, this.index});
+  QuizPlayTile({required this.questionModel, required this.index});
 
   @override
   _QuizPlayTileState createState() => _QuizPlayTileState();
@@ -155,10 +153,10 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
         children: [
           Text(
             "Q${widget.index + 1}: ${widget.questionModel.question}",
-            style: TextStyle(fontSize: 20, color: Colors.black87),
+            style: TextStyle(fontSize: 18, color: Colors.black87),
           ),
           SizedBox(
-            height: 12,
+            height: 14,
           ),
           GestureDetector(
             onTap: () {
