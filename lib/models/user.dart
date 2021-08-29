@@ -1,5 +1,5 @@
 // return the Firebase user
-class Userne {
+class UserObject {
   String uid;
-  Userne({this.uid});
+  UserObject({this.uid});
 }

@@ -1,3 +1,6 @@
+/// @author sangnd
+/// @date 29/08/2021
+/// The app run first here
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_maker_app/helper/functions.dart';
@@ -10,8 +13,8 @@ void main() async {
   runApp(MyApp());
 }
 
+// This widget is the root of the application.
 class MyApp extends StatefulWidget {
-  // This widget is the root of your application.
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -19,20 +22,18 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool _isLoggedIn = false;
   @override
-  void initState(){
+  void initState() {
     checkUserLoggedInStatus();
-    //TODO implement inittial State
     super.initState();
   }
 
-  checkUserLoggedInStatus()async {
+  checkUserLoggedInStatus() async {
     await HelperFunctions.getUserLoggedInDetail().then((value) {
       setState(() {
         _isLoggedIn = value;
       });
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: (_isLoggedIn?? false)? Home(): SignIn(),
+      home: (_isLoggedIn ?? false) ? Home() : SignIn(),
     );
   }
 }

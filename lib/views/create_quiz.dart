@@ -6,6 +6,7 @@ import 'package:quiz_maker_app/widgets/widgets.dart';
 import 'package:random_string/random_string.dart';
 
 class CreateQuiz extends StatefulWidget {
+  const CreateQuiz({Key key}) : super(key: key);
 
   @override
   _CreateQuizState createState() => _CreateQuizState();
@@ -33,15 +34,13 @@ class _CreateQuizState extends State<CreateQuiz> {
         "quizDescription": quizDescription
       };
 
-      Map<String, String> userIdMap = {
-        "userID": userID,
-      };
-
-      await databaseService.addQuizData(quizMap, userIdMap, userID, quizId).then((value) => {
+      await databaseService.addQuizData(quizMap, quizId).then((value) => {
             setState(() {
               _isLoading = false;
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => AddQuestion(userID, quizId)));
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddQuestion(userID, quizId)));
             })
           });
     }
@@ -118,9 +117,8 @@ class _CreateQuizState extends State<CreateQuiz> {
                           createAQuiz();
                           //AddQuestion(quizId);
                         },
-                        child: blueButton(
-                            context: context,
-                            label: "Create quiz")),
+                        child:
+                            blueButton(context: context, label: "Create quiz")),
                   ],
                 ),
               ),
