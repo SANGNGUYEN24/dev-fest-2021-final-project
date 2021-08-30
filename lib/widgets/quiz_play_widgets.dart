@@ -1,3 +1,9 @@
+///=============================================================================
+/// @author sangnd
+/// @date 29/08/2021
+/// Container to store each option of each question
+/// Ex: A option1
+///=============================================================================
 import 'package:flutter/material.dart';
 
 class OptionTile extends StatefulWidget {
@@ -8,11 +14,11 @@ class OptionTile extends StatefulWidget {
       required this.description,
       required this.correctAnswer,
       required this.optionSelected});
-
   @override
   _OptionTileState createState() => _OptionTileState();
 }
 
+/// The UI of the option
 class _OptionTileState extends State<OptionTile> {
   @override
   Widget build(BuildContext context) {
@@ -20,6 +26,8 @@ class _OptionTileState extends State<OptionTile> {
       padding: EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
+          /// Letter symbol for each option
+          /// Handle the option color when the user click option
           Container(
             width: 30,
             height: 25,
@@ -48,6 +56,8 @@ class _OptionTileState extends State<OptionTile> {
           SizedBox(
             width: 8,
           ),
+
+          /// The content of the option
           Expanded(
             child: Text(
               widget.description,

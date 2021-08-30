@@ -1,3 +1,8 @@
+///=============================================================================
+/// @author sangnd
+/// @date 29/08/2021
+/// The sign in page for users
+///=============================================================================
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,21 +25,24 @@ class _State extends State<SignIn> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late String email;
   late String password;
-
+  final googleSignIn = GoogleSignIn();
+  final textFieldController = TextEditingController();
   FirebaseAuth _auth = FirebaseAuth.instance;
   DatabaseService databaseService = DatabaseService(uid: '');
 
-  final _user = FirebaseAuth.instance.currentUser;
+  @override
+  void initState() {
+    super.initState();
+    textFieldController.addListener(() => setState(() {}));
+  }
 
-  // Google Sign in
-  final googleSignIn = GoogleSignIn();
-
-  // User object based on FirebaseUser
+  /// User object based on FirebaseUser
   UserObject? _userFromFirebaseUser(User user) {
     // ignore: unnecessary_null_comparison
     return user != null ? UserObject(uid: user.uid) : null;
   }
 
+  /// Show loading toast while the user is waiting for sign in process
   void showSnackBarLoading() {
     final snackBar = SnackBar(
       duration: Duration(minutes: 10),
@@ -70,6 +78,7 @@ class _State extends State<SignIn> {
       ..showSnackBar(snackBar);
   }
 
+  /// Show toast when an error happens
   void showSnackBarMessage(String mess) {
     final snackBar = SnackBar(
       duration: Duration(seconds: 2),
@@ -93,7 +102,8 @@ class _State extends State<SignIn> {
       ..showSnackBar(snackBar);
   }
 
-  // A dialog requiring an email to reset password
+  /// A dialog requiring an email to reset password
+  /// If the users forget password, they will provide his/her email to reset it
   fillEmailResetPasswordDialog(BuildContext context) {
     String email = "";
     return showDialog(
@@ -128,7 +138,7 @@ class _State extends State<SignIn> {
         });
   }
 
-  // Reset password function
+  /// The function to send user's email to Firebase for resetting password
   Future resetPassword(email) async {
     try {
       showSnackBarMessage("An email has been sent to you");
@@ -138,9 +148,9 @@ class _State extends State<SignIn> {
     }
   }
 
-  /// Sign in functions //////////////////////////////////////////
-
-  /// Using user email and password
+  /// Sign in functions
+  /// The function to communicate with Firebase Authentication
+  /// Using user's email and password
   Future signInEmailAndPassword(String email, String password) async {
     try {
       UserCredential authResult = await _auth.signInWithEmailAndPassword(
@@ -156,19 +166,20 @@ class _State extends State<SignIn> {
     }
   }
 
-  // Sign In function which call firebase function service
+  /// The function to do some staffs associated with sign in process
+  /// 1. Show a loading toast
+  /// 2. Save log in state of the user
+  /// 4. Navigate the user to [Home] page
   signInEmailAndPass() async {
     if (_formKey.currentState!.validate()) {
       showSnackBarLoading();
-
       dynamic result = await signInEmailAndPassword(email, password);
       if (result != null) {
         // update sign in status
         HelperFunctions.saveUserLoggedInDetail(isLoggedIn: true);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Home()));
-
-        // hide the snackBar after sign in done
+        // hide the snackBar after sign in process done
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
       } else {
         showSnackBarMessage("Something wrong with your email or password");
@@ -180,7 +191,6 @@ class _State extends State<SignIn> {
   /// Sign In using Google account
   Future googleSignInFunction() async {
     showSnackBarLoading();
-
     try {
       final user = await googleSignIn.signIn();
       if (user == null) {
@@ -206,16 +216,7 @@ class _State extends State<SignIn> {
     }
   }
 
-  // logout function
-  void googleLogOut() async {
-    try {
-      await googleSignIn.disconnect();
-      _auth.signOut();
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
+  /// The UI of sign in page
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -237,10 +238,13 @@ class _State extends State<SignIn> {
                 child: Column(
                   children: [
                     Spacer(),
+
+                    /// Email text field
                     Container(
                       padding: EdgeInsets.all(2),
                       //decoration: kBoxDecorationStyle,
                       child: TextFormField(
+                        controller: textFieldController,
                         validator: (email) {
                           return !EmailValidator.validate(email!)
                               ? "Enter a valid email!"
@@ -251,6 +255,12 @@ class _State extends State<SignIn> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           prefixIcon: Icon(Icons.mail),
+                          suffixIcon: textFieldController.text.isEmpty
+                              ? Container(width: 0)
+                              : IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () => textFieldController.clear(),
+                                ),
                           hintText: "Email",
                         ),
                         keyboardType: TextInputType.emailAddress,
@@ -263,6 +273,8 @@ class _State extends State<SignIn> {
                     SizedBox(
                       height: 10,
                     ),
+
+                    /// Password text field
                     Container(
                       padding: EdgeInsets.all(2),
                       //decoration: kBoxDecorationStyle,
@@ -286,6 +298,8 @@ class _State extends State<SignIn> {
                     SizedBox(
                       height: 10,
                     ),
+
+                    /// If the user forgot his/her password
                     GestureDetector(
                       onTap: () {
                         fillEmailResetPasswordDialog(context);
@@ -298,6 +312,8 @@ class _State extends State<SignIn> {
                     SizedBox(
                       height: 24,
                     ),
+
+                    /// Sign in button using email, and password
                     GestureDetector(
                         onTap: () {
                           signInEmailAndPass();
@@ -308,6 +324,8 @@ class _State extends State<SignIn> {
                     SizedBox(
                       height: 10,
                     ),
+
+                    /// Sign in button using Google account
                     OutlinedButton.icon(
                       onPressed: () {
                         googleSignInFunction();
@@ -330,6 +348,8 @@ class _State extends State<SignIn> {
                     SizedBox(
                       height: 10,
                     ),
+
+                    /// If user had an account, navigate to sign in page
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

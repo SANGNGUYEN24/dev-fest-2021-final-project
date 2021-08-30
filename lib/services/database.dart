@@ -1,3 +1,8 @@
+///=============================================================================
+/// @author sangnd
+/// @date 29/08/2021
+/// This files contains functions to communicate with the database service
+///=============================================================================
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

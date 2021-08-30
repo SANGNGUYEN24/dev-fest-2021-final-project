@@ -1,3 +1,8 @@
+///=============================================================================
+/// @author sangnd
+/// @date 29/08/2021
+/// This file contains widgets that are used in many places in the application
+///=============================================================================
 import 'package:flutter/material.dart';
 
 Widget appBar(BuildContext context) {
@@ -24,7 +29,7 @@ Widget blueButton(
   return Container(
     padding: EdgeInsets.symmetric(vertical: 18),
     decoration: BoxDecoration(
-      color: Colors.blue,
+      color: Colors.black87,
       borderRadius: BorderRadius.circular(30),
     ),
     alignment: Alignment.center,

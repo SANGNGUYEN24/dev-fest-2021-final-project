@@ -1,3 +1,8 @@
+///=============================================================================
+/// @author sangnd
+/// @date 29/08/2021
+/// This file helps add question data of each quiz to the database
+///=============================================================================
 import 'package:flutter/material.dart';
 import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
@@ -7,7 +12,6 @@ class AddQuestion extends StatefulWidget {
   final String quizId;
 
   AddQuestion(this.userID, this.quizId);
-
   @override
   _AddQuestionState createState() => _AddQuestionState();
 }
@@ -17,7 +21,23 @@ class _AddQuestionState extends State<AddQuestion> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   DatabaseService databaseService = new DatabaseService(uid: '');
   bool _isLoading = false;
+  final questionController = TextEditingController();
+  final option1Controller = TextEditingController();
+  final option2Controller = TextEditingController();
+  final option3Controller = TextEditingController();
+  final option4Controller = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    questionController.addListener(() => setState(() {}));
+    option1Controller.addListener(() => setState(() {}));
+    option2Controller.addListener(() => setState(() {}));
+    option3Controller.addListener(() => setState(() {}));
+    option4Controller.addListener(() => setState(() {}));
+  }
+
+  /// The function to upload the question data
   uploadQuestion() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -40,6 +60,7 @@ class _AddQuestionState extends State<AddQuestion> {
     }
   }
 
+  /// The UI of the page
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,10 +86,17 @@ class _AddQuestionState extends State<AddQuestion> {
                   child: Column(
                     children: [
                       TextFormField(
+                        controller: questionController,
                         validator: (val) =>
                             val!.isEmpty ? "Enter Question" : null,
                         decoration: InputDecoration(
                           hintText: "Question",
+                          suffixIcon: questionController.text.isEmpty
+                              ? Container(width: 0)
+                              : IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () => questionController.clear(),
+                                ),
                         ),
                         onChanged: (val) {
                           question = val;
@@ -78,10 +106,17 @@ class _AddQuestionState extends State<AddQuestion> {
                         height: 24,
                       ),
                       TextFormField(
+                        controller: option1Controller,
                         validator: (val) =>
                             val!.isEmpty ? "Enter option 1" : null,
                         decoration: InputDecoration(
                           hintText: "Option 1",
+                          suffixIcon: option1Controller.text.isEmpty
+                              ? Container(width: 0)
+                              : IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () => option1Controller.clear(),
+                                ),
                         ),
                         onChanged: (val) {
                           option1 = val;
@@ -91,10 +126,17 @@ class _AddQuestionState extends State<AddQuestion> {
                         height: 6,
                       ),
                       TextFormField(
+                        controller: option2Controller,
                         validator: (val) =>
                             val!.isEmpty ? "Enter option 2" : null,
                         decoration: InputDecoration(
                           hintText: "Option 2",
+                          suffixIcon: option2Controller.text.isEmpty
+                              ? Container(width: 0)
+                              : IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () => option2Controller.clear(),
+                                ),
                         ),
                         onChanged: (val) {
                           option2 = val;
@@ -104,10 +146,17 @@ class _AddQuestionState extends State<AddQuestion> {
                         height: 6,
                       ),
                       TextFormField(
+                        controller: option3Controller,
                         validator: (val) =>
                             val!.isEmpty ? "Enter option 3" : null,
                         decoration: InputDecoration(
                           hintText: "Option 3",
+                          suffixIcon: option3Controller.text.isEmpty
+                              ? Container(width: 0)
+                              : IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () => option3Controller.clear(),
+                                ),
                         ),
                         onChanged: (val) {
                           option3 = val;
@@ -117,10 +166,17 @@ class _AddQuestionState extends State<AddQuestion> {
                         height: 6,
                       ),
                       TextFormField(
+                        controller: option4Controller,
                         validator: (val) =>
                             val!.isEmpty ? "Enter option 4" : null,
                         decoration: InputDecoration(
                           hintText: "Option 4",
+                          suffixIcon: option4Controller.text.isEmpty
+                              ? Container(width: 0)
+                              : IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () => option4Controller.clear(),
+                                ),
                         ),
                         onChanged: (val) {
                           option4 = val;

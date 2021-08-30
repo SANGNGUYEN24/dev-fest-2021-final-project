@@ -1,3 +1,8 @@
+///=============================================================================
+/// @author sangnd
+/// @date 29/08/2021
+/// The sign up page for new users
+/// ============================================================================
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,10 +28,10 @@ class _SignUpState extends State<SignUp> {
   String email = "";
   String password = "";
   String error = "";
-  //bool _isLoading = false;
 
   FirebaseAuth _auth = FirebaseAuth.instance;
 
+  /// Show loading toast while the user is waiting for sign up process
   void showSnackBarLoading() {
     final snackBar = SnackBar(
       duration: Duration(minutes: 10),
@@ -62,6 +67,7 @@ class _SignUpState extends State<SignUp> {
       ..showSnackBar(snackBar);
   }
 
+  /// Show error toast when an error happens
   void showSnackBarMessage(String mess) {
     final snackBar = SnackBar(
       duration: Duration(seconds: 2),
@@ -85,12 +91,13 @@ class _SignUpState extends State<SignUp> {
       ..showSnackBar(snackBar);
   }
 
-  // User object based on FirebaseUser
+  /// User object based on FirebaseUser
   UserObject? _userFromFirebaseUser(User user) {
     // ignore: unnecessary_null_comparison
     return user != null ? UserObject(uid: user.uid) : null;
   }
 
+  /// The function to communicate with Firebase Authentication to sign up a new user
   Future signUpEmailAndPassword(String email, String password) async {
     try {
       UserCredential authResult = await _auth.createUserWithEmailAndPassword(
@@ -104,6 +111,12 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
+  /// The function to do some staffs associated with sign up process:
+  /// 1. Show a loading toast
+  /// 2. Save log in state of the user
+  /// 3. Add [userName] to the database
+  /// 4. Navigate the user to [Home] page
+  ///
   signUp() async {
     if (_formKey.currentState!.validate()) {
       showSnackBarLoading();
@@ -124,6 +137,7 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
+  /// The UI of [SignUp] page
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,12 +148,6 @@ class _SignUpState extends State<SignUp> {
           centerTitle: true,
           title: appBar(context),
         ),
-        //_isLoading
-        //     ? Container(
-        //         child: Center(
-        //         child: CircularProgressIndicator(),
-        //       ))
-        //     :
         body: SingleChildScrollView(
           reverse: true,
           child: Container(
@@ -152,6 +160,8 @@ class _SignUpState extends State<SignUp> {
                 child: Column(
                   children: [
                     Spacer(),
+
+                    /// Name text field
                     TextFormField(
                       validator: (val) {
                         return val!.isEmpty ? "Enter name!" : null;
@@ -170,6 +180,8 @@ class _SignUpState extends State<SignUp> {
                     SizedBox(
                       height: 10,
                     ),
+
+                    /// Email text field
                     TextFormField(
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -192,6 +204,8 @@ class _SignUpState extends State<SignUp> {
                     SizedBox(
                       height: 10,
                     ),
+
+                    /// Password text field
                     TextFormField(
                       keyboardType: TextInputType.visiblePassword,
                       obscureText: true,
@@ -224,6 +238,8 @@ class _SignUpState extends State<SignUp> {
                     SizedBox(
                       height: 10,
                     ),
+
+                    /// Ask whether the user had an account
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

@@ -1,8 +1,14 @@
+///=============================================================================
+/// @author sangnd
+/// @date 29/08/2021
+/// The file to show the result page after competing the quiz
+///=============================================================================
 import 'package:flutter/material.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
 
 class Results extends StatefulWidget {
   final int correct, incorrect, total;
+
   Results(
       {required this.total, required this.correct, required this.incorrect});
 
@@ -11,6 +17,7 @@ class Results extends StatefulWidget {
 }
 
 class _ResultsState extends State<Results> {
+  /// The UI of the result page
   @override
   Widget build(BuildContext context) {
     return Scaffold(

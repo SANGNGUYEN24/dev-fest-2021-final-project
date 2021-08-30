@@ -1,5 +1,12 @@
+///=============================================================================
+/// @author sangnd
+/// @date 29/08/2021
+/// This file contains some constant values in the app
+///=============================================================================
 import 'package:flutter/material.dart';
 
+const kEmptyImageQuizList = 'assets/undraw_elements_cipa.svg';
+const kLoadingImage = 'assets/loading.gif';
 final kHintTextStyle = TextStyle(
   color: Colors.white54,
   fontFamily: 'OpenSans',

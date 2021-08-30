@@ -1,3 +1,8 @@
+///=============================================================================
+/// @author sangnd
+/// @date 29/08/2021
+/// Home page of the app, it helps display quiz card list of each user
+///=============================================================================
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,8 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:quiz_maker_app/helper/functions.dart';
 import 'package:quiz_maker_app/services/auth.dart';
-import 'package:quiz_maker_app/services/database.dart';
-import 'package:quiz_maker_app/styles/images.dart';
+import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/create_quiz.dart';
 import 'package:quiz_maker_app/views/play_quiz.dart';
 import 'package:quiz_maker_app/views/signin.dart';
@@ -18,14 +22,23 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  DatabaseService databaseService = new DatabaseService(uid: '');
-
-  // get uid from Firebase
   FirebaseAuth _user = FirebaseAuth.instance;
-  final currentUser = FirebaseAuth.instance.currentUser;
   String userID = AuthService().getUserID();
-  var collectionRef = FirebaseFirestore.instance.collection("Quiz");
+  Stream<QuerySnapshot<Object?>>? _stream;
 
+  /// At the beginning, create a stream for query user's quiz data
+  /// This stream will be used in the ListBuilder to display a quiz card list
+  @override
+  void initState() {
+    _stream = FirebaseFirestore.instance
+        .collection("Quiz")
+        .doc(userID)
+        .collection("User quiz data")
+        .snapshots();
+    super.initState();
+  }
+
+  /// The function to show a snackBar for confirming sign out action for the user
   confirmSignOut() {
     final snackBar = SnackBar(
       elevation: 2.0,
@@ -47,67 +60,7 @@ class _HomeState extends State<Home> {
       ..showSnackBar(snackBar);
   }
 
-  Widget quizList() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16),
-      child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection("Quiz")
-            .doc(userID)
-            .collection("User quiz data")
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          return (snapshot.data == null)
-              ? Center(child: CircularProgressIndicator())
-              : ((snapshot.data!.docs.length <= 0)
-                  ? Container(
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              emptyImageQuizList,
-                              height: 100,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Quizzes you add appear here",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 18.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) {
-                        return QuizCard(
-                          ///DocumentSnapshot ds = snapshot.data.docs[index];
-                          uid: userID,
-                          imageUrl:
-                              //snapshot.data.documents[index].data["quizImageUrl"]
-                              snapshot.data!.docs[index]["quizImageUrl"],
-                          title: snapshot.data!.docs[index]["quizTitle"],
-                          description: snapshot.data!.docs[index]
-                              ["quizDescription"],
-                          quizId: snapshot.data!.docs[index]["quizId"],
-                          //   imageUrl: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizImageUrl"],
-                          //   title: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizTitle"],
-                          //   description: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizDescription"],
-                          //   quizId: snapshot.data.docs[index].collection("User quiz data").docs[index]["quizId"],
-                        );
-                      },
-                    ));
-        },
-      ),
-    );
-  }
-
+  /// The UI of the page
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,10 +98,62 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
+  /// List of the quiz cards will be got here
+  Widget quizList() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      child: StreamBuilder<QuerySnapshot>(
+        stream: _stream,
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          return (snapshot.data == null)
+              ? Center(child: CircularProgressIndicator())
+              : ((snapshot.data!.docs.length <= 0)
+                  ? Container(
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset(
+                              kEmptyImageQuizList,
+                              height: 100,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Quizzes you add appear here",
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 18.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        return QuizCard(
+                          uid: userID,
+                          imageUrl: snapshot.data!.docs[index]["quizImageUrl"],
+                          title: snapshot.data!.docs[index]["quizTitle"],
+                          description: snapshot.data!.docs[index]
+                              ["quizDescription"],
+                          quizId: snapshot.data!.docs[index]["quizId"],
+                        );
+                      },
+                    ));
+        },
+      ),
+    );
+  }
 }
 
+/// The information of each quiz is got here and displayed as a clickable card
+/// When user click a quiz card, navigate to [PlayQuiz]
 class QuizCard extends StatelessWidget {
-  //add uid for each quiz
   final String uid;
   final String imageUrl;
   final String title;
@@ -182,7 +187,7 @@ class QuizCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(9.0),
               child: FadeInImage.assetNetwork(
-                placeholder: loadingImage,
+                placeholder: kLoadingImage,
                 image: imageUrl,
                 width: MediaQuery.of(context).size.width,
                 fit: BoxFit.cover,

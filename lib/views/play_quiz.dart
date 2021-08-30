@@ -1,3 +1,8 @@
+///=============================================================================
+/// @author sangnd
+/// @date 29/08/2021
+/// This file handles the contents of quizzes' questions
+///=============================================================================
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,20 +35,21 @@ class _PlayQuizState extends State<PlayQuiz> {
   AuthService authService = new AuthService();
   FirebaseAuth _auth = FirebaseAuth.instance;
 
+  /// The function to get the content of questions in the selected quiz
   QuestionModel getQuestionModelFromSnapshot(
       DocumentSnapshot questionSnapshot) {
     QuestionModel questionModel = new QuestionModel();
 
     questionModel.question = questionSnapshot["question"];
     List<String> options = [
-      // TODO change the way to get data
       questionSnapshot["option1"],
-      //  questionSnapshot.data["option1"] -> questionSnapshot["option1"]
       questionSnapshot["option2"],
       questionSnapshot["option3"],
       questionSnapshot["option4"],
     ];
-    options.shuffle(); // random the elements in the list options
+
+    /// Shuffling all each question's options in a try
+    options.shuffle();
     questionModel.option1 = options[0];
     questionModel.option2 = options[1];
     questionModel.option3 = options[2];
@@ -54,30 +60,30 @@ class _PlayQuizState extends State<PlayQuiz> {
     return questionModel;
   }
 
-  String getUserID() {
-    final User? user = _auth.currentUser;
-    String uid = user!.uid;
-    return uid;
-  }
-
+  /// Set initial values of [_notAttempted], [_correct], and [_incorrect] to 0
+  /// [total] to the # of questions of the quiz
+  /// When the user click a quiz card, at the beginning, I will get question data of the quiz to display
+  /// based on the [quizId] and assigned it to [questionSnapshot] for getting data process
+  /// [questionSnapshot] is an instance of _JsonQuerySnapshot object
   @override
   void initState() {
     databaseService.getQuizDataToPlay(widget.quizId).then((value) {
-      //print('quizId ----------------- ${widget.quizId} --------------');
       questionSnapshot = value;
       print('questionSnapshot ---------- $questionSnapshot -----------');
       _notAttempted = 0;
       _correct = 0;
       _incorrect = 0;
-      total = questionSnapshot!.docs.length; // get the number of questions
+      // Get the number of questions
+      total = questionSnapshot!.docs.length;
 
-      print("---------$total total ---- ${widget.quizId} --------");
-
+      /// print quizId for checking
+      print("---------$total questions in quiz Id: ${widget.quizId} --------");
       setState(() {});
     });
     super.initState();
   }
 
+  /// The UI of the page
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,16 +95,21 @@ class _PlayQuizState extends State<PlayQuiz> {
         iconTheme: IconThemeData(color: Colors.black87),
         brightness: Brightness.light,
       ),
+
       body: SingleChildScrollView(
         child: Container(
           child: Column(
             children: [
               questionSnapshot == null
+
+                  /// Display an indicator while loading the data
                   ? Container(
                       child: Center(
                         child: CircularProgressIndicator(),
                       ),
                     )
+
+                  /// Display the question data as a list
                   : ListView.builder(
                       padding: EdgeInsets.symmetric(horizontal: 24),
                       shrinkWrap: true,
@@ -115,6 +126,8 @@ class _PlayQuizState extends State<PlayQuiz> {
           ),
         ),
       ),
+
+      /// The user will press this button when complete the quiz
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.check),
         onPressed: () {
@@ -132,6 +145,10 @@ class _PlayQuizState extends State<PlayQuiz> {
   }
 }
 
+/// The class helps display the question content (4 options in a question) and
+/// handle the conditions when user choose an option in the question
+/// If the user choose a wrong answer, it turn into red, and green if it is correct
+/// The user can only choose the answer once
 class QuizPlayTile extends StatefulWidget {
   final QuestionModel questionModel;
   final int index;

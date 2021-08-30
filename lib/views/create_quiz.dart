@@ -1,3 +1,10 @@
+///=============================================================================
+/// @author sangnd
+/// @date 29/08/2021
+/// This file helps to create a quiz, uploads quiz info to Firestore
+/// The user will upload overall information quiz first, and add questions
+/// in [AddQuestion]
+///=============================================================================
 import 'package:flutter/material.dart';
 import 'package:quiz_maker_app/services/auth.dart';
 import 'package:quiz_maker_app/services/database.dart';
@@ -13,13 +20,25 @@ class CreateQuiz extends StatefulWidget {
 }
 
 class _CreateQuizState extends State<CreateQuiz> {
+  /// An global key to check input conditions in text fields
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late String quizId, quizImageUrl, quizTitle, quizDescription;
+  final imageController = TextEditingController();
+  final titleController = TextEditingController();
+  final descController = TextEditingController();
   DatabaseService databaseService = new DatabaseService(uid: '');
-
   bool _isLoading = false;
   String userID = AuthService().getUserID();
 
+  @override
+  void initState() {
+    super.initState();
+    imageController.addListener(() => setState(() {}));
+    titleController.addListener(() => setState(() {}));
+    descController.addListener(() => setState(() {}));
+  }
+
+  /// The function to upload a new quiz info to the database
   createAQuiz() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -46,6 +65,7 @@ class _CreateQuizState extends State<CreateQuiz> {
     }
   }
 
+  /// The UI of the page
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,13 +90,19 @@ class _CreateQuizState extends State<CreateQuiz> {
                 child: Column(
                   children: [
                     TextFormField(
+                      controller: imageController,
                       validator: (val) =>
                           val!.isEmpty ? "Enter Image URL" : null,
                       decoration: InputDecoration(
                         hintText: "Quiz image URL",
+                        suffixIcon: imageController.text.isEmpty
+                            ? Container(width: 0)
+                            : IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () => imageController.clear(),
+                              ),
                       ),
                       onChanged: (val) {
-                        // TODO: add quiz image URL
                         quizImageUrl = val;
                       },
                     ),
@@ -84,10 +110,17 @@ class _CreateQuizState extends State<CreateQuiz> {
                       height: 6,
                     ),
                     TextFormField(
+                      controller: titleController,
                       validator: (val) =>
                           val!.isEmpty ? "Quiz title must not empty" : null,
                       decoration: InputDecoration(
                         hintText: "Quiz title",
+                        suffixIcon: titleController.text.isEmpty
+                            ? Container(width: 0)
+                            : IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () => titleController.clear(),
+                              ),
                       ),
                       onChanged: (val) {
                         // TODO: add quiz image URL
@@ -98,11 +131,18 @@ class _CreateQuizState extends State<CreateQuiz> {
                       height: 6,
                     ),
                     TextFormField(
+                      controller: descController,
                       validator: (val) => val!.isEmpty
                           ? "Quiz description must not empty"
                           : null,
                       decoration: InputDecoration(
                         hintText: "Quiz description",
+                        suffixIcon: descController.text.isEmpty
+                            ? Container(width: 0)
+                            : IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () => descController.clear(),
+                              ),
                       ),
                       onChanged: (val) {
                         // TODO: add quiz image URL
