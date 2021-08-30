@@ -4,32 +4,35 @@
 /// This file contains widgets that are used in many places in the application
 ///=============================================================================
 import 'package:flutter/material.dart';
+import 'package:quiz_maker_app/styles/constants.dart';
 
 Widget appBar(BuildContext context) {
   return RichText(
     text: TextSpan(
       style: TextStyle(
         fontSize: 22,
+        fontFamily: 'Montserrat',
       ),
       children: const <TextSpan>[
         TextSpan(
             text: 'Quiz',
             style:
-                TextStyle(fontWeight: FontWeight.w600, color: Colors.black54)),
+                TextStyle(fontWeight: FontWeight.w600, color: kSecondaryColor)),
         TextSpan(
             text: 'Maker',
-            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blue)),
+            style:
+                TextStyle(fontWeight: FontWeight.w600, color: kPrimaryColor)),
       ],
     ),
   );
 }
 
-Widget blueButton(
+Widget blackButton(
     {required BuildContext context, required String label, buttonWidth}) {
   return Container(
     padding: EdgeInsets.symmetric(vertical: 18),
     decoration: BoxDecoration(
-      color: Colors.black87,
+      color: kPrimaryColor,
       borderRadius: BorderRadius.circular(30),
     ),
     alignment: Alignment.center,
@@ -49,7 +52,7 @@ Widget outlinedButton(
     padding: EdgeInsets.symmetric(vertical: 18),
     decoration: BoxDecoration(
       color: Colors.transparent,
-      border: Border.all(color: Colors.blue),
+      border: Border.all(color: Colors.black87),
       borderRadius: BorderRadius.circular(30),
     ),
     alignment: Alignment.center,
@@ -58,7 +61,7 @@ Widget outlinedButton(
         : MediaQuery.of(context).size.width - 48,
     child: Text(
       label,
-      style: TextStyle(color: Colors.blue, fontSize: 16),
+      style: TextStyle(color: kSecondaryColor, fontSize: 16),
     ),
   );
 }

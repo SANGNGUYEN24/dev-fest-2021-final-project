@@ -203,7 +203,7 @@ class _AddQuestionState extends State<AddQuestion> {
                           uploadQuestion();
                           Navigator.pop(context);
                         },
-                        child: blueButton(
+                        child: blackButton(
                           context: context,
                           label: "Submit",
                           buttonWidth: MediaQuery.of(context).size.width - 100,

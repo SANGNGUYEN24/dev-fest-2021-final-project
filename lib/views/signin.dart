@@ -12,6 +12,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:quiz_maker_app/helper/functions.dart';
 import 'package:quiz_maker_app/models/user.dart';
 import 'package:quiz_maker_app/services/database.dart';
+import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/home.dart';
 import 'package:quiz_maker_app/views/signup.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
@@ -57,7 +58,7 @@ class _State extends State<SignIn> {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 5,
-                color: Colors.blue,
+                color: kPrimaryColor,
                 backgroundColor: Colors.white,
               ),
             ),
@@ -238,6 +239,9 @@ class _State extends State<SignIn> {
                 child: Column(
                   children: [
                     Spacer(),
+                    Image.asset("assets/foreground.png",
+                        width: 200, height: 200),
+                    Spacer(),
 
                     /// Email text field
                     Container(
@@ -318,7 +322,7 @@ class _State extends State<SignIn> {
                         onTap: () {
                           signInEmailAndPass();
                         },
-                        child: blueButton(
+                        child: blackButton(
                             context: context,
                             label: "Sign in with your email")),
                     SizedBox(
@@ -342,7 +346,7 @@ class _State extends State<SignIn> {
                         minimumSize:
                             Size(MediaQuery.of(context).size.width - 48, 54),
                         shape: StadiumBorder(),
-                        side: BorderSide(color: Colors.blue),
+                        side: BorderSide(color: kPrimaryColor),
                       ),
                     ),
                     SizedBox(

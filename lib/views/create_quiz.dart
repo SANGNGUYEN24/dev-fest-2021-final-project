@@ -157,8 +157,8 @@ class _CreateQuizState extends State<CreateQuiz> {
                           createAQuiz();
                           //AddQuestion(quizId);
                         },
-                        child:
-                            blueButton(context: context, label: "Create quiz")),
+                        child: blackButton(
+                            context: context, label: "Create quiz")),
                   ],
                 ),
               ),

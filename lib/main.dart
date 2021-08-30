@@ -6,6 +6,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_maker_app/helper/functions.dart';
+import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/home.dart';
 import 'package:quiz_maker_app/views/signin.dart';
 
@@ -47,8 +48,8 @@ class _MyAppState extends State<MyApp> {
       title: 'Quiz Maker',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
-        fontFamily: 'Roboto',
+        primarySwatch: kSecondaryColor,
+        fontFamily: 'Montserrat',
       ),
       home: (_isLoggedIn) ? Home() : SignIn(),
     );

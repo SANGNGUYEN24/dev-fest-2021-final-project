@@ -10,6 +10,7 @@ import 'package:quiz_maker_app/helper/functions.dart';
 import 'package:quiz_maker_app/models/user.dart';
 import 'package:quiz_maker_app/services/auth.dart';
 import 'package:quiz_maker_app/services/database.dart';
+import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/signin.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
 
@@ -46,7 +47,7 @@ class _SignUpState extends State<SignUp> {
               height: 20,
               child: CircularProgressIndicator(
                 strokeWidth: 5,
-                color: Colors.blue,
+                color: kPrimaryColor,
                 backgroundColor: Colors.white,
               ),
             ),
@@ -160,6 +161,9 @@ class _SignUpState extends State<SignUp> {
                 child: Column(
                   children: [
                     Spacer(),
+                    Image.asset("assets/foreground.png",
+                        width: 200, height: 200),
+                    Spacer(),
 
                     /// Name text field
                     TextFormField(
@@ -232,7 +236,7 @@ class _SignUpState extends State<SignUp> {
                       onTap: () {
                         signUp();
                       },
-                      child: blueButton(
+                      child: blackButton(
                           context: context, label: "Sign up with your email"),
                     ),
                     SizedBox(

@@ -5,6 +5,8 @@
 ///=============================================================================
 import 'package:flutter/material.dart';
 
+const kPrimaryColor = Colors.black87;
+const kSecondaryColor = Colors.blueGrey;
 const kEmptyImageQuizList = 'assets/undraw_elements_cipa.svg';
 const kLoadingImage = 'assets/loading.gif';
 final kHintTextStyle = TextStyle(

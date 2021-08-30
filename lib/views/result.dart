@@ -49,7 +49,7 @@ class _ResultsState extends State<Results> {
                 onTap: () {
                   Navigator.pop(context);
                 },
-                child: blueButton(
+                child: blackButton(
                     context: context,
                     label: "Go to Home",
                     buttonWidth: MediaQuery.of(context).size.width - 100),
