@@ -34,7 +34,7 @@ dependencies:
   # icon google
   font_awesome_flutter: ^9.1.0
   # Sign in with Google
-  google_sign_in: ^5.0.4
+  google_sign_in: ^5.0.7
   # Display svg images
   flutter_svg: ^0.22.0
 
@@ -46,6 +46,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.9.0
   flutter_test:
     sdk: flutter
+
 
 flutter_icons:
   android: true
