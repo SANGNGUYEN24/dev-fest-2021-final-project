@@ -6,15 +6,14 @@
 /// in [AddQuestion]
 ///=============================================================================
 import 'package:flutter/material.dart';
-import 'package:quiz_maker_app/services/auth.dart';
 import 'package:quiz_maker_app/services/database.dart';
+import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/add_question.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
 import 'package:random_string/random_string.dart';
 
 class CreateQuiz extends StatefulWidget {
   const CreateQuiz({required Key? key}) : super(key: key);
-
   @override
   _CreateQuizState createState() => _CreateQuizState();
 }
@@ -26,9 +25,9 @@ class _CreateQuizState extends State<CreateQuiz> {
   final imageController = TextEditingController();
   final titleController = TextEditingController();
   final descController = TextEditingController();
-  DatabaseService databaseService = new DatabaseService(uid: '');
+  DatabaseService databaseService = new DatabaseService();
   bool _isLoading = false;
-  String userID = AuthService().getUserID();
+  String userID = DatabaseService().getUserID();
 
   @override
   void initState() {
@@ -69,100 +68,92 @@ class _CreateQuizState extends State<CreateQuiz> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: appBar(context),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        iconTheme: IconThemeData(color: Colors.black87),
-        brightness: Brightness.light,
-      ),
-      body: _isLoading
-          ? Container(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            )
-          : Form(
-              key: _formKey,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: imageController,
-                      validator: (val) =>
-                          val!.isEmpty ? "Enter Image URL" : null,
-                      decoration: InputDecoration(
-                        hintText: "Quiz image URL",
-                        suffixIcon: imageController.text.isEmpty
-                            ? Container(width: 0)
-                            : IconButton(
-                                icon: Icon(Icons.close),
-                                onPressed: () => imageController.clear(),
-                              ),
-                      ),
-                      onChanged: (val) {
-                        quizImageUrl = val;
-                      },
-                    ),
-                    SizedBox(
-                      height: 6,
-                    ),
-                    TextFormField(
-                      controller: titleController,
-                      validator: (val) =>
-                          val!.isEmpty ? "Quiz title must not empty" : null,
-                      decoration: InputDecoration(
-                        hintText: "Quiz title",
-                        suffixIcon: titleController.text.isEmpty
-                            ? Container(width: 0)
-                            : IconButton(
-                                icon: Icon(Icons.close),
-                                onPressed: () => titleController.clear(),
-                              ),
-                      ),
-                      onChanged: (val) {
-                        // TODO: add quiz image URL
-                        quizTitle = val;
-                      },
-                    ),
-                    SizedBox(
-                      height: 6,
-                    ),
-                    TextFormField(
-                      controller: descController,
-                      validator: (val) => val!.isEmpty
-                          ? "Quiz description must not empty"
-                          : null,
-                      decoration: InputDecoration(
-                        hintText: "Quiz description",
-                        suffixIcon: descController.text.isEmpty
-                            ? Container(width: 0)
-                            : IconButton(
-                                icon: Icon(Icons.close),
-                                onPressed: () => descController.clear(),
-                              ),
-                      ),
-                      onChanged: (val) {
-                        // TODO: add quiz image URL
-                        quizDescription = val;
-                      },
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    GestureDetector(
-                        onTap: () {
-                          createAQuiz();
-                          //AddQuestion(quizId);
-                        },
-                        child: blackButton(
-                            context: context, label: "Create quiz")),
-                  ],
+      backgroundColor: kBackgroundColor,
+      appBar: buildAppBar(context),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics()),
+        child: Form(
+          key: _formKey,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              children: [
+                TextFormField(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  controller: imageController,
+                  validator: (val) => val!.isEmpty ? "Enter Image URL" : null,
+                  decoration: InputDecoration(
+                    hintText: "Quiz image URL",
+                    suffixIcon: imageController.text.isEmpty
+                        ? Container(width: 0)
+                        : IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () => imageController.clear(),
+                          ),
+                  ),
+                  onChanged: (val) {
+                    quizImageUrl = val;
+                  },
                 ),
-              ),
+                SizedBox(
+                  height: 6,
+                ),
+                TextFormField(
+                  controller: titleController,
+                  validator: (val) =>
+                      val!.isEmpty ? "Quiz title must not empty" : null,
+                  decoration: InputDecoration(
+                    hintText: "Quiz title",
+                    suffixIcon: titleController.text.isEmpty
+                        ? Container(width: 0)
+                        : IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () => titleController.clear(),
+                          ),
+                  ),
+                  onChanged: (val) {
+                    // TODO: add quiz image URL
+                    quizTitle = val;
+                  },
+                ),
+                SizedBox(
+                  height: 6,
+                ),
+                TextFormField(
+                  controller: descController,
+                  validator: (val) =>
+                      val!.isEmpty ? "Quiz description must not empty" : null,
+                  decoration: InputDecoration(
+                    hintText: "Quiz description",
+                    suffixIcon: descController.text.isEmpty
+                        ? Container(width: 0)
+                        : IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () => descController.clear(),
+                          ),
+                  ),
+                  onChanged: (val) {
+                    // TODO: add quiz image URL
+                    quizDescription = val;
+                  },
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                GestureDetector(
+                    onTap: () {
+                      createAQuiz();
+                      //AddQuestion(quizId);
+                    },
+                    child: blackButton(context: context, label: "Create quiz")),
+                SizedBox(height: 10),
+              ],
             ),
+          ),
+        ),
+      ),
     );
   }
 }

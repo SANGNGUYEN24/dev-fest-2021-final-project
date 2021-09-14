@@ -4,13 +4,18 @@
 /// The file to show the result page after competing the quiz
 ///=============================================================================
 import 'package:flutter/material.dart';
+import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
 
 class Results extends StatefulWidget {
-  final int correct, incorrect, total;
+  final int correct, incorrect, notAttempted, total;
 
-  Results(
-      {required this.total, required this.correct, required this.incorrect});
+  Results({
+    required this.correct,
+    required this.incorrect,
+    required this.notAttempted,
+    required this.total,
+  });
 
   @override
   _ResultsState createState() => _ResultsState();
@@ -21,6 +26,7 @@ class _ResultsState extends State<Results> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       body: Container(
         child: Center(
           child: Column(
@@ -36,7 +42,7 @@ class _ResultsState extends State<Results> {
                 height: 8,
               ),
               Text(
-                "${widget.correct} correct answers and ${widget.incorrect} incorrect answers",
+                "${widget.correct} correct answers \n ${widget.incorrect} incorrect answers \n ${widget.notAttempted} not attempted questions",
                 style: TextStyle(
                   color: Colors.grey,
                 ),

@@ -29,7 +29,7 @@ class _OptionTileState extends State<OptionTile> {
           /// Letter symbol for each option
           /// Handle the option color when the user click option
           Container(
-            width: 30,
+            width: 25,
             height: 25,
             decoration: BoxDecoration(
               border: Border.all(

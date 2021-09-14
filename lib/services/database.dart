@@ -7,10 +7,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class DatabaseService {
-  final String uid;
-  DatabaseService({required this.uid});
-
   FirebaseAuth _auth = FirebaseAuth.instance;
+  CollectionReference rootCollectionRef =
+      FirebaseFirestore.instance.collection("Quiz");
 
   String getUserID() {
     final User? user = _auth.currentUser;
@@ -18,17 +17,13 @@ class DatabaseService {
     return uid;
   }
 
-  Future<void> addUserInfo(String userName) async {
-    Map<String, String> userInfo = {"name": userName};
-    await FirebaseFirestore.instance
-        .collection("Quiz")
-        .doc(getUserID())
-        .set(userInfo);
+  Future<void> addUserInfo(String? userName) async {
+    Map<String, String?> userInfo = {"name": userName};
+    await rootCollectionRef.doc(getUserID()).set(userInfo);
   }
 
   Future<void> addQuizData(Map<String, dynamic> quizData, String quizId) async {
-    await FirebaseFirestore.instance
-        .collection("Quiz")
+    await rootCollectionRef
         .doc(getUserID())
         .collection("User quiz data")
         .doc(quizId)
@@ -38,10 +33,17 @@ class DatabaseService {
     });
   }
 
+  Future deleteQuizData(String userID, String quizId) async {
+    await rootCollectionRef
+        .doc(getUserID())
+        .collection("User quiz data")
+        .doc(quizId)
+        .delete();
+  }
+
   Future<void> addQuestionData(
       Map<String, dynamic> questionData, String quizId) async {
-    await FirebaseFirestore.instance
-        .collection("Quiz")
+    await rootCollectionRef
         .doc(getUserID())
         .collection("User quiz data")
         .doc(quizId)
@@ -54,8 +56,7 @@ class DatabaseService {
 
   getQuizDataToPlay(String quizId) async {
     print('user ID------------${getUserID()}--------------');
-    return await FirebaseFirestore.instance
-        .collection("Quiz")
+    return await rootCollectionRef
         .doc(getUserID())
         .collection("User quiz data")
         .doc(quizId)

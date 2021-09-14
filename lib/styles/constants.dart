@@ -7,19 +7,9 @@ import 'package:flutter/material.dart';
 
 const kPrimaryColor = Colors.black87;
 const kSecondaryColor = Colors.blueGrey;
+const kBackgroundColor = Colors.white;
 const kEmptyImageQuizList = 'assets/undraw_elements_cipa.svg';
 const kLoadingImage = 'assets/loading.gif';
-final kHintTextStyle = TextStyle(
-  color: Colors.white54,
-  fontFamily: 'OpenSans',
-);
-
-final kLabelStyle = TextStyle(
-  color: Colors.white,
-  fontWeight: FontWeight.bold,
-  fontFamily: 'OpenSans',
-);
-
 final kBoxDecorationStyle = BoxDecoration(
   color: Colors.white,
   borderRadius: BorderRadius.circular(10.0),

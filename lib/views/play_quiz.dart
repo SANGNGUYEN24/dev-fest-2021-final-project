@@ -4,12 +4,11 @@
 /// This file handles the contents of quizzes' questions
 ///=============================================================================
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_maker_app/models/quetion_model.dart';
-import 'package:quiz_maker_app/services/auth.dart';
 import 'package:quiz_maker_app/services/database.dart';
+import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/result.dart';
 import 'package:quiz_maker_app/widgets/quiz_play_widgets.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
@@ -30,10 +29,8 @@ int _incorrect = 0;
 int _notAttempted = 0;
 
 class _PlayQuizState extends State<PlayQuiz> {
-  DatabaseService databaseService = new DatabaseService(uid: '');
+  DatabaseService databaseService = new DatabaseService();
   QuerySnapshot? questionSnapshot;
-  AuthService authService = new AuthService();
-  FirebaseAuth _auth = FirebaseAuth.instance;
 
   /// The function to get the content of questions in the selected quiz
   QuestionModel getQuestionModelFromSnapshot(
@@ -70,11 +67,11 @@ class _PlayQuizState extends State<PlayQuiz> {
     databaseService.getQuizDataToPlay(widget.quizId).then((value) {
       questionSnapshot = value;
       print('questionSnapshot ---------- $questionSnapshot -----------');
-      _notAttempted = 0;
       _correct = 0;
       _incorrect = 0;
       // Get the number of questions
       total = questionSnapshot!.docs.length;
+      _notAttempted = total;
 
       /// print quizId for checking
       print("---------$total questions in quiz Id: ${widget.quizId} --------");
@@ -87,15 +84,8 @@ class _PlayQuizState extends State<PlayQuiz> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: appBar(context),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        iconTheme: IconThemeData(color: Colors.black87),
-        brightness: Brightness.light,
-      ),
-
+      backgroundColor: kBackgroundColor,
+      appBar: buildAppBar(context),
       body: SingleChildScrollView(
         child: Container(
           child: Column(
@@ -111,9 +101,9 @@ class _PlayQuizState extends State<PlayQuiz> {
 
                   /// Display the question data as a list
                   : ListView.builder(
+                      physics: ClampingScrollPhysics(),
                       padding: EdgeInsets.symmetric(horizontal: 24),
                       shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
                       itemCount: questionSnapshot!.docs.length,
                       itemBuilder: (context, index) {
                         return QuizPlayTile(
@@ -129,6 +119,7 @@ class _PlayQuizState extends State<PlayQuiz> {
 
       /// The user will press this button when complete the quiz
       floatingActionButton: FloatingActionButton(
+        tooltip: "Submit your answers",
         child: Icon(Icons.check),
         onPressed: () {
           Navigator.pushReplacement(
@@ -137,6 +128,7 @@ class _PlayQuizState extends State<PlayQuiz> {
                   builder: (context) => Results(
                         correct: _correct,
                         incorrect: _incorrect,
+                        notAttempted: _notAttempted,
                         total: total,
                       )));
         },
@@ -175,130 +167,53 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
           SizedBox(
             height: 14,
           ),
-          GestureDetector(
-            onTap: () {
-              if (!widget.questionModel.answered) {
-                ///correct
-                if (widget.questionModel.option1 ==
-                    widget.questionModel.correctOption) {
-                  optionSelected = widget.questionModel.option1;
-                  widget.questionModel.answered = true;
-                  _correct += 1;
-                  _notAttempted -= 1;
-                  setState(() {});
-                } else {
-                  optionSelected = widget.questionModel.option1;
-                  widget.questionModel.answered = true;
-                  _incorrect += 1;
-                  _notAttempted -= 1;
-                  setState(() {});
-                }
-              }
-            },
-            child: OptionTile(
-              correctAnswer: widget.questionModel.correctOption,
-              description: widget.questionModel.option1,
-              option: "A",
-              optionSelected: optionSelected,
-            ),
-          ),
+          buildGestureDetector(widget.questionModel.option1, "A"),
           SizedBox(
             height: 4,
           ),
-          //  final String option, description, correctAnswer, optionSelected;
-          GestureDetector(
-            onTap: () {
-              if (!widget.questionModel.answered) {
-                ///correct
-                if (widget.questionModel.option2 ==
-                    widget.questionModel.correctOption) {
-                  optionSelected = widget.questionModel.option2;
-                  widget.questionModel.answered = true;
-                  _correct += 1;
-                  _notAttempted -= 1;
-                  setState(() {});
-                } else {
-                  optionSelected = widget.questionModel.option2;
-                  widget.questionModel.answered = true;
-                  _incorrect += 1;
-                  _notAttempted -= 1;
-                  setState(() {});
-                }
-              }
-            },
-            child: OptionTile(
-              correctAnswer: widget.questionModel.correctOption,
-              description: widget.questionModel.option2,
-              option: "B",
-              optionSelected: optionSelected,
-            ),
-          ),
+          buildGestureDetector(widget.questionModel.option2, "B"),
           SizedBox(
             height: 4,
           ),
-          //  final String option, description, correctAnswer, optionSelected;
-          GestureDetector(
-            onTap: () {
-              if (!widget.questionModel.answered) {
-                ///correct
-                if (widget.questionModel.option3 ==
-                    widget.questionModel.correctOption) {
-                  optionSelected = widget.questionModel.option3;
-                  widget.questionModel.answered = true;
-                  _correct += 1;
-                  _notAttempted -= 1;
-                  setState(() {});
-                } else {
-                  optionSelected = widget.questionModel.option3;
-                  widget.questionModel.answered = true;
-                  _incorrect += 1;
-                  _notAttempted -= 1;
-                  setState(() {});
-                }
-              }
-            },
-            child: OptionTile(
-              correctAnswer: widget.questionModel.correctOption,
-              description: widget.questionModel.option3,
-              option: "C",
-              optionSelected: optionSelected,
-            ),
-          ),
+          buildGestureDetector(widget.questionModel.option3, "C"),
           SizedBox(
             height: 4,
           ),
-          //  final String option, description, correctAnswer, optionSelected;
-          GestureDetector(
-            onTap: () {
-              if (!widget.questionModel.answered) {
-                ///correct
-                if (widget.questionModel.option4 ==
-                    widget.questionModel.correctOption) {
-                  optionSelected = widget.questionModel.option4;
-                  widget.questionModel.answered = true;
-                  _correct += 1;
-                  _notAttempted -= 1;
-                  setState(() {});
-                } else {
-                  optionSelected = widget.questionModel.option4;
-                  widget.questionModel.answered = true;
-                  _incorrect += 1;
-                  _notAttempted -= 1;
-                  setState(() {});
-                }
-              }
-            },
-            child: OptionTile(
-              correctAnswer: widget.questionModel.correctOption,
-              description: widget.questionModel.option4,
-              option: "D",
-              optionSelected: optionSelected,
-            ),
-          ),
+          buildGestureDetector(widget.questionModel.option4, "D"),
           SizedBox(
             height: 20,
           )
         ],
+      ),
+    );
+  }
+
+  /// GestureDetector for each option in each question
+  GestureDetector buildGestureDetector(String userChoice, String optionOrder) {
+    return GestureDetector(
+      onTap: () {
+        if (!widget.questionModel.answered) {
+          ///correct
+          if (userChoice == widget.questionModel.correctOption) {
+            optionSelected = userChoice;
+            widget.questionModel.answered = true;
+            _correct += 1;
+            _notAttempted -= 1;
+            setState(() {});
+          } else {
+            optionSelected = userChoice;
+            widget.questionModel.answered = true;
+            _incorrect += 1;
+            _notAttempted -= 1;
+            setState(() {});
+          }
+        }
+      },
+      child: OptionTile(
+        correctAnswer: widget.questionModel.correctOption,
+        description: userChoice,
+        option: optionOrder,
+        optionSelected: optionSelected,
       ),
     );
   }

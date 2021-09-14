@@ -6,9 +6,9 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:quiz_maker_app/helper/functions.dart';
 import 'package:quiz_maker_app/models/user.dart';
-import 'package:quiz_maker_app/services/auth.dart';
 import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/signin.dart';
@@ -23,14 +23,18 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
-  AuthService authService = new AuthService();
-  DatabaseService databaseService = DatabaseService(uid: '');
+  DatabaseService databaseService = DatabaseService();
   String userName = "";
   String email = "";
   String password = "";
   String error = "";
 
   FirebaseAuth _auth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   /// Show loading toast while the user is waiting for sign up process
   void showSnackBarLoading() {
@@ -94,8 +98,7 @@ class _SignUpState extends State<SignUp> {
 
   /// User object based on FirebaseUser
   UserObject? _userFromFirebaseUser(User user) {
-    // ignore: unnecessary_null_comparison
-    return user != null ? UserObject(uid: user.uid) : null;
+    return UserObject(uid: user.uid);
   }
 
   /// The function to communicate with Firebase Authentication to sign up a new user
@@ -142,14 +145,11 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          brightness: Brightness.light,
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          centerTitle: true,
-          title: appBar(context),
-        ),
+        backgroundColor: kBackgroundColor,
+        appBar: buildAppBar(context),
         body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics()),
           reverse: true,
           child: Container(
             height: MediaQuery.of(context).size.height,

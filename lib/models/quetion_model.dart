@@ -3,7 +3,6 @@
 /// @date 29/08/2021
 ///=============================================================================
 // The structure of a question
-
 class QuestionModel {
   late String question;
   late String option1;

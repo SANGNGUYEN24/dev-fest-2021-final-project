@@ -6,7 +6,18 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_maker_app/styles/constants.dart';
 
-Widget appBar(BuildContext context) {
+AppBar buildAppBar(BuildContext context) {
+  return AppBar(
+    centerTitle: true,
+    title: appBarTitle(context),
+    backgroundColor: Colors.transparent,
+    elevation: 0.0,
+    iconTheme: IconThemeData(color: Colors.black87),
+    brightness: Brightness.light,
+  );
+}
+
+Widget appBarTitle(BuildContext context) {
   return RichText(
     text: TextSpan(
       style: TextStyle(
@@ -64,4 +75,64 @@ Widget outlinedButton(
       style: TextStyle(color: kSecondaryColor, fontSize: 16),
     ),
   );
+}
+
+/// Loading bar showing while user waiting for a process such as signing in/up
+void showSnackBarLoading(BuildContext context) {
+  final snackBar = SnackBar(
+    duration: Duration(minutes: 10),
+    behavior: SnackBarBehavior.fixed,
+    content: Container(
+      height: 30,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 5,
+              color: kPrimaryColor,
+              backgroundColor: Colors.white,
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Text(
+            "Loading...",
+            style: TextStyle(fontSize: 16),
+          )
+        ],
+      ),
+    ),
+  );
+
+  ScaffoldMessenger.of(context)
+    ..removeCurrentSnackBar()
+    ..showSnackBar(snackBar);
+}
+
+/// Show toast when an error happens
+void showSnackBarMessage(BuildContext context, String mess) {
+  final snackBar = SnackBar(
+    duration: Duration(seconds: 2),
+    behavior: SnackBarBehavior.fixed,
+    content: Row(
+      children: [
+        Icon(
+          Icons.error_outline,
+          color: Colors.white,
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Expanded(child: Text(mess)),
+      ],
+    ),
+    backgroundColor: Colors.red,
+  );
+  ScaffoldMessenger.of(context)
+    ..removeCurrentSnackBar()
+    ..showSnackBar(snackBar);
 }

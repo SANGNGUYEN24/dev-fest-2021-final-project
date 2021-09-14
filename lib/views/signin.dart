@@ -7,6 +7,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:quiz_maker_app/helper/functions.dart';
@@ -29,7 +30,7 @@ class _State extends State<SignIn> {
   final googleSignIn = GoogleSignIn();
   final textFieldController = TextEditingController();
   FirebaseAuth _auth = FirebaseAuth.instance;
-  DatabaseService databaseService = DatabaseService(uid: '');
+  DatabaseService databaseService = DatabaseService();
 
   @override
   void initState() {
@@ -39,68 +40,7 @@ class _State extends State<SignIn> {
 
   /// User object based on FirebaseUser
   UserObject? _userFromFirebaseUser(User user) {
-    // ignore: unnecessary_null_comparison
-    return user != null ? UserObject(uid: user.uid) : null;
-  }
-
-  /// Show loading toast while the user is waiting for sign in process
-  void showSnackBarLoading() {
-    final snackBar = SnackBar(
-      duration: Duration(minutes: 10),
-      behavior: SnackBarBehavior.fixed,
-      content: Container(
-        height: 30,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 5,
-                color: kPrimaryColor,
-                backgroundColor: Colors.white,
-              ),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Loading...",
-              style: TextStyle(fontSize: 16),
-            )
-          ],
-        ),
-      ),
-    );
-
-    ScaffoldMessenger.of(context)
-      ..removeCurrentSnackBar()
-      ..showSnackBar(snackBar);
-  }
-
-  /// Show toast when an error happens
-  void showSnackBarMessage(String mess) {
-    final snackBar = SnackBar(
-      duration: Duration(seconds: 2),
-      behavior: SnackBarBehavior.fixed,
-      content: Row(
-        children: [
-          Icon(
-            Icons.error_outline,
-            color: Colors.white,
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Expanded(child: Text(mess)),
-        ],
-      ),
-      backgroundColor: Colors.red,
-    );
-    ScaffoldMessenger.of(context)
-      ..removeCurrentSnackBar()
-      ..showSnackBar(snackBar);
+    return UserObject(uid: user.uid);
   }
 
   /// A dialog requiring an email to reset password
@@ -142,10 +82,10 @@ class _State extends State<SignIn> {
   /// The function to send user's email to Firebase for resetting password
   Future resetPassword(email) async {
     try {
-      showSnackBarMessage("An email has been sent to you");
+      showSnackBarMessage(context, "An email has been sent to you");
       return await _auth.sendPasswordResetEmail(email: email);
     } catch (e) {
-      showSnackBarMessage("Please provide a valid email");
+      showSnackBarMessage(context, "Please provide a valid email");
     }
   }
 
@@ -161,7 +101,7 @@ class _State extends State<SignIn> {
 
       return _userFromFirebaseUser(firebaseUser!);
     } catch (e) {
-      showSnackBarMessage(
+      showSnackBarMessage(context,
           "Something wrong with your email or password. Please try again!");
       return null;
     }
@@ -173,7 +113,7 @@ class _State extends State<SignIn> {
   /// 4. Navigate the user to [Home] page
   signInEmailAndPass() async {
     if (_formKey.currentState!.validate()) {
-      showSnackBarLoading();
+      showSnackBarLoading(context);
       dynamic result = await signInEmailAndPassword(email, password);
       if (result != null) {
         // update sign in status
@@ -183,7 +123,8 @@ class _State extends State<SignIn> {
         // hide the snackBar after sign in process done
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
       } else {
-        showSnackBarMessage("Something wrong with your email or password");
+        showSnackBarMessage(
+            context, "Something wrong with your email or password");
         return null;
       }
     }
@@ -191,7 +132,7 @@ class _State extends State<SignIn> {
 
   /// Sign In using Google account
   Future googleSignInFunction() async {
-    showSnackBarLoading();
+    showSnackBarLoading(context);
     try {
       final user = await googleSignIn.signIn();
       if (user == null) {
@@ -204,12 +145,11 @@ class _State extends State<SignIn> {
         );
         await _auth.signInWithCredential(credential).then((value) {
           HelperFunctions.saveUserLoggedInDetail(isLoggedIn: true);
+          databaseService.addUserInfo('Sign in with Google account');
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => Home()));
-
           // Hide snackBar
           ScaffoldMessenger.of(context).removeCurrentSnackBar();
-          //databaseService.addUserInfo(_user.displayName);
         });
       }
     } catch (e) {
@@ -221,14 +161,11 @@ class _State extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          brightness: Brightness.light,
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          centerTitle: true,
-          title: appBar(context),
-        ),
+        backgroundColor: kBackgroundColor,
+        appBar: buildAppBar(context),
         body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics()),
           reverse: true,
           child: Container(
             height: MediaQuery.of(context).size.height - 50,

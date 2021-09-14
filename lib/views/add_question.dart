@@ -5,6 +5,7 @@
 ///=============================================================================
 import 'package:flutter/material.dart';
 import 'package:quiz_maker_app/services/database.dart';
+import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
 
 class AddQuestion extends StatefulWidget {
@@ -19,7 +20,7 @@ class AddQuestion extends StatefulWidget {
 class _AddQuestionState extends State<AddQuestion> {
   late String question, option1, option2, option3, option4;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  DatabaseService databaseService = new DatabaseService(uid: '');
+  DatabaseService databaseService = new DatabaseService();
   bool _isLoading = false;
   final questionController = TextEditingController();
   final option1Controller = TextEditingController();
@@ -35,6 +36,47 @@ class _AddQuestionState extends State<AddQuestion> {
     option2Controller.addListener(() => setState(() {}));
     option3Controller.addListener(() => setState(() {}));
     option4Controller.addListener(() => setState(() {}));
+  }
+
+  confirmQuizSubmit() {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title:
+                Text("Do you want to submit the quiz? You can edit it later."),
+            actions: <Widget>[
+              TextButton(
+                  child: Text("CANCEL"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              ElevatedButton(
+                  child: Text("SUBMIT"),
+                  onPressed: () {
+                    uploadQuestion();
+
+                    /// Pop first time to hide the AlertDialog
+                    Navigator.pop(context);
+
+                    /// Check if the fields has inputs or not
+                    if (_formKey.currentState!.validate())
+
+                      /// Pop the second time to go to home page
+                      Navigator.pop(context);
+                  }),
+            ],
+          );
+        });
+  }
+
+  /// Clear all the inputs
+  clearInput() {
+    questionController.clear();
+    option1Controller.clear();
+    option2Controller.clear();
+    option3Controller.clear();
+    option4Controller.clear();
   }
 
   /// The function to upload the question data
@@ -64,14 +106,8 @@ class _AddQuestionState extends State<AddQuestion> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: appBar(context),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        iconTheme: IconThemeData(color: Colors.black87),
-        brightness: Brightness.light,
-      ),
+      backgroundColor: kBackgroundColor,
+      appBar: buildAppBar(context),
       body: _isLoading
           ? Container(
               child: Center(
@@ -81,11 +117,15 @@ class _AddQuestionState extends State<AddQuestion> {
           : Container(
               padding: EdgeInsets.symmetric(horizontal: 24),
               child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     children: [
                       TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
                         controller: questionController,
                         validator: (val) =>
                             val!.isEmpty ? "Enter Question" : null,
@@ -106,11 +146,13 @@ class _AddQuestionState extends State<AddQuestion> {
                         height: 24,
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
                         controller: option1Controller,
                         validator: (val) =>
                             val!.isEmpty ? "Enter option 1" : null,
                         decoration: InputDecoration(
-                          hintText: "Option 1",
+                          hintText: "Option 1 (the correct answer)",
                           suffixIcon: option1Controller.text.isEmpty
                               ? Container(width: 0)
                               : IconButton(
@@ -126,6 +168,8 @@ class _AddQuestionState extends State<AddQuestion> {
                         height: 6,
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
                         controller: option2Controller,
                         validator: (val) =>
                             val!.isEmpty ? "Enter option 2" : null,
@@ -146,6 +190,8 @@ class _AddQuestionState extends State<AddQuestion> {
                         height: 6,
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
                         controller: option3Controller,
                         validator: (val) =>
                             val!.isEmpty ? "Enter option 3" : null,
@@ -166,6 +212,8 @@ class _AddQuestionState extends State<AddQuestion> {
                         height: 6,
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
                         controller: option4Controller,
                         validator: (val) =>
                             val!.isEmpty ? "Enter option 4" : null,
@@ -188,6 +236,7 @@ class _AddQuestionState extends State<AddQuestion> {
                       GestureDetector(
                         onTap: () {
                           uploadQuestion();
+                          clearInput();
                         },
                         child: outlinedButton(
                             context: context,
@@ -200,14 +249,17 @@ class _AddQuestionState extends State<AddQuestion> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          uploadQuestion();
-                          Navigator.pop(context);
+                          confirmQuizSubmit();
+                          //Navigator.pop(context);
                         },
                         child: blackButton(
                           context: context,
                           label: "Submit",
                           buttonWidth: MediaQuery.of(context).size.width - 100,
                         ),
+                      ),
+                      SizedBox(
+                        height: 40,
                       )
                     ],
                   ),
