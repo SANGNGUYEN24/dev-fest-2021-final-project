@@ -35,8 +35,8 @@ class _OptionTileState extends State<OptionTile> {
               border: Border.all(
                   color: widget.description == widget.optionSelected
                       ? widget.optionSelected == widget.correctAnswer
-                          ? Colors.green.withOpacity(0.7)
-                          : Colors.red.withOpacity(0.7)
+                          ? Colors.green
+                          : Colors.red
                       : Colors.grey,
                   width: 2.0),
               borderRadius: BorderRadius.circular(30),
@@ -45,9 +45,9 @@ class _OptionTileState extends State<OptionTile> {
             child: Text(
               "${widget.option}",
               style: TextStyle(
-                color: widget.optionSelected == widget.description
-                    ? widget.correctAnswer == widget.optionSelected
-                        ? Colors.green.withOpacity(0.7)
+                color: widget.description == widget.optionSelected
+                    ? widget.optionSelected == widget.correctAnswer
+                        ? Colors.green
                         : Colors.red
                     : Colors.black54,
               ),
@@ -63,7 +63,11 @@ class _OptionTileState extends State<OptionTile> {
               widget.description,
               style: TextStyle(
                 fontSize: 18,
-                color: Colors.black54,
+                color: widget.description == widget.optionSelected
+                    ? widget.optionSelected == widget.correctAnswer
+                        ? Colors.green
+                        : Colors.red
+                    : Colors.black54,
               ),
             ),
           )

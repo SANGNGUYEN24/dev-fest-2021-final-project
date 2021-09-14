@@ -6,7 +6,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:quiz_maker_app/models/quetion_model.dart';
+import 'package:quiz_maker_app/models/question_model.dart';
 import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/result.dart';
@@ -31,6 +31,36 @@ int _notAttempted = 0;
 class _PlayQuizState extends State<PlayQuiz> {
   DatabaseService databaseService = new DatabaseService();
   QuerySnapshot? questionSnapshot;
+  late List<QueryDocumentSnapshot<Object?>> docs;
+
+  /// Set initial values of [_notAttempted], [_correct], and [_incorrect] to 0
+  /// [total] to the # of questions of the quiz
+  /// When the user click a quiz card, at the beginning, I will get question data of the quiz to display
+  /// based on the [quizId] and assigned it to [questionSnapshot] for getting data process
+  /// [questionSnapshot] is an instance of _JsonQuerySnapshot object
+  ///
+  /// Firstly, shuffle all the documents in the question data collection
+  /// Second, shuffle all the options in that documents
+  @override
+  void initState() {
+    databaseService.getQuizDataToPlay(widget.quizId).then((value) {
+      questionSnapshot = value;
+      print('questionSnapshot ---------- $questionSnapshot -----------');
+      _correct = 0;
+      _incorrect = 0;
+      // Get the number of questions
+      total = questionSnapshot!.docs.length;
+      _notAttempted = total;
+
+      /// Shuffle all the questions (documents) in the quiz
+      docs = questionSnapshot!.docs..shuffle();
+
+      /// print quizId for checking
+      print("---------$total questions in quiz Id: ${widget.quizId} --------");
+      setState(() {});
+    });
+    super.initState();
+  }
 
   /// The function to get the content of questions in the selected quiz
   QuestionModel getQuestionModelFromSnapshot(
@@ -57,29 +87,6 @@ class _PlayQuizState extends State<PlayQuiz> {
     return questionModel;
   }
 
-  /// Set initial values of [_notAttempted], [_correct], and [_incorrect] to 0
-  /// [total] to the # of questions of the quiz
-  /// When the user click a quiz card, at the beginning, I will get question data of the quiz to display
-  /// based on the [quizId] and assigned it to [questionSnapshot] for getting data process
-  /// [questionSnapshot] is an instance of _JsonQuerySnapshot object
-  @override
-  void initState() {
-    databaseService.getQuizDataToPlay(widget.quizId).then((value) {
-      questionSnapshot = value;
-      print('questionSnapshot ---------- $questionSnapshot -----------');
-      _correct = 0;
-      _incorrect = 0;
-      // Get the number of questions
-      total = questionSnapshot!.docs.length;
-      _notAttempted = total;
-
-      /// print quizId for checking
-      print("---------$total questions in quiz Id: ${widget.quizId} --------");
-      setState(() {});
-    });
-    super.initState();
-  }
-
   /// The UI of the page
   @override
   Widget build(BuildContext context) {
@@ -88,32 +95,27 @@ class _PlayQuizState extends State<PlayQuiz> {
       appBar: buildAppBar(context),
       body: SingleChildScrollView(
         child: Container(
-          child: Column(
-            children: [
-              questionSnapshot == null
+          child: questionSnapshot == null
 
-                  /// Display an indicator while loading the data
-                  ? Container(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    )
+              /// Display an indicator while loading the data
+              ? Container(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
 
-                  /// Display the question data as a list
-                  : ListView.builder(
-                      physics: ClampingScrollPhysics(),
-                      padding: EdgeInsets.symmetric(horizontal: 24),
-                      shrinkWrap: true,
-                      itemCount: questionSnapshot!.docs.length,
-                      itemBuilder: (context, index) {
-                        return QuizPlayTile(
-                          questionModel: getQuestionModelFromSnapshot(
-                              questionSnapshot!.docs[index]),
-                          index: index,
-                        );
-                      }),
-            ],
-          ),
+              /// Display the question data as a list
+              : ListView.builder(
+                  physics: ClampingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  shrinkWrap: true,
+                  itemCount: docs.length,
+                  itemBuilder: (context, index) {
+                    return QuizPlayTile(
+                      questionModel: getQuestionModelFromSnapshot(docs[index]),
+                      index: index,
+                    );
+                  }),
         ),
       ),
 
