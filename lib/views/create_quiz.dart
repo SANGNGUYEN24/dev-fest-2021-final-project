@@ -12,6 +12,8 @@ import 'package:quiz_maker_app/views/add_question.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
 import 'package:random_string/random_string.dart';
 
+/// TODO handle the case user multiple click the button 'create quiz
+
 class CreateQuiz extends StatefulWidget {
   const CreateQuiz({required Key? key}) : super(key: key);
   @override
@@ -26,7 +28,6 @@ class _CreateQuizState extends State<CreateQuiz> {
   final titleController = TextEditingController();
   final descController = TextEditingController();
   DatabaseService databaseService = new DatabaseService();
-  bool _isLoading = false;
   String userID = DatabaseService().getUserID();
 
   @override
@@ -40,9 +41,7 @@ class _CreateQuizState extends State<CreateQuiz> {
   /// The function to upload a new quiz info to the database
   createAQuiz() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+      setState(() {});
       quizId = randomAlphaNumeric(16); // create a random Id
       Map<String, dynamic> quizData = {
         "userID": userID,
@@ -54,7 +53,6 @@ class _CreateQuizState extends State<CreateQuiz> {
 
       await databaseService.addQuizData(quizData, quizId).then((value) => {
             setState(() {
-              _isLoading = false;
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -145,7 +143,6 @@ class _CreateQuizState extends State<CreateQuiz> {
                 GestureDetector(
                     onTap: () {
                       createAQuiz();
-                      //AddQuestion(quizId);
                     },
                     child: blackButton(context: context, label: "Create quiz")),
                 SizedBox(height: 10),
