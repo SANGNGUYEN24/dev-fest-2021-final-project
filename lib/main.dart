@@ -56,11 +56,11 @@ class _MyAppState extends State<MyApp> {
       DeviceOrientation.portraitDown,
     ]);
     return MaterialApp(
-      title: 'Quiz Maker',
+      title: 'BKQuiz',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: kSecondaryColor,
-        fontFamily: 'Montserrat',
+        fontFamily: 'Nunito',
       ),
       home: (_isLoggedIn) ? Home() : SignIn(),
     );

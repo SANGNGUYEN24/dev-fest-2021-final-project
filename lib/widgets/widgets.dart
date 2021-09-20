@@ -22,7 +22,7 @@ Widget appBarTitle(BuildContext context) {
     text: TextSpan(
       style: TextStyle(
         fontSize: 22,
-        fontFamily: 'Montserrat',
+        fontFamily: 'Nunito',
       ),
       children: const <TextSpan>[
         TextSpan(
