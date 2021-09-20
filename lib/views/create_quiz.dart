@@ -76,12 +76,30 @@ class _CreateQuizState extends State<CreateQuiz> {
     }
   }
 
+  //TODO upload a photo
+
   /// The UI of the page
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kBackgroundColor,
-      appBar: buildAppBar(context),
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black87),
+        centerTitle: true,
+        title: appBarTitle(context),
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        brightness: Brightness.light,
+        actions: <Widget>[
+          IconButton(
+            tooltip: "Upload a photo",
+            onPressed: () {},
+            icon: Icon(
+              Icons.upload_outlined,
+            ),
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics()),
@@ -96,7 +114,7 @@ class _CreateQuizState extends State<CreateQuiz> {
                     quizTitle: quizTitle,
                     quizDescription: quizDescription),
                 SizedBox(
-                  height: 6,
+                  height: 8,
                 ),
                 TextFormField(
                   controller: titleController,
@@ -105,7 +123,10 @@ class _CreateQuizState extends State<CreateQuiz> {
                   decoration: InputDecoration(
                     hintText: "Quiz title",
                     suffixIcon: titleController.text.isEmpty
-                        ? Container(width: 0)
+                        ? IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.mic_none_rounded),
+                          )
                         : IconButton(
                             icon: Icon(Icons.close),
                             onPressed: () => titleController.clear(),
@@ -116,7 +137,7 @@ class _CreateQuizState extends State<CreateQuiz> {
                   },
                 ),
                 SizedBox(
-                  height: 6,
+                  height: 8,
                 ),
                 TextFormField(
                   controller: descController,
@@ -125,7 +146,10 @@ class _CreateQuizState extends State<CreateQuiz> {
                   decoration: InputDecoration(
                     hintText: "Quiz description",
                     suffixIcon: descController.text.isEmpty
-                        ? Container(width: 0)
+                        ? IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.mic_none_rounded),
+                          )
                         : IconButton(
                             icon: Icon(Icons.close),
                             onPressed: () => descController.clear(),
@@ -136,7 +160,7 @@ class _CreateQuizState extends State<CreateQuiz> {
                   },
                 ),
                 SizedBox(
-                  height: 40,
+                  height: 48,
                 ),
                 ElevatedButton(
                   onPressed: _tappedCreateQuizButton ? null : createAQuiz,
@@ -151,7 +175,7 @@ class _CreateQuizState extends State<CreateQuiz> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(50))),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 64),
               ],
             ),
           ),
@@ -235,7 +259,7 @@ class _PreviewQuizCardState extends State<PreviewQuizCard> {
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
-                          fontWeight: FontWeight.w500),
+                          fontWeight: FontWeight.bold,),
                       maxLines: 1,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,

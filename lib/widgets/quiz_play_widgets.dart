@@ -29,8 +29,8 @@ class _OptionTileState extends State<OptionTile> {
           /// Letter symbol for each option
           /// Handle the option color when the user click option
           Container(
-            width: 25,
-            height: 25,
+            width: 24,
+            height: 24,
             decoration: BoxDecoration(
               border: Border.all(
                   color: widget.description == widget.optionSelected
@@ -49,7 +49,7 @@ class _OptionTileState extends State<OptionTile> {
                     ? widget.optionSelected == widget.correctAnswer
                         ? Colors.green
                         : Colors.red
-                    : Colors.black54,
+                    : Colors.grey,
               ),
             ),
           ),
@@ -67,7 +67,7 @@ class _OptionTileState extends State<OptionTile> {
                     ? widget.optionSelected == widget.correctAnswer
                         ? Colors.green
                         : Colors.red
-                    : Colors.black54,
+                    : Colors.black87,
               ),
             ),
           )

@@ -167,7 +167,10 @@ class _AddQuestionState extends State<AddQuestion> {
                           decoration: InputDecoration(
                             hintText: "Question",
                             suffixIcon: questionController.text.isEmpty
-                                ? Container(width: 0)
+                                ? IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(Icons.mic_none_rounded),
+                                  )
                                 : IconButton(
                                     icon: Icon(Icons.close),
                                     onPressed: () => questionController.clear(),
@@ -185,11 +188,14 @@ class _AddQuestionState extends State<AddQuestion> {
                           maxLines: null,
                           controller: option1Controller,
                           validator: (val) =>
-                              val!.isEmpty ? "Enter option 1" : null,
+                              val!.isEmpty ? "Enter option A" : null,
                           decoration: InputDecoration(
-                            hintText: "Option 1 (the correct answer)",
+                            hintText: "Option A (the correct answer)",
                             suffixIcon: option1Controller.text.isEmpty
-                                ? Container(width: 0)
+                                ? IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(Icons.mic_none_rounded),
+                                  )
                                 : IconButton(
                                     icon: Icon(Icons.close),
                                     onPressed: () => option1Controller.clear(),
@@ -207,11 +213,14 @@ class _AddQuestionState extends State<AddQuestion> {
                           maxLines: null,
                           controller: option2Controller,
                           validator: (val) =>
-                              val!.isEmpty ? "Enter option 2" : null,
+                              val!.isEmpty ? "Enter option B" : null,
                           decoration: InputDecoration(
-                            hintText: "Option 2",
+                            hintText: "Option B",
                             suffixIcon: option2Controller.text.isEmpty
-                                ? Container(width: 0)
+                                ? IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(Icons.mic_none_rounded),
+                                  )
                                 : IconButton(
                                     icon: Icon(Icons.close),
                                     onPressed: () => option2Controller.clear(),
@@ -229,11 +238,14 @@ class _AddQuestionState extends State<AddQuestion> {
                           maxLines: null,
                           controller: option3Controller,
                           validator: (val) =>
-                              val!.isEmpty ? "Enter option 3" : null,
+                              val!.isEmpty ? "Enter option C" : null,
                           decoration: InputDecoration(
-                            hintText: "Option 3",
+                            hintText: "Option C",
                             suffixIcon: option3Controller.text.isEmpty
-                                ? Container(width: 0)
+                                ? IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(Icons.mic_none_rounded),
+                                  )
                                 : IconButton(
                                     icon: Icon(Icons.close),
                                     onPressed: () => option3Controller.clear(),
@@ -251,11 +263,14 @@ class _AddQuestionState extends State<AddQuestion> {
                           maxLines: null,
                           controller: option4Controller,
                           validator: (val) =>
-                              val!.isEmpty ? "Enter option 4" : null,
+                              val!.isEmpty ? "Enter option D" : null,
                           decoration: InputDecoration(
-                            hintText: "Option 4",
+                            hintText: "Option D",
                             suffixIcon: option4Controller.text.isEmpty
-                                ? Container(width: 0)
+                                ? IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(Icons.mic_none_rounded),
+                                  )
                                 : IconButton(
                                     icon: Icon(Icons.close),
                                     onPressed: () => option4Controller.clear(),
@@ -296,7 +311,7 @@ class _AddQuestionState extends State<AddQuestion> {
                                   borderRadius: BorderRadius.circular(50))),
                         ),
                         SizedBox(
-                          height: 40,
+                          height: 64,
                         )
                       ],
                     ),

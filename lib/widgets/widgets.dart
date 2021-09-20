@@ -28,11 +28,11 @@ Widget appBarTitle(BuildContext context) {
         TextSpan(
             text: 'BK',
             style:
-                TextStyle(fontWeight: FontWeight.w600, color: kSecondaryColor)),
+                TextStyle(fontWeight: FontWeight.bold, color: kSecondaryColor)),
         TextSpan(
             text: 'Quiz',
             style:
-                TextStyle(fontWeight: FontWeight.w600, color: kPrimaryColor)),
+                TextStyle(fontWeight: FontWeight.bold, color: kPrimaryColor)),
       ],
     ),
   );

@@ -67,6 +67,7 @@ class QuizCard extends StatelessWidget {
                 builder: (context) => PlayQuiz(
                       quizId: quizId,
                       userId: userId,
+                      quizTitle: title,
                     )));
       },
       onLongPress: () {
@@ -102,7 +103,7 @@ class QuizCard extends StatelessWidget {
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
-                          fontWeight: FontWeight.w500),
+                          fontWeight: FontWeight.bold),
                       maxLines: 1,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,

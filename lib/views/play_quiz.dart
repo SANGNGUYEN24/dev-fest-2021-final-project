@@ -11,16 +11,14 @@ import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/result.dart';
 import 'package:quiz_maker_app/widgets/quiz_play_widgets.dart';
-import 'package:quiz_maker_app/widgets/widgets.dart';
 
 class PlayQuiz extends StatefulWidget {
   final String userId;
   final String quizId;
+  final String quizTitle;
 
-  PlayQuiz({
-    required this.userId,
-    required this.quizId,
-  });
+  PlayQuiz(
+      {required this.userId, required this.quizId, required this.quizTitle});
 
   @override
   _PlayQuizState createState() => _PlayQuizState();
@@ -35,6 +33,7 @@ class _PlayQuizState extends State<PlayQuiz> {
   DatabaseService databaseService = new DatabaseService();
   QuerySnapshot? questionSnapshot;
   late List<QueryDocumentSnapshot<Object?>> docs;
+  late String quizTitle;
 
   /// Set initial values of [notAttempted], [correct], and [incorrect] to 0
   /// [total] to the # of questions of the quiz
@@ -46,6 +45,11 @@ class _PlayQuizState extends State<PlayQuiz> {
   /// Second, shuffle all the options in that documents
   @override
   void initState() {
+    setState(() {
+      quizTitle = widget.quizTitle;
+      print("[----quizTitle: $quizTitle----]");
+    });
+
     databaseService.getQuizDataToPlay(widget.quizId).then((value) {
       questionSnapshot = value;
       correct = 0;
@@ -90,13 +94,57 @@ class _PlayQuizState extends State<PlayQuiz> {
 
     return questionModel;
   }
+  // TODO edit quiz
 
   /// The UI of the page
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kBackgroundColor,
-      appBar: buildAppBar(context),
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black87,
+        ),
+        centerTitle: true,
+        title: Text(quizTitle,
+            style: TextStyle(
+                fontSize: 18,
+                color: Colors.black87,
+                fontStyle: FontStyle.italic)),
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        brightness: Brightness.light,
+        actions: <Widget>[
+          PopupMenuButton<int>(
+              onSelected: (item) => _onSelected(context, item),
+              itemBuilder: (context) => [
+                    PopupMenuItem<int>(
+                      value: 0,
+                      child: Row(
+                        children: [
+                          Icon(Icons.edit_rounded),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text("Edit this quiz")
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem<int>(
+                      value: 1,
+                      child: Row(
+                        children: [
+                          Icon(Icons.add_rounded),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text("Add a question")
+                        ],
+                      ),
+                    ),
+                  ]),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Container(
           child: questionSnapshot == null
@@ -152,6 +200,15 @@ class _PlayQuizState extends State<PlayQuiz> {
       ),
     );
   }
+
+  void _onSelected(BuildContext context, int item) {
+    switch (item) {
+      case 0:
+        break;
+      case 1:
+        break;
+    }
+  }
 }
 
 /// The class helps display the question content (4 options in a question) and
@@ -179,7 +236,10 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
         children: [
           Text(
             "Q${widget.index + 1}: ${widget.questionModel.question}",
-            style: TextStyle(fontSize: 18, color: Colors.black87),
+            style: TextStyle(
+                fontSize: 18,
+                color: Colors.black87,
+                fontWeight: FontWeight.bold),
           ),
           SizedBox(
             height: 14,
