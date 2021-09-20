@@ -14,26 +14,29 @@ import 'package:quiz_maker_app/widgets/quiz_play_widgets.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
 
 class PlayQuiz extends StatefulWidget {
+  final String userId;
   final String quizId;
-  final String userID;
 
-  PlayQuiz({required this.quizId, required this.userID});
+  PlayQuiz({
+    required this.userId,
+    required this.quizId,
+  });
 
   @override
   _PlayQuizState createState() => _PlayQuizState();
 }
 
 int total = 0;
-int _correct = 0;
-int _incorrect = 0;
-int _notAttempted = 0;
+int correct = 0;
+int incorrect = 0;
+int notAttempted = 0;
 
 class _PlayQuizState extends State<PlayQuiz> {
   DatabaseService databaseService = new DatabaseService();
   QuerySnapshot? questionSnapshot;
   late List<QueryDocumentSnapshot<Object?>> docs;
 
-  /// Set initial values of [_notAttempted], [_correct], and [_incorrect] to 0
+  /// Set initial values of [notAttempted], [correct], and [incorrect] to 0
   /// [total] to the # of questions of the quiz
   /// When the user click a quiz card, at the beginning, I will get question data of the quiz to display
   /// based on the [quizId] and assigned it to [questionSnapshot] for getting data process
@@ -45,18 +48,19 @@ class _PlayQuizState extends State<PlayQuiz> {
   void initState() {
     databaseService.getQuizDataToPlay(widget.quizId).then((value) {
       questionSnapshot = value;
-      print('questionSnapshot ---------- $questionSnapshot -----------');
-      _correct = 0;
-      _incorrect = 0;
-      // Get the number of questions
+      correct = 0;
+      incorrect = 0;
+
+      /// Get the number of questions
       total = questionSnapshot!.docs.length;
-      _notAttempted = total;
+      notAttempted = total;
 
       /// Shuffle all the questions (documents) in the quiz
       docs = questionSnapshot!.docs..shuffle();
 
       /// print quizId for checking
-      print("---------$total questions in quiz Id: ${widget.quizId} --------");
+      print(
+          "[----userId: ${widget.userId} ----> quizId: ${widget.quizId} has $total questions----]");
       setState(() {});
     });
     super.initState();
@@ -105,17 +109,28 @@ class _PlayQuizState extends State<PlayQuiz> {
                 )
 
               /// Display the question data as a list
-              : ListView.builder(
-                  physics: ClampingScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: 24),
-                  shrinkWrap: true,
-                  itemCount: docs.length,
-                  itemBuilder: (context, index) {
-                    return QuizPlayTile(
-                      questionModel: getQuestionModelFromSnapshot(docs[index]),
-                      index: index,
-                    );
-                  }),
+              /// Check is there at least one question in the quiz
+              : docs.length == 0
+                  ? Container(
+                      height: MediaQuery.of(context).size.height - 200,
+                      child: Center(
+                        child: Text(
+                          "Your quiz needs a question \n Just as much as you need a lover 🙄",
+                          textAlign: TextAlign.center,
+                        ),
+                      ))
+                  : ListView.builder(
+                      physics: ClampingScrollPhysics(),
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      shrinkWrap: true,
+                      itemCount: docs.length,
+                      itemBuilder: (context, index) {
+                        return QuizPlayTile(
+                          questionModel:
+                              getQuestionModelFromSnapshot(docs[index]),
+                          index: index,
+                        );
+                      }),
         ),
       ),
 
@@ -128,9 +143,9 @@ class _PlayQuizState extends State<PlayQuiz> {
               context,
               MaterialPageRoute(
                   builder: (context) => Results(
-                        correct: _correct,
-                        incorrect: _incorrect,
-                        notAttempted: _notAttempted,
+                        correct: correct,
+                        incorrect: incorrect,
+                        notAttempted: notAttempted,
                         total: total,
                       )));
         },
@@ -199,14 +214,14 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
           if (userChoice == widget.questionModel.correctOption) {
             optionSelected = userChoice;
             widget.questionModel.answered = true;
-            _correct += 1;
-            _notAttempted -= 1;
+            correct += 1;
+            notAttempted -= 1;
             setState(() {});
           } else {
             optionSelected = userChoice;
             widget.questionModel.answered = true;
-            _incorrect += 1;
-            _notAttempted -= 1;
+            incorrect += 1;
+            notAttempted -= 1;
             setState(() {});
           }
         }

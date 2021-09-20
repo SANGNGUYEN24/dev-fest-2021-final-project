@@ -25,7 +25,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   FirebaseAuth _user = FirebaseAuth.instance;
   DatabaseService databaseService = DatabaseService();
-  String _userID = DatabaseService().getUserID();
+  String userId = DatabaseService().getUserID();
   Stream<QuerySnapshot<Object?>>? _stream;
 
   /// At the beginning, create a stream for query user's quiz data
@@ -33,8 +33,11 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _stream = databaseService.rootCollectionRef
-        .doc(_userID)
+
+    /// Get the thumbnail list
+    databaseService.getThumbnail();
+    _stream = databaseService.quizCollectionRef
+        .doc(userId)
         .collection("User quiz data")
         .snapshots();
   }
@@ -61,43 +64,75 @@ class _HomeState extends State<Home> {
       ..showSnackBar(snackBar);
   }
 
+  Future<bool> onBackPressed(BuildContext context) async {
+    return await showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Exit BKQuiz?'),
+            content: new Text('Goodbye, see you later 😁'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text("NO"),
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.black87,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50))),
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text("YES"),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
   /// The UI of the page
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kBackgroundColor,
-      appBar: AppBar(
-        centerTitle: true,
-        title: appBarTitle(context),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        brightness: Brightness.light,
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {
-              confirmSignOut();
-            },
-            icon: Icon(
-              Icons.logout,
-              color: Colors.black,
+    return WillPopScope(
+      onWillPop: () {
+        final popUp = onBackPressed(context);
+        return popUp;
+      },
+      child: Scaffold(
+        backgroundColor: kBackgroundColor,
+        appBar: AppBar(
+          centerTitle: true,
+          title: appBarTitle(context),
+          backgroundColor: Colors.white,
+          elevation: 0.0,
+          brightness: Brightness.light,
+          actions: <Widget>[
+            IconButton(
+              onPressed: () {
+                confirmSignOut();
+              },
+              icon: Icon(
+                Icons.logout,
+                color: Colors.black,
+              ),
             ),
-          ),
-        ],
-      ),
-      body: quizList(),
-      floatingActionButton: FloatingActionButton.extended(
-        icon: Icon(Icons.edit_outlined),
-        label:
-            Text("Add a quiz", style: TextStyle(fontWeight: FontWeight.bold)),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CreateQuiz(
-                      key: null,
-                    )),
-          );
-        },
+          ],
+        ),
+        body: quizList(),
+        floatingActionButton: FloatingActionButton.extended(
+          icon: Icon(Icons.edit_outlined),
+          label:
+              Text("Add a quiz", style: TextStyle(fontWeight: FontWeight.bold)),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CreateQuiz(
+                        key: null,
+                      )),
+            );
+          },
+        ),
       ),
     );
   }
@@ -141,7 +176,7 @@ class _HomeState extends State<Home> {
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
                         return QuizCard(
-                          uid: _userID,
+                          userId: userId,
                           imageUrl: snapshot.data!.docs[index]["quizImageUrl"],
                           title: snapshot.data!.docs[index]["quizTitle"],
                           description: snapshot.data!.docs[index]

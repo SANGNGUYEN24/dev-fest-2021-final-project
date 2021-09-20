@@ -5,7 +5,6 @@
 ///=============================================================================
 import 'package:flutter/material.dart';
 import 'package:quiz_maker_app/styles/constants.dart';
-import 'package:quiz_maker_app/widgets/widgets.dart';
 
 class Results extends StatefulWidget {
   final int correct, incorrect, notAttempted, total;
@@ -51,15 +50,21 @@ class _ResultsState extends State<Results> {
               SizedBox(
                 height: 14,
               ),
-              GestureDetector(
-                onTap: () {
+              ElevatedButton(
+                onPressed: () {
                   Navigator.pop(context);
                 },
-                child: blackButton(
-                    context: context,
-                    label: "Go to Home",
-                    buttonWidth: MediaQuery.of(context).size.width - 100),
-              )
+                child: Text(
+                  "Go to Home",
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.black87,
+                    fixedSize:
+                        Size(MediaQuery.of(context).size.width - 100, 54),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50))),
+              ),
             ],
           ),
         ),

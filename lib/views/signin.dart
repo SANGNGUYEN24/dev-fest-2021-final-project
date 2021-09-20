@@ -39,8 +39,8 @@ class _State extends State<SignIn> {
   }
 
   /// User object based on FirebaseUser
-  UserObject? _userFromFirebaseUser(User user) {
-    return UserObject(uid: user.uid);
+  UserModel? _getUserModel(User user) {
+    return UserModel(uid: user.uid);
   }
 
   /// A dialog requiring an email to reset password
@@ -99,7 +99,7 @@ class _State extends State<SignIn> {
 
       User? firebaseUser = authResult.user;
 
-      return _userFromFirebaseUser(firebaseUser!);
+      return _getUserModel(firebaseUser!);
     } catch (e) {
       showSnackBarMessage(context,
           "Something wrong with your email or password. Please try again!");
@@ -255,13 +255,21 @@ class _State extends State<SignIn> {
                     ),
 
                     /// Sign in button using email, and password
-                    GestureDetector(
-                        onTap: () {
-                          signInEmailAndPass();
-                        },
-                        child: blackButton(
-                            context: context,
-                            label: "Sign in with your email")),
+                    ElevatedButton(
+                      onPressed: () {
+                        signInEmailAndPass();
+                      },
+                      child: Text(
+                        "Sign in with your email",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.black87,
+                          fixedSize:
+                              Size(MediaQuery.of(context).size.width - 48, 54),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50))),
+                    ),
                     SizedBox(
                       height: 10,
                     ),

@@ -10,7 +10,7 @@ AppBar buildAppBar(BuildContext context) {
   return AppBar(
     centerTitle: true,
     title: appBarTitle(context),
-    backgroundColor: Colors.transparent,
+    backgroundColor: Colors.white,
     elevation: 0.0,
     iconTheme: IconThemeData(color: Colors.black87),
     brightness: Brightness.light,
@@ -26,11 +26,11 @@ Widget appBarTitle(BuildContext context) {
       ),
       children: const <TextSpan>[
         TextSpan(
-            text: 'Quiz',
+            text: 'BK',
             style:
                 TextStyle(fontWeight: FontWeight.w600, color: kSecondaryColor)),
         TextSpan(
-            text: 'Maker',
+            text: 'Quiz',
             style:
                 TextStyle(fontWeight: FontWeight.w600, color: kPrimaryColor)),
       ],

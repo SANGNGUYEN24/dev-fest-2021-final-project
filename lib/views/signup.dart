@@ -97,8 +97,8 @@ class _SignUpState extends State<SignUp> {
   }
 
   /// User object based on FirebaseUser
-  UserObject? _userFromFirebaseUser(User user) {
-    return UserObject(uid: user.uid);
+  UserModel? _userFromFirebaseUser(User user) {
+    return UserModel(uid: user.uid);
   }
 
   /// The function to communicate with Firebase Authentication to sign up a new user
@@ -232,13 +232,22 @@ class _SignUpState extends State<SignUp> {
                     SizedBox(
                       height: 24,
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        signUp();
-                      },
-                      child: blackButton(
-                          context: context, label: "Sign up with your email"),
-                    ),
+
+                ElevatedButton(
+                  onPressed: () {
+                    signUp();
+                  },
+                  child: Text(
+                    "Sign up with your email",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      primary: Colors.black87,
+                      fixedSize:
+                      Size(MediaQuery.of(context).size.width - 48, 54),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50))),
+                ),
                     SizedBox(
                       height: 10,
                     ),

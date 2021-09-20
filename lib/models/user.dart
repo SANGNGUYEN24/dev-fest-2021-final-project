@@ -3,7 +3,7 @@
 /// @date 29/08/2021
 ///=============================================================================
 // return the Firebase user
-class UserObject {
+class UserModel {
   String uid;
-  UserObject({required this.uid});
+  UserModel({required this.uid});
 }
