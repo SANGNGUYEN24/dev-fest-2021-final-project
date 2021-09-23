@@ -105,6 +105,8 @@ class _AddQuestionState extends State<AddQuestion> {
     } else {}
   }
 
+  //TODO fix bug clear all option when click add a question button
+
   /// Handle back button
   Future<bool> onBackPressed(BuildContext context) async {
     return await showDialog(

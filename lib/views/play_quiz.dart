@@ -211,6 +211,8 @@ class _PlayQuizState extends State<PlayQuiz> {
   }
 }
 
+// TODO handle back when user are doing quiz, confirm submission
+
 /// The class helps display the question content (4 options in a question) and
 /// handle the conditions when user choose an option in the question
 /// If the user choose a wrong answer, it turn into red, and green if it is correct
