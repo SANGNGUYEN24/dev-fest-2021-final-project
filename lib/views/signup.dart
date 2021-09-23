@@ -107,7 +107,7 @@ class _SignUpState extends State<SignUp> {
         await databaseService.addUserInfo(userName);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Home()));
-        showSnackBarMessage(context, "Welcome $userName, signed in as $email");
+        showGoodMessage(context, "Welcome $userName, signed in as $email");
       } else {
         setState(() {
           error = "The email address is already in use by another account";

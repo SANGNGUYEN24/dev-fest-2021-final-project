@@ -137,15 +137,38 @@ void showSnackBarError(BuildContext context, String error) {
     ..showSnackBar(snackBar);
 }
 
-/// Show toast when an error happens
-void showSnackBarMessage(BuildContext context, String mess) {
+/// Show a positive message to user
+void showGoodMessage(BuildContext context, String mess) {
+  final snackBar = SnackBar(
+    duration: Duration(seconds: 4),
+    behavior: SnackBarBehavior.floating,
+    content: Row(
+      children: [
+        Icon(
+          Icons.check_circle_outlined,
+          color: Colors.white,
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Expanded(child: Text(mess)),
+      ],
+    ),
+  );
+  ScaffoldMessenger.of(context)
+    ..removeCurrentSnackBar()
+    ..showSnackBar(snackBar);
+}
+
+/// Show a negative message to user
+void showNotGoodMessage(BuildContext context, String mess) {
   final snackBar = SnackBar(
     duration: Duration(seconds: 5),
     behavior: SnackBarBehavior.floating,
     content: Row(
       children: [
         Icon(
-          Icons.check_circle_outlined,
+          Icons.announcement_outlined,
           color: Colors.white,
         ),
         SizedBox(

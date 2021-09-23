@@ -34,7 +34,6 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-    ///TODO test get thumnailList
     databaseService.getThumbnail();
 
     /// Get the thumbnail list
@@ -67,12 +66,12 @@ class _HomeState extends State<Home> {
       ..showSnackBar(snackBar);
   }
 
-  Future<bool> onBackPressed(BuildContext context) async {
+  Future<bool> _onBackPressed(BuildContext context) async {
     return await showDialog(
           context: context,
           builder: (context) => new AlertDialog(
             title: new Text('Exit BKQuiz?'),
-            content: new Text('Goodbye, see you later 😁'),
+            content: new Text('Goodbye, see you later'),
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
@@ -84,61 +83,13 @@ class _HomeState extends State<Home> {
                     primary: Colors.black87,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50))),
-                onPressed: () => Navigator.of(context).pop(true),
+                onPressed: () => SystemNavigator.pop(),
                 child: Text("YES"),
               ),
             ],
           ),
         ) ??
         false;
-  }
-  // TODO create/delete quiz successfully
-
-  /// The UI of the page
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        final popUp = onBackPressed(context);
-        return popUp;
-      },
-      child: Scaffold(
-        backgroundColor: kBackgroundColor,
-        appBar: AppBar(
-          centerTitle: true,
-          title: appBarTitle(context),
-          backgroundColor: Colors.white,
-          elevation: 0.0,
-          brightness: Brightness.light,
-          actions: <Widget>[
-            IconButton(
-              onPressed: () {
-                confirmSignOut();
-              },
-              icon: Icon(
-                Icons.logout,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
-        body: quizList(),
-        floatingActionButton: FloatingActionButton.extended(
-          icon: Icon(Icons.edit_outlined),
-          label:
-              Text("Add a quiz", style: TextStyle(fontWeight: FontWeight.bold)),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CreateQuiz(
-                        key: null,
-                      )),
-            );
-          },
-        ),
-      ),
-    );
   }
 
   /// List of the quiz cards will be got here
@@ -190,6 +141,52 @@ class _HomeState extends State<Home> {
                       },
                     ));
         },
+      ),
+    );
+  }
+
+  /// The UI of the page
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () {
+        final popUp = _onBackPressed(context);
+        return popUp;
+      },
+      child: Scaffold(
+        backgroundColor: kBackgroundColor,
+        appBar: AppBar(
+          centerTitle: true,
+          title: appBarTitle(context),
+          backgroundColor: Colors.white,
+          elevation: 0.0,
+          actions: <Widget>[
+            IconButton(
+              onPressed: () {
+                confirmSignOut();
+              },
+              icon: Icon(
+                Icons.logout,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+        body: quizList(),
+        floatingActionButton: FloatingActionButton.extended(
+          icon: Icon(Icons.edit_outlined),
+          label:
+              Text("Add a quiz", style: TextStyle(fontWeight: FontWeight.bold)),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CreateQuiz(
+                        key: null,
+                      )),
+            );
+          },
+        ),
       ),
     );
   }

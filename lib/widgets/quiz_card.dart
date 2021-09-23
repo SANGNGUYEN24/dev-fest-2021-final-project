@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/play_quiz.dart';
+import 'package:quiz_maker_app/widgets/widgets.dart';
 
 /// The information of each quiz is got here and displayed as a clickable card
 /// When user click a quiz card, navigate to [PlayQuiz]
@@ -51,7 +52,12 @@ class QuizCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(50))),
                 onPressed: () {
                   databaseService.deleteQuizData(userId, quizId);
+
+                  /// Pop to hide the dialog
                   Navigator.pop(context);
+
+                  /// Show confirmation
+                  showGoodMessage(context, "Deleted quiz successfully");
                 },
                 child: Text("DELETE"),
               ),

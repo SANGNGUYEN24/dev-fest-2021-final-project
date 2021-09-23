@@ -12,6 +12,9 @@ import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/result.dart';
 import 'package:quiz_maker_app/widgets/quiz_play_widgets.dart';
 
+import 'add_question.dart';
+import 'home.dart';
+
 class PlayQuiz extends StatefulWidget {
   final String userId;
   final String quizId;
@@ -96,122 +99,179 @@ class _PlayQuizState extends State<PlayQuiz> {
   }
   // TODO edit quiz
 
-  /// The UI of the page
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kBackgroundColor,
-      appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.black87,
-        ),
-        centerTitle: true,
-        title: Text(quizTitle,
-            style: TextStyle(
-                fontSize: 18,
-                color: Colors.black87,
-                fontStyle: FontStyle.italic)),
-        backgroundColor: Colors.white,
-        elevation: 0.0,
-        brightness: Brightness.light,
-        actions: <Widget>[
-          PopupMenuButton<int>(
-              onSelected: (item) => _onSelected(context, item),
-              itemBuilder: (context) => [
-                    PopupMenuItem<int>(
-                      value: 0,
-                      child: Row(
-                        children: [
-                          Icon(Icons.edit_rounded),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text("Edit this quiz")
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem<int>(
-                      value: 1,
-                      child: Row(
-                        children: [
-                          Icon(Icons.add_rounded),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text("Add a question")
-                        ],
-                      ),
-                    ),
-                  ]),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: questionSnapshot == null
-
-              /// Display an indicator while loading the data
-              ? Container(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-
-              /// Display the question data as a list
-              /// Check is there at least one question in the quiz
-              : docs.length == 0
-                  ? Container(
-                      height: MediaQuery.of(context).size.height - 200,
-                      child: Center(
-                        child: Text(
-                          "Your quiz needs a question \n Just as much as you need a lover 🙄",
-                          textAlign: TextAlign.center,
-                        ),
-                      ))
-                  : ListView.builder(
-                      physics: ClampingScrollPhysics(),
-                      padding: EdgeInsets.symmetric(horizontal: 24),
-                      shrinkWrap: true,
-                      itemCount: docs.length,
-                      itemBuilder: (context, index) {
-                        return QuizPlayTile(
-                          questionModel:
-                              getQuestionModelFromSnapshot(docs[index]),
-                          index: index,
-                        );
-                      }),
-        ),
-      ),
-
-      /// The user will press this button when complete the quiz
-      floatingActionButton: FloatingActionButton(
-        tooltip: "Submit your answers",
-        child: Icon(Icons.check),
-        onPressed: () {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => Results(
-                        correct: correct,
-                        incorrect: incorrect,
-                        notAttempted: notAttempted,
-                        total: total,
-                      )));
-        },
-      ),
-    );
+  Future<bool> _onBackPressed(BuildContext context) async {
+    return await showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('You are doing quiz...'),
+            content: new Text('Going back cause progress losing'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context, MaterialPageRoute(builder: (context) => Home()));
+                },
+                child: Text("GO HOME"),
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.black87,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50))),
+                onPressed: () => {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Results(
+                                correct: correct,
+                                incorrect: incorrect,
+                                notAttempted: notAttempted,
+                                total: total,
+                                userId: widget.userId,
+                                quizId: widget.quizId,
+                                quizTitle: quizTitle,
+                              )))
+                },
+                child: Text("SUMMIT"),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 
   void _onSelected(BuildContext context, int item) {
     switch (item) {
       case 0:
         break;
+
+      /// Add a question
       case 1:
-        break;
+        {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      AddQuestion(widget.userId, widget.quizId)));
+          break;
+        }
     }
   }
-}
 
-// TODO handle back when user are doing quiz, confirm submission
+  /// The UI of the page
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () {
+        var popUp = _onBackPressed(context);
+        return popUp;
+      },
+      child: Scaffold(
+        backgroundColor: kBackgroundColor,
+        appBar: AppBar(
+          iconTheme: IconThemeData(
+            color: Colors.black87,
+          ),
+          centerTitle: true,
+          title: Text(quizTitle,
+              style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black87,
+                  fontStyle: FontStyle.italic)),
+          backgroundColor: Colors.white,
+          elevation: 0.0,
+          actions: <Widget>[
+            PopupMenuButton<int>(
+                onSelected: (item) => _onSelected(context, item),
+                itemBuilder: (context) => [
+                      PopupMenuItem<int>(
+                        value: 0,
+                        child: Row(
+                          children: [
+                            Icon(Icons.edit_rounded),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text("Edit this quiz")
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem<int>(
+                        value: 1,
+                        child: Row(
+                          children: [
+                            Icon(Icons.add_rounded),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Text("Add a question")
+                          ],
+                        ),
+                      ),
+                    ]),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Container(
+            child: questionSnapshot == null
+
+                /// Display an indicator while loading the data
+                ? Container(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+
+                /// Display the question data as a list
+                /// Check is there at least one question in the quiz
+                : docs.length == 0
+                    ? Container(
+                        height: MediaQuery.of(context).size.height - 200,
+                        child: Center(
+                          child: Text(
+                            "Your quiz needs a question \n Just as much as you need a lover 🙄",
+                            textAlign: TextAlign.center,
+                          ),
+                        ))
+                    : ListView.builder(
+                        physics: ClampingScrollPhysics(),
+                        padding: EdgeInsets.symmetric(horizontal: 24),
+                        shrinkWrap: true,
+                        itemCount: docs.length,
+                        itemBuilder: (context, index) {
+                          return QuizPlayTile(
+                            questionModel:
+                                getQuestionModelFromSnapshot(docs[index]),
+                            index: index,
+                          );
+                        }),
+          ),
+        ),
+
+        /// The user will press this button when complete the quiz
+        floatingActionButton: FloatingActionButton(
+          tooltip: "Submit your answers",
+          child: Icon(Icons.check),
+          onPressed: () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Results(
+                          correct: correct,
+                          incorrect: incorrect,
+                          notAttempted: notAttempted,
+                          total: total,
+                          userId: widget.userId,
+                          quizId: widget.quizId,
+                          quizTitle: quizTitle,
+                        )));
+          },
+        ),
+      ),
+    );
+  }
+}
 
 /// The class helps display the question content (4 options in a question) and
 /// handle the conditions when user choose an option in the question
@@ -237,7 +297,7 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Q${widget.index + 1}: ${widget.questionModel.question}",
+            "Q${widget.index + 1}/$total: ${widget.questionModel.question}",
             style: TextStyle(
                 fontSize: 18,
                 color: Colors.black87,

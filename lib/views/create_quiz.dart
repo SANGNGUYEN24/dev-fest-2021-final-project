@@ -65,14 +65,17 @@ class _CreateQuizState extends State<CreateQuiz> {
       };
       showSnackBarLoading(context);
       await databaseService.addQuizData(quizData, quizId).then((value) => {
-            setState(() {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AddQuestion(userID, quizId)));
-            })
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddQuestion(userID, quizId)))
           });
+
+      /// Hide Loading bar
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
+      /// Show confirmation
+      showGoodMessage(context, "Created quiz space");
     }
   }
 
@@ -257,9 +260,10 @@ class _PreviewQuizCardState extends State<PreviewQuizCard> {
                     Text(
                       _CreateQuizState.quizTitle,
                       style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,),
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                       maxLines: 1,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,

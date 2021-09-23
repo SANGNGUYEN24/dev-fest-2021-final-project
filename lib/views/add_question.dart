@@ -9,10 +9,10 @@ import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
 
 class AddQuestion extends StatefulWidget {
-  final String userID;
+  final String userId;
   final String quizId;
 
-  AddQuestion(this.userID, this.quizId);
+  AddQuestion(this.userId, this.quizId);
   @override
   _AddQuestionState createState() => _AddQuestionState();
 }
@@ -65,6 +65,14 @@ class _AddQuestionState extends State<AddQuestion> {
 
                   /// Pop the second time to go to home page
                   Navigator.pop(context);
+
+                  showGoodMessage(context, "Enjoy your quiz!");
+
+                  /// If the user submit the last question
+                  /// but it is not filled full fields, show a message to user
+                  if (!(_formKey.currentState!.validate()))
+                    showNotGoodMessage(context,
+                        "The last question was not uploaded because it was incomplete");
                 },
                 child: Text("SUBMIT"),
               ),
@@ -102,10 +110,9 @@ class _AddQuestionState extends State<AddQuestion> {
           _isLoading = false;
         });
       });
+      showGoodMessage(context, "Uploaded question");
     } else {}
   }
-
-  //TODO fix bug clear all option when click add a question button
 
   /// Handle back button
   Future<bool> onBackPressed(BuildContext context) async {
@@ -285,16 +292,21 @@ class _AddQuestionState extends State<AddQuestion> {
                         SizedBox(
                           height: 40,
                         ),
-                        GestureDetector(
-                          onTap: () {
+                        OutlinedButton(
+                          onPressed: () {
                             uploadQuestion();
-                            clearInput();
+                            if (_formKey.currentState!.validate()) clearInput();
                           },
-                          child: outlinedButton(
-                              context: context,
-                              label: "Add question",
-                              buttonWidth:
-                                  MediaQuery.of(context).size.width - 100),
+                          child: Text(
+                            'Add question',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: Size(
+                                MediaQuery.of(context).size.width - 100, 54),
+                            shape: StadiumBorder(),
+                            side: BorderSide(color: kPrimaryColor),
+                          ),
                         ),
                         SizedBox(
                           height: 10,

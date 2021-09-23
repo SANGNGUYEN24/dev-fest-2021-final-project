@@ -87,7 +87,7 @@ class _State extends State<SignIn> {
   Future resetPassword(email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
-      showSnackBarMessage(context, "An email has been sent to you");
+      showGoodMessage(context, "An email has been sent to you");
     } catch (e) {
       showSnackBarError(context, "Please provide a valid email");
     }
@@ -153,7 +153,7 @@ class _State extends State<SignIn> {
           /// Update user name to database
           final userName = value.additionalUserInfo!.profile!["given_name"];
           databaseService.addUserInfo(userName);
-          showSnackBarMessage(context, "Welcome $userName");
+          showGoodMessage(context, "Welcome $userName");
 
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => Home()));
