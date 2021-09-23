@@ -67,13 +67,17 @@ class _State extends State<SignIn> {
               },
             ),
             actions: <Widget>[
-              MaterialButton(
-                  elevation: 5.0,
-                  child: Text("Submit"),
-                  onPressed: () {
-                    resetPassword(email);
-                    Navigator.pop(context);
-                  }),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.black87,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50))),
+                onPressed: () {
+                  resetPassword(email);
+                  Navigator.pop(context);
+                },
+                child: Text("SEND"),
+              ),
             ],
           );
         });
@@ -82,10 +86,10 @@ class _State extends State<SignIn> {
   /// The function to send user's email to Firebase for resetting password
   Future resetPassword(email) async {
     try {
+      await _auth.sendPasswordResetEmail(email: email);
       showSnackBarMessage(context, "An email has been sent to you");
-      return await _auth.sendPasswordResetEmail(email: email);
     } catch (e) {
-      showSnackBarMessage(context, "Please provide a valid email");
+      showSnackBarError(context, "Please provide a valid email");
     }
   }
 
@@ -101,7 +105,7 @@ class _State extends State<SignIn> {
 
       return _getUserModel(firebaseUser!);
     } catch (e) {
-      showSnackBarMessage(context,
+      showSnackBarError(context,
           "Something wrong with your email or password. Please try again!");
       return null;
     }
@@ -123,7 +127,7 @@ class _State extends State<SignIn> {
         // hide the snackBar after sign in process done
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
       } else {
-        showSnackBarMessage(
+        showSnackBarError(
             context, "Something wrong with your email or password");
         return null;
       }
@@ -145,11 +149,16 @@ class _State extends State<SignIn> {
         );
         await _auth.signInWithCredential(credential).then((value) {
           HelperFunctions.saveUserLoggedInDetail(isLoggedIn: true);
-          databaseService.addUserInfo('Sign in with Google account');
+
+          /// Update user name to database
+          final userName = value.additionalUserInfo!.profile!["given_name"];
+          databaseService.addUserInfo(userName);
+          showSnackBarMessage(context, "Welcome $userName");
+
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => Home()));
           // Hide snackBar
-          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+          // ScaffoldMessenger.of(context).removeCurrentSnackBar();
         });
       }
     } catch (e) {

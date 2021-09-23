@@ -34,8 +34,11 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-    /// Get the thumbnail list
+    ///TODO test get thumnailList
     databaseService.getThumbnail();
+
+    /// Get the thumbnail list
+    //databaseService.getThumbnail();
     _stream = databaseService.quizCollectionRef
         .doc(userId)
         .collection("User quiz data")

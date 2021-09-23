@@ -28,6 +28,7 @@ class _SignUpState extends State<SignUp> {
   String email = "";
   String password = "";
   String error = "";
+  bool _obscureText = true;
 
   FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -72,30 +73,6 @@ class _SignUpState extends State<SignUp> {
       ..showSnackBar(snackBar);
   }
 
-  /// Show error toast when an error happens
-  void showSnackBarMessage(String mess) {
-    final snackBar = SnackBar(
-      duration: Duration(seconds: 2),
-      behavior: SnackBarBehavior.fixed,
-      content: Row(
-        children: [
-          Icon(
-            Icons.error_outline,
-            color: Colors.white,
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          Expanded(child: Text(mess)),
-        ],
-      ),
-      backgroundColor: Colors.red,
-    );
-    ScaffoldMessenger.of(context)
-      ..removeCurrentSnackBar()
-      ..showSnackBar(snackBar);
-  }
-
   /// User object based on FirebaseUser
   UserModel? _userFromFirebaseUser(User user) {
     return UserModel(uid: user.uid);
@@ -130,12 +107,12 @@ class _SignUpState extends State<SignUp> {
         await databaseService.addUserInfo(userName);
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Home()));
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+        showSnackBarMessage(context, "Welcome $userName, signed in as $email");
       } else {
         setState(() {
           error = "The email address is already in use by another account";
         });
-        showSnackBarMessage(error);
+        showSnackBarError(context, error);
         return null;
       }
     }
@@ -168,14 +145,14 @@ class _SignUpState extends State<SignUp> {
                     /// Name text field
                     TextFormField(
                       validator: (val) {
-                        return val!.isEmpty ? "Enter name!" : null;
+                        return val!.isEmpty ? "Enter your name!" : null;
                       },
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                         prefixIcon: Icon(Icons.person),
-                        hintText: "Name",
+                        hintText: "Your name",
                       ),
                       onChanged: (val) {
                         userName = val;
@@ -212,7 +189,7 @@ class _SignUpState extends State<SignUp> {
                     /// Password text field
                     TextFormField(
                       keyboardType: TextInputType.visiblePassword,
-                      obscureText: true,
+                      obscureText: _obscureText,
                       validator: (val) {
                         return val!.length < 6
                             ? "Password at least 6 characters"
@@ -223,6 +200,16 @@ class _SignUpState extends State<SignUp> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         prefixIcon: Icon(Icons.vpn_key),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                          icon: _obscureText
+                              ? Icon(Icons.visibility_off_outlined)
+                              : Icon(Icons.visibility_outlined),
+                        ),
                         hintText: "Password",
                       ),
                       onChanged: (val) {
@@ -230,24 +217,24 @@ class _SignUpState extends State<SignUp> {
                       },
                     ),
                     SizedBox(
-                      height: 24,
+                      height: 10,
                     ),
 
-                ElevatedButton(
-                  onPressed: () {
-                    signUp();
-                  },
-                  child: Text(
-                    "Sign up with your email",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      primary: Colors.black87,
-                      fixedSize:
-                      Size(MediaQuery.of(context).size.width - 48, 54),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50))),
-                ),
+                    ElevatedButton(
+                      onPressed: () {
+                        signUp();
+                      },
+                      child: Text(
+                        "Sign up with your email",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.black87,
+                          fixedSize:
+                              Size(MediaQuery.of(context).size.width - 48, 54),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50))),
+                    ),
                     SizedBox(
                       height: 10,
                     ),

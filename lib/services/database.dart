@@ -12,12 +12,12 @@ class DatabaseService {
   FirebaseAuth _auth = FirebaseAuth.instance;
   CollectionReference quizCollectionRef =
       FirebaseFirestore.instance.collection("Quiz");
-  CollectionReference thumbCollectionRef =
-      FirebaseFirestore.instance.collection("Thumbnail");
+  DocumentReference thumbnailDocumentRef =
+      FirebaseFirestore.instance.collection("Thumbnails").doc("thumbnailList");
 
   /// A list of thumbnail will be get at [Home] screen
   /// through initState function and mark as static
-  static late List<String> thumbnailAddressList = [];
+  static late List<dynamic> thumbnailAddressList = [];
 
   //TODO timestamp for quiz
 
@@ -64,21 +64,6 @@ class DatabaseService {
     });
   }
 
-  Future<void> getThumbnail() async {
-    try {
-      var thumbnailSnapshot = await thumbCollectionRef.get();
-      var thumbnailSnapshotList = thumbnailSnapshot.docs;
-      thumbnailSnapshotList.forEach((doc) {
-        thumbnailAddressList.add(doc["address"]);
-      });
-
-      /// print the list for checking
-      print("thumbnailAddressList: $thumbnailAddressList");
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
   getQuizDataToPlay(String quizId) async {
     print("[----userId: ${getUserID()}----]");
     return await quizCollectionRef
@@ -87,5 +72,14 @@ class DatabaseService {
         .doc(quizId)
         .collection("QNA")
         .get();
+  }
+
+  Future<void> getThumbnail() async {
+    try {
+      var thumbnailDocumentSnapshot = await thumbnailDocumentRef.get();
+      thumbnailAddressList = thumbnailDocumentSnapshot["addressList"];
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

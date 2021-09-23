@@ -102,7 +102,7 @@ class _AddQuestionState extends State<AddQuestion> {
           _isLoading = false;
         });
       });
-    }
+    } else {}
   }
 
   /// Handle back button

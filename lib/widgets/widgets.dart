@@ -114,7 +114,7 @@ void showSnackBarLoading(BuildContext context) {
 }
 
 /// Show toast when an error happens
-void showSnackBarMessage(BuildContext context, String mess) {
+void showSnackBarError(BuildContext context, String error) {
   final snackBar = SnackBar(
     duration: Duration(seconds: 2),
     behavior: SnackBarBehavior.fixed,
@@ -127,10 +127,33 @@ void showSnackBarMessage(BuildContext context, String mess) {
         SizedBox(
           width: 10,
         ),
-        Expanded(child: Text(mess)),
+        Expanded(child: Text(error)),
       ],
     ),
     backgroundColor: Colors.red,
+  );
+  ScaffoldMessenger.of(context)
+    ..removeCurrentSnackBar()
+    ..showSnackBar(snackBar);
+}
+
+/// Show toast when an error happens
+void showSnackBarMessage(BuildContext context, String mess) {
+  final snackBar = SnackBar(
+    duration: Duration(seconds: 5),
+    behavior: SnackBarBehavior.floating,
+    content: Row(
+      children: [
+        Icon(
+          Icons.check_circle_outlined,
+          color: Colors.white,
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Expanded(child: Text(mess)),
+      ],
+    ),
   );
   ScaffoldMessenger.of(context)
     ..removeCurrentSnackBar()

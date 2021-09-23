@@ -11,18 +11,21 @@ import 'package:quiz_maker_app/views/play_quiz.dart';
 /// The information of each quiz is got here and displayed as a clickable card
 /// When user click a quiz card, navigate to [PlayQuiz]
 class QuizCard extends StatelessWidget {
+  //final QuizModel quizModel;
   final String userId;
   final String imageUrl;
   final String title;
   final String description;
   final String quizId;
 
-  QuizCard(
-      {required this.userId,
-      required this.imageUrl,
-      required this.title,
-      required this.description,
-      required this.quizId});
+  QuizCard({
+    required this.userId,
+    required this.imageUrl,
+    required this.title,
+    required this.description,
+    required this.quizId,
+  });
+  //this.quizModel});
 
   final DatabaseService databaseService = new DatabaseService();
 
