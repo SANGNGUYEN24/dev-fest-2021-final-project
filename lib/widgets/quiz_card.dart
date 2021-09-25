@@ -68,71 +68,78 @@ class QuizCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => PlayQuiz(
-                      quizId: quizId,
-                      userId: userId,
-                      quizTitle: title,
-                    )));
-      },
-      onLongPress: () {
-        deleteQuiz(context);
-      },
-      child: Container(
-        margin: EdgeInsets.only(bottom: 16),
-        height: 150,
-        child: Stack(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(9.0),
-              child: FadeInImage.assetNetwork(
-                placeholder: kLoadingImage,
-                image: imageUrl,
-                width: MediaQuery.of(context).size.width,
-                fit: BoxFit.cover,
-              ),
+    return Container(
+      margin: EdgeInsets.only(bottom: 16),
+      height: 150,
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(9.0),
+            child: FadeInImage.assetNetwork(
+              placeholder: kLoadingImage,
+              image: imageUrl,
+              width: MediaQuery.of(context).size.width,
+              fit: BoxFit.cover,
             ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(9.0),
-                color: Colors.black26,
-              ),
-              alignment: Alignment.center,
-              child: Padding(
-                padding: EdgeInsets.only(right: 30, left: 30),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(
-                      height: 6,
-                    ),
-                    Text(
-                      description,
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+          ),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(9.0),
+              highlightColor: Colors.transparent,
+              splashColor: Colors.black26,
+              radius: 1000.0,
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PlayQuiz(
+                              quizId: quizId,
+                              userId: userId,
+                              quizTitle: title,
+                            )));
+              },
+              onLongPress: () {
+                deleteQuiz(context);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(9.0),
+                  color: Colors.black26,
+                ),
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: EdgeInsets.only(right: 30, left: 30),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(
+                        height: 6,
+                      ),
+                      Text(
+                        description,
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
   }

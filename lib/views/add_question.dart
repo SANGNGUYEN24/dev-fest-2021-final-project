@@ -168,6 +168,7 @@ class _AddQuestionState extends State<AddQuestion> {
                     child: Column(
                       children: [
                         TextFormField(
+                          autofocus: true,
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           controller: questionController,
