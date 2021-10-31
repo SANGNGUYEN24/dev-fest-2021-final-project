@@ -94,53 +94,61 @@ class _HomeState extends State<Home> {
 
   /// List of the quiz cards will be got here
   Widget quizList() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16),
-      child: StreamBuilder<QuerySnapshot>(
-        stream: _stream,
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          return (snapshot.data == null)
-              ? Center(child: CircularProgressIndicator())
-              : ((snapshot.data!.docs.length <= 0)
-                  ? Container(
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              kEmptyImageQuizList,
-                              height: 100,
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Quizzes you add appear here",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 18.0,
+    return WillPopScope(
+      onWillPop: () {
+        final popUp = _onBackPressed(context);
+        return popUp;
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 16),
+        child: StreamBuilder<QuerySnapshot>(
+          stream: _stream,
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            return (snapshot.data == null)
+                ? Center(child: CircularProgressIndicator())
+                : ((snapshot.data!.docs.length <= 0)
+                    ? Container(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                kEmptyImageQuizList,
+                                height: 100,
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Quizzes you add appear here",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 18.0,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    )
-                  : ListView.builder(
-                      physics: const BouncingScrollPhysics(
-                          parent: AlwaysScrollableScrollPhysics()),
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) {
-                        return QuizCard(
-                          userId: userId,
-                          imageUrl: snapshot.data!.docs[index]["quizImageUrl"],
-                          title: snapshot.data!.docs[index]["quizTitle"],
-                          description: snapshot.data!.docs[index]
-                              ["quizDescription"],
-                          quizId: snapshot.data!.docs[index]["quizId"],
-                        );
-                      },
-                    ));
-        },
+                      )
+                    : ListView.builder(
+                        physics: const BouncingScrollPhysics(
+                            parent: AlwaysScrollableScrollPhysics()),
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          return QuizCard(
+                            userId: userId,
+                            imageUrl: snapshot.data!.docs[index]
+                                ["quizImageUrl"],
+                            title: snapshot.data!.docs[index]["quizTitle"],
+                            description: snapshot.data!.docs[index]
+                                ["quizDescription"],
+                            quizId: snapshot.data!.docs[index]["quizId"],
+                          );
+                        },
+                      ));
+          },
+        ),
       ),
     );
   }
@@ -148,45 +156,39 @@ class _HomeState extends State<Home> {
   /// The UI of the page
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        final popUp = _onBackPressed(context);
-        return popUp;
-      },
-      child: Scaffold(
-        backgroundColor: kBackgroundColor,
-        appBar: AppBar(
-          centerTitle: true,
-          title: appBarTitle(context),
-          backgroundColor: Colors.white,
-          elevation: 0.0,
-          actions: <Widget>[
-            IconButton(
-              onPressed: () {
-                confirmSignOut();
-              },
-              icon: Icon(
-                Icons.logout,
-                color: Colors.black,
-              ),
+    return Scaffold(
+      backgroundColor: kBackgroundColor,
+      appBar: AppBar(
+        centerTitle: true,
+        title: appBarTitle(context),
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              confirmSignOut();
+            },
+            icon: Icon(
+              Icons.logout,
+              color: Colors.black,
             ),
-          ],
-        ),
-        body: quizList(),
-        floatingActionButton: FloatingActionButton.extended(
-          icon: Icon(Icons.edit_outlined),
-          label:
-              Text("Add a quiz", style: TextStyle(fontWeight: FontWeight.bold)),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CreateQuiz(
-                        key: null,
-                      )),
-            );
-          },
-        ),
+          ),
+        ],
+      ),
+      body: quizList(),
+      floatingActionButton: FloatingActionButton.extended(
+        icon: Icon(Icons.edit_outlined),
+        label:
+            Text("Add a quiz", style: TextStyle(fontWeight: FontWeight.bold)),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CreateQuiz(
+                      key: null,
+                    )),
+          );
+        },
       ),
     );
   }

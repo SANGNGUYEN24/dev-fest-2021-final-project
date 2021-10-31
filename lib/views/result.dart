@@ -59,7 +59,7 @@ class _ResultsState extends State<Results> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.pop(
                       context, MaterialPageRoute(builder: (context) => Home()));
                 },
                 child: Text(

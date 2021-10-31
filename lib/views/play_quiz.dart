@@ -162,112 +162,106 @@ class _PlayQuizState extends State<PlayQuiz> {
   /// The UI of the page
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        var popUp = _onBackPressed(context);
-        return popUp;
-      },
-      child: Scaffold(
-        backgroundColor: kBackgroundColor,
-        appBar: AppBar(
-          iconTheme: IconThemeData(
-            color: Colors.black87,
-          ),
-          centerTitle: true,
-          title: Text(quizTitle,
-              style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black87,
-                  fontStyle: FontStyle.italic)),
-          backgroundColor: Colors.white,
-          elevation: 0.0,
-          actions: <Widget>[
-            PopupMenuButton<int>(
-                onSelected: (item) => _onSelected(context, item),
-                itemBuilder: (context) => [
-                      PopupMenuItem<int>(
-                        value: 0,
-                        child: Row(
-                          children: [
-                            Icon(Icons.edit_rounded),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Text("Edit this quiz")
-                          ],
-                        ),
-                      ),
-                      PopupMenuItem<int>(
-                        value: 1,
-                        child: Row(
-                          children: [
-                            Icon(Icons.add_rounded),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Text("Add a question")
-                          ],
-                        ),
-                      ),
-                    ]),
-          ],
+    return Scaffold(
+      backgroundColor: kBackgroundColor,
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black87,
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            child: questionSnapshot == null
-
-                /// Display an indicator while loading the data
-                ? Container(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
-
-                /// Display the question data as a list
-                /// Check is there at least one question in the quiz
-                : docs.length == 0
-                    ? Container(
-                        height: MediaQuery.of(context).size.height - 200,
-                        child: Center(
-                          child: Text(
-                            "Your quiz needs a question \n Just as much as you need a lover 🙄",
-                            textAlign: TextAlign.center,
+        centerTitle: true,
+        title: Text(quizTitle,
+            style: TextStyle(
+                fontSize: 18,
+                color: Colors.black87,
+                fontStyle: FontStyle.italic)),
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        actions: <Widget>[
+          PopupMenuButton<int>(
+              onSelected: (item) => _onSelected(context, item),
+              itemBuilder: (context) => [
+                    PopupMenuItem<int>(
+                      value: 0,
+                      child: Row(
+                        children: [
+                          Icon(Icons.edit_rounded),
+                          SizedBox(
+                            width: 8,
                           ),
-                        ))
-                    : ListView.builder(
-                        physics: ClampingScrollPhysics(),
-                        padding: EdgeInsets.symmetric(horizontal: 24),
-                        shrinkWrap: true,
-                        itemCount: docs.length,
-                        itemBuilder: (context, index) {
-                          return QuizPlayTile(
-                            questionModel:
-                                getQuestionModelFromSnapshot(docs[index]),
-                            index: index,
-                          );
-                        }),
-          ),
-        ),
+                          Text("Edit this quiz")
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem<int>(
+                      value: 1,
+                      child: Row(
+                        children: [
+                          Icon(Icons.add_rounded),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text("Add a question")
+                        ],
+                      ),
+                    ),
+                  ]),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          child: questionSnapshot == null
 
-        /// The user will press this button when complete the quiz
-        floatingActionButton: FloatingActionButton(
-          tooltip: "Submit your answers",
-          child: Icon(Icons.check),
-          onPressed: () {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Results(
-                          correct: correct,
-                          incorrect: incorrect,
-                          notAttempted: notAttempted,
-                          total: total,
-                          userId: widget.userId,
-                          quizId: widget.quizId,
-                          quizTitle: quizTitle,
-                        )));
-          },
+              /// Display an indicator while loading the data
+              ? Container(
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+
+              /// Display the question data as a list
+              /// Check is there at least one question in the quiz
+              : docs.length == 0
+                  ? Container(
+                      height: MediaQuery.of(context).size.height - 200,
+                      child: Center(
+                        child: Text(
+                          "Your quiz needs a question \n Just as much as you need a lover 🙄",
+                          textAlign: TextAlign.center,
+                        ),
+                      ))
+                  : ListView.builder(
+                      physics: ClampingScrollPhysics(),
+                      padding: EdgeInsets.symmetric(horizontal: 24),
+                      shrinkWrap: true,
+                      itemCount: docs.length,
+                      itemBuilder: (context, index) {
+                        return QuizPlayTile(
+                          questionModel:
+                              getQuestionModelFromSnapshot(docs[index]),
+                          index: index,
+                        );
+                      }),
         ),
+      ),
+
+      /// The user will press this button when complete the quiz
+      floatingActionButton: FloatingActionButton(
+        tooltip: "Submit your answers",
+        child: Icon(Icons.check),
+        onPressed: () {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Results(
+                        correct: correct,
+                        incorrect: incorrect,
+                        notAttempted: notAttempted,
+                        total: total,
+                        userId: widget.userId,
+                        quizId: widget.quizId,
+                        quizTitle: quizTitle,
+                      )));
+        },
       ),
     );
   }
@@ -357,3 +351,9 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
     );
   }
 }
+
+// WillPopScope
+// onWillPop: () {
+// var popUp = _onBackPressed(context);
+// return popUp;
+// },
