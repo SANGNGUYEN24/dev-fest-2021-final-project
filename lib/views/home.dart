@@ -75,7 +75,7 @@ class _HomeState extends State<Home> {
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: Text("NO"),
+                child: Text("STAY HERE"),
               ),
               SizedBox(height: 16),
               ElevatedButton(
@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50))),
                 onPressed: () => SystemNavigator.pop(),
-                child: Text("YES"),
+                child: Text("EXIT"),
               ),
             ],
           ),

@@ -200,7 +200,7 @@ class _PlayQuizState extends State<PlayQuiz> {
                           SizedBox(
                             width: 8,
                           ),
-                          Text("Add a question")
+                          Text("Add a question for this quiz")
                         ],
                       ),
                     ),
@@ -284,62 +284,102 @@ class QuizPlayTile extends StatefulWidget {
 class _QuizPlayTileState extends State<QuizPlayTile> {
   String optionSelected = "";
 
+  void _showModalBottomSheetMenu() {
+    showModalBottomSheet(
+        context: context,
+        builder: (builder) {
+          // return new Container(
+          //   height: 350.0,
+          // color: Colors.transparent, //could change this to Color(0xFF737373),
+          //so you don't have to change MaterialApp canvasColor
+          return new Container(
+            height: 300.0,
+            decoration: new BoxDecoration(
+                color: Colors.red,
+                borderRadius: new BorderRadius.only(
+                    topLeft: const Radius.circular(30.0),
+                    topRight: const Radius.circular(30.0))),
+            child: new Center(
+              child: new Text("This is a modal sheet"),
+            ),
+          );
+          // });
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Q${widget.index + 1}/$total: ${widget.questionModel.question}",
-            style: TextStyle(
-                fontSize: 18,
-                color: Colors.black87,
-                fontWeight: FontWeight.bold),
-          ),
-          SizedBox(
-            height: 14,
-          ),
-          buildGestureDetector(widget.questionModel.option1, "A"),
-          SizedBox(
-            height: 4,
-          ),
-          buildGestureDetector(widget.questionModel.option2, "B"),
-          SizedBox(
-            height: 4,
-          ),
-          buildGestureDetector(widget.questionModel.option3, "C"),
-          SizedBox(
-            height: 4,
-          ),
-          buildGestureDetector(widget.questionModel.option4, "D"),
-          SizedBox(
-            height: 20,
-          )
-        ],
+    return InkWell(
+      borderRadius: BorderRadius.circular(10.0),
+      onTap: () {
+        _showModalBottomSheetMenu();
+      },
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Q${widget.index + 1}/$total: ${widget.questionModel.question}",
+              style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 14,
+            ),
+            buildGestureDetector(widget.questionModel.option1, "A"),
+            SizedBox(
+              height: 4,
+            ),
+            buildGestureDetector(widget.questionModel.option2, "B"),
+            SizedBox(
+              height: 4,
+            ),
+            buildGestureDetector(widget.questionModel.option3, "C"),
+            SizedBox(
+              height: 4,
+            ),
+            buildGestureDetector(widget.questionModel.option4, "D"),
+            SizedBox(
+              height: 20,
+            )
+          ],
+        ),
       ),
     );
   }
 
   /// GestureDetector for each option in each question
-  GestureDetector buildGestureDetector(String userChoice, String optionOrder) {
-    return GestureDetector(
+  Widget buildGestureDetector(String userChoice, String optionOrder) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(10.0),
       onTap: () {
         if (!widget.questionModel.answered) {
-          ///correct
+          /// The users can answer many times they want but only count
+          /// correct, incorrect at the first time
           if (userChoice == widget.questionModel.correctOption) {
             optionSelected = userChoice;
-            widget.questionModel.answered = true;
-            correct += 1;
-            notAttempted -= 1;
-            setState(() {});
+            if (widget.questionModel.answered != true) {
+              widget.questionModel.answered = true;
+              correct += 1;
+            }
           } else {
             optionSelected = userChoice;
-            widget.questionModel.answered = true;
-            incorrect += 1;
-            notAttempted -= 1;
-            setState(() {});
+            if (widget.questionModel.answered != true) {
+              widget.questionModel.answered = true;
+              incorrect += 1;
+            }
           }
+          notAttempted -= 1;
+          setState(() {});
+        } else {
+          if (userChoice == widget.questionModel.correctOption) {
+            optionSelected = userChoice;
+          } else {
+            optionSelected = userChoice;
+          }
+          setState(() {});
         }
       },
       child: OptionTile(
