@@ -85,6 +85,13 @@ class _BodyState extends State<Body> {
                 /// User have not searched yet
                 : null,
           ),
+          Container(
+            child: _searched
+                ? (_validToken
+                    ? null
+                    : Text("Invalid quiz token, please check again!"))
+                : null,
+          ),
         ],
       ),
     );

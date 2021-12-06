@@ -83,7 +83,7 @@ class DatabaseService {
 
   // Search quiz data with quizToken
   searchQuizDataWithToken({required String quizToken}) async {
-    // Split path into 2 parts: userId and quizId
+    // Split path into 2 parts separate by a dot ".": userId and quizId
     if (!quizToken.contains(".")) return null;
     List<String> userIdAndQuizId = quizToken.split(".");
     final String userId = userIdAndQuizId[0];
@@ -95,12 +95,10 @@ class DatabaseService {
         .get();
   }
 
-  // Get
-
-  getQuizDataToPlay({required String quizId}) async {
-    print("[----userId: ${getUserID()}----]");
+  // Get quiz data to play
+  getQuizDataToPlay({required String userId, required String quizId}) async {
     return await quizCollectionRef
-        .doc(getUserID())
+        .doc(userId)
         .collection(USER_QUIZ_DATA_NAME)
         .doc(quizId)
         .collection(QNA_SUB_COLLECTION_NAME)

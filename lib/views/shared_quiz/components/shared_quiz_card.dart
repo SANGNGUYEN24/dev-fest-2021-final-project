@@ -46,7 +46,9 @@ class SharedQuizCard extends StatelessWidget {
               thickness: 1.0,
             ),
             ListTile(
-              onTap: () {},
+              onTap: () {
+                /// TODO: save quiz token to db
+              },
               leading: Icon(
                 Icons.star_border,
                 color: kPrimaryColor,

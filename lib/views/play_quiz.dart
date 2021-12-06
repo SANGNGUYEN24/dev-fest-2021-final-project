@@ -53,7 +53,9 @@ class _PlayQuizState extends State<PlayQuiz> {
       print("[----quizTitle: $quizTitle----]");
     });
 
-    databaseService.getQuizDataToPlay(quizId: widget.quizId).then((value) {
+    databaseService
+        .getQuizDataToPlay(userId: widget.userId, quizId: widget.quizId)
+        .then((value) {
       questionSnapshot = value;
       correct = 0;
       incorrect = 0;
