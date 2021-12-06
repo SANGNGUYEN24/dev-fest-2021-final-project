@@ -80,29 +80,24 @@ class DatabaseService {
       print(e.toString());
     }
   }
-  //
-  // String getDocumentPath({required String userId, required String quizId}) {
-  //   // String path = quizCollectionRef
-  //   //     .doc(getUserID())
-  //   //     .collection(USER_QUIZ_DATA_NAME)
-  //   //     .doc(quizId)
-  //   //     .path
-  //   //     .toString();
-  //   String path = userId + "." + quizId;
-  //   print(path);
-  //   return path;
-  // }
 
-  // Get share quiz data, user input a string in text field
-  getSharedQuizData({required path}) async {
+  // Search quiz data with quizToken
+  searchQuizDataWithToken({required String quizToken}) async {
     // Split path into 2 parts: userId and quizId
-    List<String> userIdAndquizId = path.split(".");
-    print(userIdAndquizId);
-    print(userIdAndquizId[0]);
-    print(userIdAndquizId[1]);
+    if (!quizToken.contains(".")) return null;
+    List<String> userIdAndQuizId = quizToken.split(".");
+    final String userId = userIdAndQuizId[0];
+    final String quizId = userIdAndQuizId[1];
+    return await quizCollectionRef
+        .doc(userId)
+        .collection(USER_QUIZ_DATA_NAME)
+        .doc(quizId)
+        .get();
   }
 
-  getQuizDataToPlay(String quizId) async {
+  // Get
+
+  getQuizDataToPlay({required String quizId}) async {
     print("[----userId: ${getUserID()}----]");
     return await quizCollectionRef
         .doc(getUserID())

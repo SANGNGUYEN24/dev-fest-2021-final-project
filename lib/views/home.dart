@@ -36,6 +36,7 @@ class _HomeState extends State<Home> {
     super.initState();
 
     databaseService.getThumbnail();
+    HelperFunctions.saveUserId(userId: userId);
 
     /// Get the thumbnail list
     //databaseService.getThumbnail();
