@@ -3,11 +3,13 @@
 /// @date 14/09/2021
 /// Quiz Card
 ///=============================================================================
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/play_quiz.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
+import 'package:share/share.dart';
 
 /// The information of each quiz is got here and displayed as a clickable card
 /// When user click a quiz card, navigate to [PlayQuiz]
@@ -30,10 +32,11 @@ class QuizCard extends StatelessWidget {
   //this.quizModel});
 
   final DatabaseService databaseService = new DatabaseService();
+  late String quizToken;
 
   /// Show a alert dialog to delete a quiz when
   /// the user has a long press on the quiz card
-  showOptionsAboutQuiz(BuildContext context) {
+  showDeleteQuizAlert(BuildContext context) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -85,6 +88,8 @@ class QuizCard extends StatelessWidget {
 
   // Show a bottom sheet with options
   showBottomSheet(BuildContext context) {
+    quizToken = userId + "." + quizId;
+    print(quizToken);
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -99,6 +104,14 @@ class QuizCard extends StatelessWidget {
             ),
             Divider(thickness: 1.0),
             ListTile(
+              onTap: () async {
+                /// Hide the bottom sheet
+                Navigator.pop(context);
+
+                /// Share token to global
+                /// TODO: write description for sharing token
+                await Share.share(quizToken);
+              },
               leading: Icon(
                 Icons.share,
                 color: kPrimaryColor,
@@ -106,11 +119,20 @@ class QuizCard extends StatelessWidget {
               title: Text('Share'),
             ),
             ListTile(
+              onTap: () async {
+                await FlutterClipboard.copy(quizToken).then((value) {
+                  /// Hide the bottom sheet
+                  Navigator.pop(context);
+
+                  /// Show confirmation
+                  showGoodMessage(context, "Token copied to clipboard");
+                });
+              },
               leading: Icon(
                 Icons.copy,
                 color: kPrimaryColor,
               ),
-              title: Text('Copy Link'),
+              title: Text('Copy token'),
             ),
             ListTile(
               leading: Icon(
@@ -127,7 +149,7 @@ class QuizCard extends StatelessWidget {
               onTap: () {
                 // Hide bottom sheet
                 Navigator.pop(context);
-                showOptionsAboutQuiz(context);
+                showDeleteQuizAlert(context);
               },
               leading: Icon(
                 Icons.delete_outlined,

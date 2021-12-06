@@ -12,7 +12,7 @@ AppBar buildAppBar(BuildContext context) {
     title: appBarTitle(context),
     backgroundColor: Colors.white,
     elevation: 0.0,
-    iconTheme: IconThemeData(color: Colors.black87),
+    iconTheme: IconThemeData(color: kSecondaryColor),
     brightness: Brightness.light,
   );
 }

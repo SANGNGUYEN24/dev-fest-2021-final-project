@@ -13,6 +13,7 @@ import 'package:quiz_maker_app/helper/functions.dart';
 import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/create_quiz.dart';
+import 'package:quiz_maker_app/views/shared_quiz/shared_quiz.dart';
 import 'package:quiz_maker_app/views/signin.dart';
 import 'package:quiz_maker_app/widgets/quiz_card.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
@@ -169,7 +170,10 @@ class _HomeState extends State<Home> {
               Icons.people_outlined,
               color: kSecondaryColor,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SharedQuiz()));
+            },
           ),
           IconButton(
             onPressed: () {
