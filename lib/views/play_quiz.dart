@@ -284,68 +284,62 @@ class QuizPlayTile extends StatefulWidget {
 class _QuizPlayTileState extends State<QuizPlayTile> {
   String optionSelected = "";
 
-  void _showModalBottomSheetMenu() {
-    showModalBottomSheet(
-        context: context,
-        builder: (builder) {
-          // return new Container(
-          //   height: 350.0,
-          // color: Colors.transparent, //could change this to Color(0xFF737373),
-          //so you don't have to change MaterialApp canvasColor
-          return new Container(
-            height: 300.0,
-            decoration: new BoxDecoration(
-                color: Colors.red,
-                borderRadius: new BorderRadius.only(
-                    topLeft: const Radius.circular(30.0),
-                    topRight: const Radius.circular(30.0))),
-            child: new Center(
-              child: new Text("This is a modal sheet"),
-            ),
-          );
-          // });
-        });
-  }
+  // void _showModalBottomSheetMenu() {
+  //   showModalBottomSheet(
+  //       context: context,
+  //       builder: (builder) {
+  //         // return new Container(
+  //         //   height: 350.0,
+  //         // color: Colors.transparent, //could change this to Color(0xFF737373),
+  //         //so you don't have to change MaterialApp canvasColor
+  //         return new Container(
+  //           height: 300.0,
+  //           decoration: new BoxDecoration(
+  //               color: Colors.red,
+  //               borderRadius: new BorderRadius.only(
+  //                   topLeft: const Radius.circular(30.0),
+  //                   topRight: const Radius.circular(30.0))),
+  //           child: new Center(
+  //             child: new Text("This is a modal sheet"),
+  //           ),
+  //         );
+  //         // });
+  //       });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(10.0),
-      onTap: () {
-        _showModalBottomSheetMenu();
-      },
-      child: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Q${widget.index + 1}/$total: ${widget.questionModel.question}",
-              style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 14,
-            ),
-            buildGestureDetector(widget.questionModel.option1, "A"),
-            SizedBox(
-              height: 4,
-            ),
-            buildGestureDetector(widget.questionModel.option2, "B"),
-            SizedBox(
-              height: 4,
-            ),
-            buildGestureDetector(widget.questionModel.option3, "C"),
-            SizedBox(
-              height: 4,
-            ),
-            buildGestureDetector(widget.questionModel.option4, "D"),
-            SizedBox(
-              height: 20,
-            )
-          ],
-        ),
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Q${widget.index + 1}/$total: ${widget.questionModel.question}",
+            style: TextStyle(
+                fontSize: 18,
+                color: Colors.black87,
+                fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 14,
+          ),
+          buildGestureDetector(widget.questionModel.option1, "A"),
+          SizedBox(
+            height: 4,
+          ),
+          buildGestureDetector(widget.questionModel.option2, "B"),
+          SizedBox(
+            height: 4,
+          ),
+          buildGestureDetector(widget.questionModel.option3, "C"),
+          SizedBox(
+            height: 4,
+          ),
+          buildGestureDetector(widget.questionModel.option4, "D"),
+          SizedBox(
+            height: 20,
+          )
+        ],
       ),
     );
   }

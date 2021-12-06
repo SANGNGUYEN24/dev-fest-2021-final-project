@@ -21,3 +21,6 @@ final kBoxDecorationStyle = BoxDecoration(
     ),
   ],
 );
+
+const String kGuideCreateQuiz =
+    "Press on the below preview card to change thumbnails";

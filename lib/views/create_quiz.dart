@@ -112,6 +112,7 @@ class _CreateQuizState extends State<CreateQuiz> {
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: [
+                // Text(kGuideCreateQuiz),
                 PreviewQuizCard(
                     quizImageUrl: quizImageUrl,
                     quizTitle: quizTitle,
