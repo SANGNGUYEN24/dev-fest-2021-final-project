@@ -13,6 +13,7 @@ import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/add_question.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
 import 'package:random_string/random_string.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class CreateQuiz extends StatefulWidget {
   const CreateQuiz({required Key? key}) : super(key: key);
@@ -26,7 +27,9 @@ class _CreateQuizState extends State<CreateQuiz> {
   static late String quizId, quizImageUrl, quizTitle, quizDescription;
   final titleController = TextEditingController();
   final descController = TextEditingController();
-
+  late stt.SpeechToText _speech;
+  bool _isListening = false;
+  double _confidence = 1.0;
   // Detect click on a button to prevent user from clicking multiple times
   bool _tappedCreateQuizButton = false;
 
@@ -47,6 +50,7 @@ class _CreateQuizState extends State<CreateQuiz> {
     quizDescription = "";
     titleController.addListener(() => setState(() {}));
     descController.addListener(() => setState(() {}));
+    _speech = stt.SpeechToText();
   }
 
   /// The function to upload a new quiz info to the database
@@ -122,13 +126,13 @@ class _CreateQuizState extends State<CreateQuiz> {
                 ),
                 TextFormField(
                   controller: titleController,
-                  validator: (val) =>
-                      val!.isEmpty ? "Quiz title must not empty" : null,
+                  // validator: (val) =>
+                  //     val!.isEmpty ? "Quiz title must not empty" : null,
                   decoration: InputDecoration(
                     hintText: "Quiz title",
                     suffixIcon: titleController.text.isEmpty
                         ? IconButton(
-                            onPressed: () {},
+                            onPressed: () => _listen("quizTitle"),
                             icon: Icon(Icons.mic_none_rounded),
                           )
                         : IconButton(
@@ -138,6 +142,7 @@ class _CreateQuizState extends State<CreateQuiz> {
                   ),
                   onChanged: (val) {
                     quizTitle = val;
+                    print(quizTitle);
                   },
                 ),
                 SizedBox(
@@ -145,13 +150,13 @@ class _CreateQuizState extends State<CreateQuiz> {
                 ),
                 TextFormField(
                   controller: descController,
-                  validator: (val) =>
-                      val!.isEmpty ? "Quiz description must not empty" : null,
+                  // validator: (val) =>
+                  //     val!.isEmpty ? "Quiz description must not empty" : null,
                   decoration: InputDecoration(
                     hintText: "Quiz description",
                     suffixIcon: descController.text.isEmpty
                         ? IconButton(
-                            onPressed: () {},
+                            onPressed: () => _listen("quizDesc"),
                             icon: Icon(Icons.mic_none_rounded),
                           )
                         : IconButton(
@@ -186,6 +191,28 @@ class _CreateQuizState extends State<CreateQuiz> {
         ),
       ),
     );
+  }
+
+  void _listen(String label) async {
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) => print('onStatus: $val'),
+        onError: (val) => print('onError: $val'),
+      );
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+          onResult: (val) => setState(() {
+            if (label == "quizTitle") quizTitle = val.recognizedWords;
+
+            if (label == "quizDesc") quizDescription = val.recognizedWords;
+          }),
+        );
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
   }
 }
 
