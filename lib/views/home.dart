@@ -159,18 +159,25 @@ class _HomeState extends State<Home> {
     return Scaffold(
       backgroundColor: kBackgroundColor,
       appBar: AppBar(
-        centerTitle: true,
+        // centerTitle: true,
         title: appBarTitle(context),
         backgroundColor: Colors.white,
         elevation: 0.0,
         actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.people_outlined,
+              color: kSecondaryColor,
+            ),
+            onPressed: () {},
+          ),
           IconButton(
             onPressed: () {
               confirmSignOut();
             },
             icon: Icon(
               Icons.logout,
-              color: Colors.black,
+              color: kSecondaryColor,
             ),
           ),
         ],

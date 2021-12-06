@@ -9,11 +9,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class DatabaseService {
+  // Quiz -> userId -> User quiz data -> quizId -> QNA -> questionId
+  static const String USER_QUIZ_DATA_NAME = "User quiz data";
+  static const String QUIZ_COLLECTION_NAME = "Quiz";
+  static const String QNA_SUB_COLLECTION_NAME = "QNA";
+  static const String THUMBNAILS_COLLECTION_NAME = "Thumbnails";
+  static const String THUMBNAILS_DOC_NAME = "thumbnailList";
+
   FirebaseAuth _auth = FirebaseAuth.instance;
   CollectionReference quizCollectionRef =
-      FirebaseFirestore.instance.collection("Quiz");
-  DocumentReference thumbnailDocumentRef =
-      FirebaseFirestore.instance.collection("Thumbnails").doc("thumbnailList");
+      FirebaseFirestore.instance.collection(QUIZ_COLLECTION_NAME);
+  DocumentReference thumbnailDocumentRef = FirebaseFirestore.instance
+      .collection(THUMBNAILS_COLLECTION_NAME)
+      .doc(THUMBNAILS_DOC_NAME);
 
   /// A list of thumbnail will be get at [Home] screen
   /// through initState function and mark as static
@@ -35,7 +43,7 @@ class DatabaseService {
   Future<void> addQuizData(Map<String, dynamic> quizData, String quizId) async {
     await quizCollectionRef
         .doc(getUserID())
-        .collection("User quiz data")
+        .collection(USER_QUIZ_DATA_NAME)
         .doc(quizId)
         .set(quizData)
         .catchError((e) {
@@ -43,10 +51,10 @@ class DatabaseService {
     });
   }
 
-  Future deleteQuizData(String userID, String quizId) async {
+  Future<void> deleteQuizData(String userID, String quizId) async {
     await quizCollectionRef
         .doc(getUserID())
-        .collection("User quiz data")
+        .collection(USER_QUIZ_DATA_NAME)
         .doc(quizId)
         .delete();
   }
@@ -55,23 +63,13 @@ class DatabaseService {
       Map<String, dynamic> questionData, String quizId) async {
     await quizCollectionRef
         .doc(getUserID())
-        .collection("User quiz data")
+        .collection(USER_QUIZ_DATA_NAME)
         .doc(quizId)
-        .collection("QNA")
+        .collection(QNA_SUB_COLLECTION_NAME)
         .add(questionData)
         .catchError((e) {
       print(e.toString());
     });
-  }
-
-  getQuizDataToPlay(String quizId) async {
-    print("[----userId: ${getUserID()}----]");
-    return await quizCollectionRef
-        .doc(getUserID())
-        .collection("User quiz data")
-        .doc(quizId)
-        .collection("QNA")
-        .get();
   }
 
   Future<void> getThumbnail() async {
@@ -81,5 +79,36 @@ class DatabaseService {
     } catch (e) {
       print(e.toString());
     }
+  }
+  //
+  // String getDocumentPath({required String userId, required String quizId}) {
+  //   // String path = quizCollectionRef
+  //   //     .doc(getUserID())
+  //   //     .collection(USER_QUIZ_DATA_NAME)
+  //   //     .doc(quizId)
+  //   //     .path
+  //   //     .toString();
+  //   String path = userId + "." + quizId;
+  //   print(path);
+  //   return path;
+  // }
+
+  // Get share quiz data, user input a string in text field
+  getSharedQuizData({required path}) async {
+    // Split path into 2 parts: userId and quizId
+    List<String> userIdAndquizId = path.split(".");
+    print(userIdAndquizId);
+    print(userIdAndquizId[0]);
+    print(userIdAndquizId[1]);
+  }
+
+  getQuizDataToPlay(String quizId) async {
+    print("[----userId: ${getUserID()}----]");
+    return await quizCollectionRef
+        .doc(getUserID())
+        .collection(USER_QUIZ_DATA_NAME)
+        .doc(quizId)
+        .collection(QNA_SUB_COLLECTION_NAME)
+        .get();
   }
 }

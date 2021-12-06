@@ -26,44 +26,119 @@ class QuizCard extends StatelessWidget {
     required this.description,
     required this.quizId,
   });
+
   //this.quizModel});
 
   final DatabaseService databaseService = new DatabaseService();
 
   /// Show a alert dialog to delete a quiz when
   /// the user has a long press on the quiz card
-  deleteQuiz(BuildContext context) {
+  showOptionsAboutQuiz(BuildContext context) {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Delete this quiz?"),
+            title: Text("Are you sure?"),
             content: Text("This action cannot be undone."),
             actions: <Widget>[
               TextButton(
-                  child: Text("NO"),
+                  child: Text(
+                    "CANCEL",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   onPressed: () {
                     Navigator.pop(context);
                   }),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary: Colors.black87,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50))),
-                onPressed: () {
-                  databaseService.deleteQuizData(userId, quizId);
+              // ElevatedButton(
+              //   style: ElevatedButton.styleFrom(
+              //       shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(50))),
+              //   onPressed: () {
+              //     databaseService.deleteQuizData(userId, quizId);
+              //
+              //     /// Pop to hide the dialog
+              //     Navigator.pop(context);
+              //
+              //     /// Show confirmation
+              //     showGoodMessage(context, "Deleted quiz successfully");
+              //   },
+              //   child: Text("DELETE"),
+              // ),
+              TextButton(
+                  child: Text(
+                    "DELETE",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    databaseService.deleteQuizData(userId, quizId);
 
-                  /// Pop to hide the dialog
-                  Navigator.pop(context);
+                    /// Pop to hide the dialog
+                    Navigator.pop(context);
 
-                  /// Show confirmation
-                  showGoodMessage(context, "Deleted quiz successfully");
-                },
-                child: Text("DELETE"),
-              ),
+                    /// Show confirmation
+                    showGoodMessage(context, "Deleted quiz successfully");
+                  }),
             ],
           );
         });
+  }
+
+  // Show a bottom sheet with options
+  showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Wrap(
+          children: [
+            ListTile(
+              leading: Icon(
+                Icons.auto_stories,
+                color: kPrimaryColor,
+              ),
+              title: Text(title),
+            ),
+            Divider(thickness: 1.0),
+            ListTile(
+              leading: Icon(
+                Icons.share,
+                color: kPrimaryColor,
+              ),
+              title: Text('Share'),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.copy,
+                color: kPrimaryColor,
+              ),
+              title: Text('Copy Link'),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.edit,
+                color: kPrimaryColor,
+              ),
+              title: Text('Rename'),
+            ),
+            Divider(
+              thickness: 1.0,
+              indent: 72.0,
+            ),
+            ListTile(
+              onTap: () {
+                // Hide bottom sheet
+                Navigator.pop(context);
+                showOptionsAboutQuiz(context);
+              },
+              leading: Icon(
+                Icons.delete_outlined,
+                color: kPrimaryColor,
+              ),
+              title: Text('Delete this quiz'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -100,7 +175,8 @@ class QuizCard extends StatelessWidget {
                             )));
               },
               onLongPress: () {
-                deleteQuiz(context);
+                showBottomSheet(context);
+                // showOptionsAboutQuiz(context);
               },
               child: Container(
                 decoration: BoxDecoration(
