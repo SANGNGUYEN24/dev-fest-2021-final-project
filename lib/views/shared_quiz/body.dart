@@ -28,14 +28,6 @@ class _BodyState extends State<Body> {
     getAppUserId();
   }
 
-  // getAppUserId() {
-  //   HelperFunctions.getUserId().then((value) {
-  //     setState(() {
-  //       print("_appUserId $value");
-  //       _appUserId = value!;
-  //     });
-  //   });
-  // }
   getAppUserId() {
     _appUserId = databaseService.getAppUserId();
     setState(() {

@@ -29,8 +29,6 @@ class QuizCard extends StatelessWidget {
     required this.quizId,
   });
 
-  //this.quizModel});
-
   final DatabaseService databaseService = new DatabaseService();
   late String quizToken;
   String newTitle = "";
