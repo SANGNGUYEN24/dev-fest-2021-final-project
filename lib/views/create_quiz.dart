@@ -29,6 +29,8 @@ class _CreateQuizState extends State<CreateQuiz> {
   final descController = TextEditingController();
   late stt.SpeechToText _speech;
   bool _isListening = false;
+  bool _isListening1 = false;
+  bool _isListening2 = false;
   bool _tappedCreateQuizButton = false;
   var _localeId = '';
 // generate a random index based on the list length
@@ -145,10 +147,10 @@ class _CreateQuizState extends State<CreateQuiz> {
                     suffixIcon: titleController.text.isEmpty
                         ? IconButton(
                             onPressed: () => _listen("quizTitle"),
-                            icon: Icon(_isListening
+                            icon: Icon(_isListening1
                                 ? Icons.mic
                                 : Icons.mic_none_rounded),
-                            color: _isListening ? Colors.red : kSecondaryColor,
+                            color: _isListening1 ? Colors.red : kSecondaryColor,
                           )
                         : IconButton(
                             icon: Icon(Icons.close),
@@ -172,7 +174,10 @@ class _CreateQuizState extends State<CreateQuiz> {
                     suffixIcon: descController.text.isEmpty
                         ? IconButton(
                             onPressed: () => _listen("quizDesc"),
-                            icon: Icon(Icons.mic_none_rounded),
+                            icon: Icon(_isListening2
+                                ? Icons.mic
+                                : Icons.mic_none_rounded),
+                            color: _isListening2 ? Colors.red : kSecondaryColor,
                           )
                         : IconButton(
                             icon: Icon(Icons.close),
@@ -215,7 +220,13 @@ class _CreateQuizState extends State<CreateQuiz> {
         onError: (val) => print('onError: $val'),
       );
       if (available) {
-        setState(() => _isListening = true);
+        setState(() {
+          _isListening = true;
+          if (label == "quizTitle")
+            _isListening1 = true;
+          else
+            _isListening2 = true;
+        });
         var systemLocale = await _speech.systemLocale();
         var s = _localeId = systemLocale!.localeId;
         _speech.listen(
@@ -233,7 +244,13 @@ class _CreateQuizState extends State<CreateQuiz> {
         );
       }
     } else {
-      setState(() => _isListening = false);
+      setState(() {
+        _isListening = false;
+        if (label == "quizTitle")
+          _isListening1 = false;
+        else
+          _isListening2 = false;
+      });
       _speech.stop();
     }
   }
