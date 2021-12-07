@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class AddQuestion extends StatefulWidget {
   final String userId;
@@ -27,15 +28,44 @@ class _AddQuestionState extends State<AddQuestion> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   DatabaseService databaseService = new DatabaseService();
   bool _isLoading = false;
+  late stt.SpeechToText _speech;
+  bool _isListening = false;
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    questionController.dispose();
+    option1Controller.dispose();
+    option2Controller.dispose();
+    option3Controller.dispose();
+    option4Controller.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
-    questionController.addListener(() => setState(() {}));
-    option1Controller.addListener(() => setState(() {}));
-    option2Controller.addListener(() => setState(() {}));
-    option3Controller.addListener(() => setState(() {}));
-    option4Controller.addListener(() => setState(() {}));
+    questionController.addListener(() {
+      question = questionController.text;
+      setState(() {});
+    });
+    option1Controller.addListener(() {
+      option1 = option1Controller.text;
+      setState(() {});
+    });
+    option2Controller.addListener(() {
+      option2 = option2Controller.text;
+      setState(() {});
+    });
+    option3Controller.addListener(() {
+      option3 = option3Controller.text;
+      setState(() {});
+    });
+    option4Controller.addListener(() {
+      option4 = option4Controller.text;
+      setState(() {});
+    });
+    _speech = stt.SpeechToText();
   }
 
   confirmQuizSubmit() {
@@ -178,7 +208,7 @@ class _AddQuestionState extends State<AddQuestion> {
                             hintText: "Question",
                             suffixIcon: questionController.text.isEmpty
                                 ? IconButton(
-                                    onPressed: () {},
+                                    onPressed: () => _listen('question'),
                                     icon: Icon(Icons.mic_none_rounded),
                                   )
                                 : IconButton(
@@ -203,7 +233,7 @@ class _AddQuestionState extends State<AddQuestion> {
                             hintText: "Option A (the correct answer)",
                             suffixIcon: option1Controller.text.isEmpty
                                 ? IconButton(
-                                    onPressed: () {},
+                                    onPressed: () => _listen('option 1'),
                                     icon: Icon(Icons.mic_none_rounded),
                                   )
                                 : IconButton(
@@ -228,7 +258,7 @@ class _AddQuestionState extends State<AddQuestion> {
                             hintText: "Option B",
                             suffixIcon: option2Controller.text.isEmpty
                                 ? IconButton(
-                                    onPressed: () {},
+                                    onPressed: () => _listen('option 2'),
                                     icon: Icon(Icons.mic_none_rounded),
                                   )
                                 : IconButton(
@@ -253,7 +283,7 @@ class _AddQuestionState extends State<AddQuestion> {
                             hintText: "Option C",
                             suffixIcon: option3Controller.text.isEmpty
                                 ? IconButton(
-                                    onPressed: () {},
+                                    onPressed: () => _listen('option 3'),
                                     icon: Icon(Icons.mic_none_rounded),
                                   )
                                 : IconButton(
@@ -278,7 +308,7 @@ class _AddQuestionState extends State<AddQuestion> {
                             hintText: "Option D",
                             suffixIcon: option4Controller.text.isEmpty
                                 ? IconButton(
-                                    onPressed: () {},
+                                    onPressed: () => _listen('option 4'),
                                     icon: Icon(Icons.mic_none_rounded),
                                   )
                                 : IconButton(
@@ -335,5 +365,35 @@ class _AddQuestionState extends State<AddQuestion> {
               ),
       ),
     );
+  }
+
+  void _listen(String label) async {
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) => print('onStatus: $val'),
+        onError: (val) => print('onError: $val'),
+      );
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+          onResult: (val) => setState(() {
+            if (label == "question")
+              questionController.text = val.recognizedWords;
+            else if (label == "option1")
+              option1Controller.text = val.recognizedWords;
+            else if (label == "option2")
+              option2Controller.text = val.recognizedWords;
+            else if (label == "option3")
+              option3Controller.text = val.recognizedWords;
+            else if (label == "option4")
+              option4Controller.text = val.recognizedWords;
+          }),
+          localeId: 'en_US',
+        );
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
   }
 }
