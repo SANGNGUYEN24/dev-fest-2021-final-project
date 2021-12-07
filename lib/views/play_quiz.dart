@@ -14,7 +14,6 @@ import 'package:quiz_maker_app/widgets/quiz_play_widgets.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
 
 import 'add_question.dart';
-import 'update_question.dart';
 import 'home.dart';
 
 class PlayQuiz extends StatefulWidget {
@@ -146,22 +145,21 @@ class _PlayQuizState extends State<PlayQuiz> {
         false;
   }
 
-  void _onSelected(BuildContext context, int item) {
-    switch (item) {
-      case 0:
-        break;
-
-      /// Add a question
-      case 1:
-        {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      AddQuestion(widget.userId, widget.quizId)));
-          break;
-        }
-    }
+  void _onSelected(BuildContext context) {
+    // switch (item) {
+    //   case 0:
+    //     break;
+    //
+    //   /// Add a question
+    //   case 1:
+    //     {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddQuestion(widget.userId, widget.quizId)));
+    // break;
+    // }
+    // }
   }
 
   /// The UI of the page
@@ -182,34 +180,43 @@ class _PlayQuizState extends State<PlayQuiz> {
         backgroundColor: Colors.white,
         elevation: 0.0,
         actions: <Widget>[
-          PopupMenuButton<int>(
-              onSelected: (item) => _onSelected(context, item),
-              itemBuilder: (context) => [
-                    PopupMenuItem<int>(
-                      value: 0,
-                      child: Row(
-                        children: [
-                          Icon(Icons.edit_rounded),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text("Edit this quiz")
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem<int>(
-                      value: 1,
-                      child: Row(
-                        children: [
-                          Icon(Icons.add_rounded),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          Text("Add a question for this quiz")
-                        ],
-                      ),
-                    ),
-                  ]),
+          Tooltip(
+            message: 'Add a question to this quiz',
+            child: IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                _onSelected(context);
+              },
+            ),
+          ),
+          // PopupMenuButton<int>(
+          //     // onSelected: (item) => _onSelected(context, item),
+          //     itemBuilder: (context) => [
+          //           PopupMenuItem<int>(
+          //             value: 0,
+          //             child: Row(
+          //               children: [
+          //                 Icon(Icons.edit_rounded),
+          //                 SizedBox(
+          //                   width: 8,
+          //                 ),
+          //                 Text("Edit this quiz")
+          //               ],
+          //             ),
+          //           ),
+          //           PopupMenuItem<int>(
+          //             value: 1,
+          //             child: Row(
+          //               children: [
+          //                 Icon(Icons.add_rounded),
+          //                 SizedBox(
+          //                   width: 8,
+          //                 ),
+          //                 Text("Add a question for this quiz")
+          //               ],
+          //             ),
+          //           ),
+          //         ]),
         ],
       ),
       body: SingleChildScrollView(
@@ -342,7 +349,8 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
               child: Form(
                   child: Wrap(
                 children: [
-                  Text("Question"),
+                  Text("Question",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   SizedBox(
                     height: 8.0,
                   ),
@@ -355,7 +363,8 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
                   SizedBox(
                     height: 8.0,
                   ),
-                  Text("Option 1"),
+                  Text("Option 1 (The correct answer)",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   SizedBox(
                     height: 8.0,
                   ),
@@ -368,7 +377,8 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
                   SizedBox(
                     height: 8.0,
                   ),
-                  Text("Option 2"),
+                  Text("Option 2",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   SizedBox(
                     height: 8.0,
                   ),
@@ -381,7 +391,8 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
                   SizedBox(
                     height: 8.0,
                   ),
-                  Text("Option 3"),
+                  Text("Option 3",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   SizedBox(
                     height: 8.0,
                   ),
@@ -394,7 +405,8 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
                   SizedBox(
                     height: 8.0,
                   ),
-                  Text("Option 4"),
+                  Text("Option 4",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   SizedBox(
                     height: 8.0,
                   ),
@@ -481,6 +493,9 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
             onPressed: () async {
               await databaseService.deleteQuestionData(
                   widget.quizId, widget.questionId);
+              // Hide pop up
+              Navigator.of(context).pop(true);
+              // Go to home
               Navigator.of(context).pop(true);
               showGoodMessage(context, "Question Deleted!");
             },

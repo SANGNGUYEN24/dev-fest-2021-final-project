@@ -9,7 +9,7 @@ import 'package:quiz_maker_app/styles/constants.dart';
 AppBar buildAppBar(BuildContext context) {
   return AppBar(
     centerTitle: true,
-    title: appBarTitle(context),
+    title: buildAppBarTitle(context),
     backgroundColor: Colors.white,
     elevation: 0.0,
     iconTheme: IconThemeData(color: kSecondaryColor),
@@ -17,7 +17,7 @@ AppBar buildAppBar(BuildContext context) {
   );
 }
 
-Widget appBarTitle(BuildContext context) {
+Widget buildAppBarTitle(BuildContext context) {
   return RichText(
     text: TextSpan(
       style: TextStyle(

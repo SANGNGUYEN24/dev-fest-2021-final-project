@@ -85,7 +85,10 @@ class QuizCard extends StatelessWidget {
             content: Form(
               child: Wrap(
                 children: [
-                  Text("Title"),
+                  Text(
+                    "Title",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   SizedBox(
                     height: 8.0,
                   ),
@@ -95,11 +98,8 @@ class QuizCard extends StatelessWidget {
                       newTitle = value;
                     },
                   ),
-                  SizedBox(
-                    width: 200.0,
-                    height: 24.0,
-                  ),
-                  Text("Description"),
+                  Text("Description",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   SizedBox(
                     height: 8.0,
                   ),

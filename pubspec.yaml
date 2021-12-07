@@ -15,9 +15,9 @@ dependencies:
   flutter:
     sdk: flutter
   cached_network_image: ^3.0.0
-  cloud_firestore: ^2.5.1
-  firebase_core: ^1.6.0
-  firebase_auth: ^3.1.0
+  cloud_firestore: ^3.1.1
+  firebase_core: ^1.10.2
+  firebase_auth: ^3.3.0
   random_string: ^2.1.0
   email_validator: ^2.0.1
   # state management
@@ -25,7 +25,7 @@ dependencies:
   # icon google
   font_awesome_flutter: ^9.1.0
   # Sign in with Google
-  google_sign_in: ^5.0.7
+  google_sign_in: ^5.2.1
   # Display svg images
   flutter_svg: ^0.22.0
   # Copy paste

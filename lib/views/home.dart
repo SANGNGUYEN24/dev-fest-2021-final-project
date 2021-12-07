@@ -162,7 +162,7 @@ class _HomeState extends State<Home> {
       backgroundColor: kBackgroundColor,
       appBar: AppBar(
         // centerTitle: true,
-        title: appBarTitle(context),
+        title: buildAppBarTitle(context),
         backgroundColor: Colors.white,
         elevation: 0.0,
         actions: <Widget>[
