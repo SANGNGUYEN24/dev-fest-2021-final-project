@@ -128,6 +128,7 @@ class SharedQuizCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(bottom: 16),
       height: 150,
       child: Stack(
         children: [
@@ -167,7 +168,10 @@ class SharedQuizCard extends StatelessWidget {
                 ),
                 alignment: Alignment.center,
                 child: Padding(
-                  padding: EdgeInsets.only(right: 30, left: 30),
+                  padding: EdgeInsets.only(
+                    right: 30,
+                    left: 30,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

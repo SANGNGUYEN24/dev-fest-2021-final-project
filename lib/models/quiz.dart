@@ -4,9 +4,16 @@
 ///=============================================================================
 
 class QuizModel {
-  late String userId;
-  late String quizId;
-  late String quizImageUrl;
-  late String quizTitle;
-  late String quizDescription;
+  String userId;
+  String quizId;
+  String quizImageUrl;
+  String quizTitle;
+  String quizDescription;
+
+  QuizModel(
+      {required this.userId,
+      required this.quizId,
+      required this.quizImageUrl,
+      required this.quizDescription,
+      required this.quizTitle});
 }

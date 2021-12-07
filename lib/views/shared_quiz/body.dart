@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_maker_app/helper/functions.dart';
 import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/shared_quiz/components/shared_quiz_card.dart';
+
+import 'components/shared_quiz_list.dart';
 
 class Body extends StatefulWidget {
   Body({Key? key}) : super(key: key);
@@ -27,13 +28,33 @@ class _BodyState extends State<Body> {
     getAppUserId();
   }
 
-  void getAppUserId() async {
-    await HelperFunctions.getUserId().then((value) {
-      setState(() {
-        print("Value $value");
-        _appUserId = value!;
-      });
+  // getAppUserId() {
+  //   HelperFunctions.getUserId().then((value) {
+  //     setState(() {
+  //       print("_appUserId $value");
+  //       _appUserId = value!;
+  //     });
+  //   });
+  // }
+  getAppUserId() {
+    _appUserId = databaseService.getAppUserId();
+    setState(() {
+      print("_appUserId in Body: $_appUserId");
     });
+  }
+
+  void getQuizInfo(dynamic doc) {
+    if (doc != null) {
+      setState(() {
+        _validToken = true;
+        userId = doc["userID"];
+        quizTitle = doc["quizTitle"];
+        quizImageUrl = doc["quizImageUrl"];
+        quizId = doc["quizId"];
+        quizDescription = doc["quizDescription"];
+      });
+      print("$quizId, $quizTitle, $quizDescription, $quizImageUrl, $userId");
+    }
   }
 
   @override
@@ -59,18 +80,7 @@ class _BodyState extends State<Body> {
                 databaseService
                     .searchQuizDataWithToken(quizToken: value)
                     .then((doc) {
-                  if (doc != null) {
-                    setState(() {
-                      _validToken = true;
-                      userId = doc["userID"];
-                      quizTitle = doc["quizTitle"];
-                      quizImageUrl = doc["quizImageUrl"];
-                      quizId = doc["quizId"];
-                      quizDescription = doc["quizDescription"];
-                    });
-                    print(
-                        "$quizId, $quizTitle, $quizDescription, $quizImageUrl, $userId");
-                  }
+                  getQuizInfo(doc);
                 });
               },
               decoration: InputDecoration(
@@ -84,7 +94,7 @@ class _BodyState extends State<Body> {
 
           /// Handle errors
           Container(
-            padding: EdgeInsets.only(top: 24.0),
+            padding: EdgeInsets.only(top: 16.0),
 
             /// If user entered
             child: _searched
@@ -113,6 +123,8 @@ class _BodyState extends State<Body> {
                     : Text("Invalid quiz token, please check again!"))
                 : null,
           ),
+          Divider(),
+          Expanded(child: SharedQuizList(appUserId: _appUserId)),
         ],
       ),
     );

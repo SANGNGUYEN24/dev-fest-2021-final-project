@@ -35,6 +35,30 @@ class DatabaseService {
     return userId;
   }
 
+  Future<void> getThumbnail() async {
+    try {
+      var thumbnailDocumentSnapshot = await thumbnailDocumentRef.get();
+      thumbnailAddressList = thumbnailDocumentSnapshot["addressList"];
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  // Get quiz data to play
+  getQuizDataToPlay({required String userId, required String quizId}) async {
+    return await quizCollectionRef
+        .doc(userId)
+        .collection(USER_QUIZ_DATA_NAME)
+        .doc(quizId)
+        .collection(QNA_SUB_COLLECTION_NAME)
+        .get();
+  }
+
+  // Get shared quiz array
+  getAppUserDocument({required String appUserId}) async {
+    return await quizCollectionRef.doc(appUserId).get();
+  }
+
   Future<void> addUserInfo(String? userName) async {
     Map<String, String?> userInfo = {"name": userName};
     await quizCollectionRef.doc(getAppUserId()).update(userInfo);
@@ -51,14 +75,7 @@ class DatabaseService {
     });
   }
 
-  Future<void> deleteQuizData(String userID, String quizId) async {
-    await quizCollectionRef
-        .doc(getAppUserId())
-        .collection(USER_QUIZ_DATA_NAME)
-        .doc(quizId)
-        .delete();
-  }
-
+  // Add question data to quiz
   Future<void> addQuestionData(
       Map<String, dynamic> questionData, String quizId) async {
     await quizCollectionRef
@@ -72,13 +89,12 @@ class DatabaseService {
     });
   }
 
-  Future<void> getThumbnail() async {
-    try {
-      var thumbnailDocumentSnapshot = await thumbnailDocumentRef.get();
-      thumbnailAddressList = thumbnailDocumentSnapshot["addressList"];
-    } catch (e) {
-      print(e.toString());
-    }
+  Future<void> deleteQuizData(String userID, String quizId) async {
+    await quizCollectionRef
+        .doc(getAppUserId())
+        .collection(USER_QUIZ_DATA_NAME)
+        .doc(quizId)
+        .delete();
   }
 
   // Add quiz token to the db
@@ -100,16 +116,6 @@ class DatabaseService {
         .doc(userId)
         .collection(USER_QUIZ_DATA_NAME)
         .doc(quizId)
-        .get();
-  }
-
-  // Get quiz data to play
-  getQuizDataToPlay({required String userId, required String quizId}) async {
-    return await quizCollectionRef
-        .doc(userId)
-        .collection(USER_QUIZ_DATA_NAME)
-        .doc(quizId)
-        .collection(QNA_SUB_COLLECTION_NAME)
         .get();
   }
 }
