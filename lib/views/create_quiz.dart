@@ -13,6 +13,7 @@ import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/add_question.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
 import 'package:random_string/random_string.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class CreateQuiz extends StatefulWidget {
   const CreateQuiz({required Key? key}) : super(key: key);
@@ -26,15 +27,23 @@ class _CreateQuizState extends State<CreateQuiz> {
   static late String quizId, quizImageUrl, quizTitle, quizDescription;
   final titleController = TextEditingController();
   final descController = TextEditingController();
-
-  // Detect click on a button to prevent user from clicking multiple times
+  late stt.SpeechToText _speech;
+  bool _isListening = false;
   bool _tappedCreateQuizButton = false;
-
+  var _localeId = '';
 // generate a random index based on the list length
 // and use it to retrieve the element
 
   DatabaseService databaseService = new DatabaseService();
   static String userID = DatabaseService().getAppUserId();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    titleController.dispose();
+    descController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -45,8 +54,15 @@ class _CreateQuizState extends State<CreateQuiz> {
     quizImageUrl = "";
     quizTitle = "";
     quizDescription = "";
-    titleController.addListener(() => setState(() {}));
-    descController.addListener(() => setState(() {}));
+    titleController.addListener(() {
+      quizTitle = titleController.text;
+      setState(() {});
+    });
+    descController.addListener(() {
+      quizDescription = descController.text;
+      setState(() {});
+    });
+    _speech = stt.SpeechToText();
   }
 
   /// The function to upload a new quiz info to the database
@@ -128,17 +144,21 @@ class _CreateQuizState extends State<CreateQuiz> {
                     hintText: "Quiz title",
                     suffixIcon: titleController.text.isEmpty
                         ? IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.mic_none_rounded),
+                            onPressed: () => _listen("quizTitle"),
+                            icon: Icon(_isListening
+                                ? Icons.mic
+                                : Icons.mic_none_rounded),
+                            color: _isListening ? Colors.red : kSecondaryColor,
                           )
                         : IconButton(
                             icon: Icon(Icons.close),
                             onPressed: () => titleController.clear(),
                           ),
                   ),
-                  onChanged: (val) {
-                    quizTitle = val;
-                  },
+                  // onChanged: (val) {
+                  //   quizTitle = val;
+                  //   print(quizTitle);
+                  // },
                 ),
                 SizedBox(
                   height: 8,
@@ -151,7 +171,7 @@ class _CreateQuizState extends State<CreateQuiz> {
                     hintText: "Quiz description",
                     suffixIcon: descController.text.isEmpty
                         ? IconButton(
-                            onPressed: () {},
+                            onPressed: () => _listen("quizDesc"),
                             icon: Icon(Icons.mic_none_rounded),
                           )
                         : IconButton(
@@ -159,9 +179,9 @@ class _CreateQuizState extends State<CreateQuiz> {
                             onPressed: () => descController.clear(),
                           ),
                   ),
-                  onChanged: (val) {
-                    quizDescription = val;
-                  },
+                  // onChanged: (val) {
+                  //   quizDescription = val;
+                  // },
                 ),
                 SizedBox(
                   height: 48,
@@ -186,6 +206,36 @@ class _CreateQuizState extends State<CreateQuiz> {
         ),
       ),
     );
+  }
+
+  void _listen(String label) async {
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) => print('onStatus: $val'),
+        onError: (val) => print('onError: $val'),
+      );
+      if (available) {
+        setState(() => _isListening = true);
+        var systemLocale = await _speech.systemLocale();
+        var s = _localeId = systemLocale!.localeId;
+        _speech.listen(
+          onResult: (val) => setState(() {
+            if (label == "quizTitle")
+              titleController.text = val.recognizedWords;
+
+            if (label == "quizDesc") descController.text = val.recognizedWords;
+          }),
+          localeId: _localeId,
+          // cancelOnError: true,
+          partialResults: true,
+          onSoundLevelChange: null,
+          listenFor: Duration(minutes: 1),
+        );
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
   }
 }
 
