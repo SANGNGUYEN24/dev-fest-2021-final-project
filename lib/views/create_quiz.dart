@@ -148,6 +148,7 @@ class _CreateQuizState extends State<CreateQuiz> {
                             icon: Icon(_isListening
                                 ? Icons.mic
                                 : Icons.mic_none_rounded),
+                            color: _isListening ? Colors.red : kSecondaryColor,
                           )
                         : IconButton(
                             icon: Icon(Icons.close),
@@ -225,7 +226,7 @@ class _CreateQuizState extends State<CreateQuiz> {
             if (label == "quizDesc") descController.text = val.recognizedWords;
           }),
           localeId: _localeId,
-          cancelOnError: true,
+          // cancelOnError: true,
           partialResults: true,
           onSoundLevelChange: null,
           listenFor: Duration(minutes: 1),
