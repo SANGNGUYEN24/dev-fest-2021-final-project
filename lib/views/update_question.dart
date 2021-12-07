@@ -41,49 +41,6 @@ class _UpdateQuestionState extends State<UpdateQuestion> {
     option4Controller.addListener(() => setState(() {}));
   }
 
-  confirmQuizSubmit() {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text("Submit the quiz?"),
-            content: Text("You can edit it later."),
-            actions: <Widget>[
-              TextButton(
-                  child: Text("CANCEL"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary: Colors.black87,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50))),
-                onPressed: () {
-                  /// Pop first time to hide the AlertDialog
-                  Navigator.pop(context);
-
-                  /// upload the question
-                  updateQuestion();
-
-                  /// Pop the second time to go to home page
-                  Navigator.pop(context);
-
-                  showGoodMessage(context, "Enjoy your quiz!");
-
-                  /// If the user submit the last question
-                  /// but it is not filled full fields, show a message to user
-                  if (!(_formKey.currentState!.validate()))
-                    showNotGoodMessage(context,
-                        "The last question was not uploaded because it was incomplete");
-                },
-                child: Text("SUBMIT"),
-              ),
-            ],
-          );
-        });
-  }
-
   /// Clear all the inputs
   clearInput() {
     questionController.clear();
@@ -93,7 +50,7 @@ class _UpdateQuestionState extends State<UpdateQuestion> {
     option4Controller.clear();
   }
 
-  /// The function to upload the question data
+  /// The function to update the question data
   updateQuestion() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -148,180 +105,173 @@ class _UpdateQuestionState extends State<UpdateQuestion> {
   /// The UI of the page
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        final popUp = onBackPressed(context);
-        return popUp;
-      },
-      child: Scaffold(
-        backgroundColor: kBackgroundColor,
-        appBar: buildAppBar(context),
-        body: _isLoading
-            ? Container(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              )
-            : Container(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics()),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          autofocus: true,
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          controller: questionController,
-                          validator: (val) =>
-                              val!.isEmpty ? "Enter Question" : null,
-                          decoration: InputDecoration(
-                            hintText: "Question",
-                            suffixIcon: questionController.text.isEmpty
-                                ? IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.mic_none_rounded),
-                                  )
-                                : IconButton(
-                                    icon: Icon(Icons.close),
-                                    onPressed: () => questionController.clear(),
-                                  ),
-                          ),
-                          onChanged: (val) {
-                            question = val;
-                          },
+    return Scaffold(
+      backgroundColor: kBackgroundColor,
+      // appBar: buildAppBar(context),
+      body: _isLoading
+          ? Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          : Container(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        controller: questionController,
+                        validator: (val) =>
+                            val!.isEmpty ? "Enter Question" : null,
+                        decoration: InputDecoration(
+                          hintText: "Question",
+                          suffixIcon: questionController.text.isEmpty
+                              ? IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.mic_none_rounded),
+                                )
+                              : IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () => questionController.clear(),
+                                ),
                         ),
-                        SizedBox(
-                          height: 24,
+                        onChanged: (val) {
+                          question = val;
+                        },
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        controller: option1Controller,
+                        validator: (val) =>
+                            val!.isEmpty ? "Enter option A" : null,
+                        decoration: InputDecoration(
+                          hintText: "Option A (the correct answer)",
+                          suffixIcon: option1Controller.text.isEmpty
+                              ? IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.mic_none_rounded),
+                                )
+                              : IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () => option1Controller.clear(),
+                                ),
                         ),
-                        TextFormField(
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          controller: option1Controller,
-                          validator: (val) =>
-                              val!.isEmpty ? "Enter option A" : null,
-                          decoration: InputDecoration(
-                            hintText: "Option A (the correct answer)",
-                            suffixIcon: option1Controller.text.isEmpty
-                                ? IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.mic_none_rounded),
-                                  )
-                                : IconButton(
-                                    icon: Icon(Icons.close),
-                                    onPressed: () => option1Controller.clear(),
-                                  ),
-                          ),
-                          onChanged: (val) {
-                            option1 = val;
-                          },
+                        onChanged: (val) {
+                          option1 = val;
+                        },
+                      ),
+                      SizedBox(
+                        height: 6,
+                      ),
+                      TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        controller: option2Controller,
+                        validator: (val) =>
+                            val!.isEmpty ? "Enter option B" : null,
+                        decoration: InputDecoration(
+                          hintText: "Option B",
+                          suffixIcon: option2Controller.text.isEmpty
+                              ? IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.mic_none_rounded),
+                                )
+                              : IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () => option2Controller.clear(),
+                                ),
                         ),
-                        SizedBox(
-                          height: 6,
+                        onChanged: (val) {
+                          option2 = val;
+                        },
+                      ),
+                      SizedBox(
+                        height: 6,
+                      ),
+                      TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        controller: option3Controller,
+                        validator: (val) =>
+                            val!.isEmpty ? "Enter option C" : null,
+                        decoration: InputDecoration(
+                          hintText: "Option C",
+                          suffixIcon: option3Controller.text.isEmpty
+                              ? IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.mic_none_rounded),
+                                )
+                              : IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () => option3Controller.clear(),
+                                ),
                         ),
-                        TextFormField(
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          controller: option2Controller,
-                          validator: (val) =>
-                              val!.isEmpty ? "Enter option B" : null,
-                          decoration: InputDecoration(
-                            hintText: "Option B",
-                            suffixIcon: option2Controller.text.isEmpty
-                                ? IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.mic_none_rounded),
-                                  )
-                                : IconButton(
-                                    icon: Icon(Icons.close),
-                                    onPressed: () => option2Controller.clear(),
-                                  ),
-                          ),
-                          onChanged: (val) {
-                            option2 = val;
-                          },
+                        onChanged: (val) {
+                          option3 = val;
+                        },
+                      ),
+                      SizedBox(
+                        height: 6,
+                      ),
+                      TextFormField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        controller: option4Controller,
+                        validator: (val) =>
+                            val!.isEmpty ? "Enter option D" : null,
+                        decoration: InputDecoration(
+                          hintText: "Option D",
+                          suffixIcon: option4Controller.text.isEmpty
+                              ? IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.mic_none_rounded),
+                                )
+                              : IconButton(
+                                  icon: Icon(Icons.close),
+                                  onPressed: () => option4Controller.clear(),
+                                ),
                         ),
-                        SizedBox(
-                          height: 6,
+                        onChanged: (val) {
+                          option4 = val;
+                        },
+                      ),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          updateQuestion();
+                          if (_formKey.currentState!.validate()) clearInput();
+                        },
+                        child: Text(
+                          "Update question",
+                          style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
-                        TextFormField(
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          controller: option3Controller,
-                          validator: (val) =>
-                              val!.isEmpty ? "Enter option C" : null,
-                          decoration: InputDecoration(
-                            hintText: "Option C",
-                            suffixIcon: option3Controller.text.isEmpty
-                                ? IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.mic_none_rounded),
-                                  )
-                                : IconButton(
-                                    icon: Icon(Icons.close),
-                                    onPressed: () => option3Controller.clear(),
-                                  ),
-                          ),
-                          onChanged: (val) {
-                            option3 = val;
-                          },
-                        ),
-                        SizedBox(
-                          height: 6,
-                        ),
-                        TextFormField(
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          controller: option4Controller,
-                          validator: (val) =>
-                              val!.isEmpty ? "Enter option D" : null,
-                          decoration: InputDecoration(
-                            hintText: "Option D",
-                            suffixIcon: option4Controller.text.isEmpty
-                                ? IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.mic_none_rounded),
-                                  )
-                                : IconButton(
-                                    icon: Icon(Icons.close),
-                                    onPressed: () => option4Controller.clear(),
-                                  ),
-                          ),
-                          onChanged: (val) {
-                            option4 = val;
-                          },
-                        ),
-                        SizedBox(
-                          height: 40,
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            updateQuestion();
-                            if (_formKey.currentState!.validate()) clearInput();
-                          },
-                          child: Text(
-                            "Update question",
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                              primary: Colors.black87,
-                              fixedSize: Size(
-                                  MediaQuery.of(context).size.width - 100, 54),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50))),
-                        ),
-                        SizedBox(
-                          height: 64,
-                        )
-                      ],
-                    ),
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.black87,
+                            fixedSize: Size(
+                                MediaQuery.of(context).size.width - 100, 54),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50))),
+                      ),
+                      SizedBox(
+                        height: 64,
+                      )
+                    ],
                   ),
                 ),
               ),
-      ),
+            ),
     );
   }
 }

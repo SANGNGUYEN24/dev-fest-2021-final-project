@@ -11,6 +11,7 @@ import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/result.dart';
 import 'package:quiz_maker_app/widgets/quiz_play_widgets.dart';
+import 'package:quiz_maker_app/widgets/widgets.dart';
 
 import 'add_question.dart';
 import 'update_question.dart';
@@ -296,6 +297,13 @@ class QuizPlayTile extends StatefulWidget {
 
 class _QuizPlayTileState extends State<QuizPlayTile> {
   String optionSelected = "";
+  DatabaseService databaseService = new DatabaseService();
+
+  String newQuestion = "";
+  String newOption1 = "";
+  String newOption2 = "";
+  String newOption3 = "";
+  String newOption4 = "";
 
   // void _showModalBottomSheetMenu() {
   //   showModalBottomSheet(
@@ -320,36 +328,234 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
   //       });
   // }
 
+  Future<bool> showUpdateDialog(BuildContext context, String quizId,
+      String questionId, QuestionModel questionModel) async {
+    return await showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Update question'),
+            content: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
+              child: Form(
+                  child: Wrap(
+                children: [
+                  Text("Question"),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  TextFormField(
+                    initialValue: widget.questionModel.question,
+                    onChanged: (value) {
+                      newQuestion = value;
+                    },
+                  ),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  Text("Option 1"),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  TextFormField(
+                    onChanged: (value) {
+                      newOption1 = value;
+                    },
+                    initialValue: widget.questionModel.option1,
+                  ),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  Text("Option 2"),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  TextFormField(
+                    onChanged: (value) {
+                      newOption2 = value;
+                    },
+                    initialValue: widget.questionModel.option2,
+                  ),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  Text("Option 3"),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  TextFormField(
+                    onChanged: (value) {
+                      newOption3 = value;
+                    },
+                    initialValue: widget.questionModel.option3,
+                  ),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  Text("Option 4"),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  TextFormField(
+                    onChanged: (value) {
+                      newOption4 = value;
+                    },
+                    initialValue: widget.questionModel.option4,
+                  ),
+                  SizedBox(
+                    height: 24.0,
+                  ),
+                ],
+              )),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text("CANCEL"),
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.black87,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50))),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+
+                  /// Pop to hide the dialog
+                  Navigator.pop(context);
+
+                  /// Update title and description
+                  Map<String, String> newQuestionData = {
+                    "question": newQuestion,
+                    "option1": newOption1,
+                    "option2": newOption2,
+                    "option3": newOption3,
+                    "option4": newOption4,
+                  };
+                  print("newQuizName: $newQuestionData");
+
+                  databaseService.updateQuestionData(
+                      newQuestionData, widget.quizId, widget.questionId);
+
+                  /// Show confirmation
+                  showGoodMessage(context, "Update question successfully");
+                },
+                child: Text("UPDATE"),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
+  Future<bool> showDeleteDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Are you sure to delete this question?'),
+        content: new Text('This action cannot be undone.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text("NO"),
+          ),
+          SizedBox(height: 16),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                primary: Colors.black87,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50))),
+            onPressed: () async {
+              await databaseService.deleteQuestionData(
+                  widget.quizId, widget.questionId);
+              Navigator.of(context).pop(true);
+              showGoodMessage(context, "Question Deleted!");
+            },
+            child: Text("DELETE"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Show a bottom sheet with options
+  void showBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Wrap(
+          children: [
+            ListTile(
+              leading: Icon(
+                Icons.auto_stories,
+                color: kPrimaryColor,
+              ),
+              title: Text(
+                "Q${widget.index + 1}/$total: ${widget.questionModel.question}",
+              ),
+            ),
+            Divider(
+              thickness: 1.0,
+            ),
+            ListTile(
+              onTap: () {
+                /// Hide the bottom sheet
+                Navigator.pop(context);
+                showUpdateDialog(
+                  context,
+                  widget.quizId,
+                  widget.questionId,
+                  widget.questionModel,
+                );
+              },
+              leading: Icon(
+                Icons.edit,
+                color: kPrimaryColor,
+              ),
+              title: Text('Edit question'),
+            ),
+            ListTile(
+              onTap: () async {
+                final bool shouldCloseModal = await showDeleteDialog(context);
+                shouldCloseModal ? Navigator.of(context).pop() : null;
+              },
+              leading: Icon(
+                Icons.delete,
+                color: kPrimaryColor,
+              ),
+              title: Text('Delete question'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(9.0),
+              highlightColor: Colors.transparent,
+              splashColor: Colors.black26,
+              radius: 1000.0,
+              onLongPress: () {
+                showBottomSheet(context);
+              },
+              child: Text(
                 "Q${widget.index + 1}/$total: ${widget.questionModel.question}",
                 style: TextStyle(
                     fontSize: 18,
                     color: Colors.black87,
                     fontWeight: FontWeight.bold),
               ),
-              IconButton(
-                  onPressed: () {
-                    print('questionId ${widget.questionId}');
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => UpdateQuestion(
-                                widget.userId,
-                                widget.quizId,
-                                widget.questionId,
-                                widget.questionModel)));
-                  },
-                  icon: Icon(Icons.edit))
-            ],
+            ),
           ),
           SizedBox(
             height: 14,
