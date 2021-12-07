@@ -30,6 +30,7 @@ class _AddQuestionState extends State<AddQuestion> {
   bool _isLoading = false;
   late stt.SpeechToText _speech;
   bool _isListening = false;
+  var _localeId = '';
 
   @override
   void dispose() {
@@ -233,7 +234,7 @@ class _AddQuestionState extends State<AddQuestion> {
                             hintText: "Option A (the correct answer)",
                             suffixIcon: option1Controller.text.isEmpty
                                 ? IconButton(
-                                    onPressed: () => _listen('option 1'),
+                                    onPressed: () => _listen('option1'),
                                     icon: Icon(Icons.mic_none_rounded),
                                   )
                                 : IconButton(
@@ -258,7 +259,7 @@ class _AddQuestionState extends State<AddQuestion> {
                             hintText: "Option B",
                             suffixIcon: option2Controller.text.isEmpty
                                 ? IconButton(
-                                    onPressed: () => _listen('option 2'),
+                                    onPressed: () => _listen('option2'),
                                     icon: Icon(Icons.mic_none_rounded),
                                   )
                                 : IconButton(
@@ -283,7 +284,7 @@ class _AddQuestionState extends State<AddQuestion> {
                             hintText: "Option C",
                             suffixIcon: option3Controller.text.isEmpty
                                 ? IconButton(
-                                    onPressed: () => _listen('option 3'),
+                                    onPressed: () => _listen('option3'),
                                     icon: Icon(Icons.mic_none_rounded),
                                   )
                                 : IconButton(
@@ -308,7 +309,7 @@ class _AddQuestionState extends State<AddQuestion> {
                             hintText: "Option D",
                             suffixIcon: option4Controller.text.isEmpty
                                 ? IconButton(
-                                    onPressed: () => _listen('option 4'),
+                                    onPressed: () => _listen('option4'),
                                     icon: Icon(Icons.mic_none_rounded),
                                   )
                                 : IconButton(
@@ -375,6 +376,8 @@ class _AddQuestionState extends State<AddQuestion> {
       );
       if (available) {
         setState(() => _isListening = true);
+        var systemLocale = await _speech.systemLocale();
+        var s = _localeId = systemLocale!.localeId;
         _speech.listen(
           onResult: (val) => setState(() {
             if (label == "question")
@@ -388,7 +391,11 @@ class _AddQuestionState extends State<AddQuestion> {
             else if (label == "option4")
               option4Controller.text = val.recognizedWords;
           }),
-          localeId: 'en_US',
+          localeId: _localeId,
+          cancelOnError: true,
+          partialResults: true,
+          onSoundLevelChange: null,
+          listenFor: Duration(minutes: 1),
         );
       }
     } else {

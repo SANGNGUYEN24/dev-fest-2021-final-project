@@ -216,7 +216,7 @@ class _CreateQuizState extends State<CreateQuiz> {
       if (available) {
         setState(() => _isListening = true);
         var systemLocale = await _speech.systemLocale();
-        _localeId = systemLocale.localeId;
+        var s = _localeId = systemLocale!.localeId;
         _speech.listen(
           onResult: (val) => setState(() {
             if (label == "quizTitle")
