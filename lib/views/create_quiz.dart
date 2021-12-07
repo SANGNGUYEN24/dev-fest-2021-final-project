@@ -29,8 +29,6 @@ class _CreateQuizState extends State<CreateQuiz> {
   final descController = TextEditingController();
   late stt.SpeechToText _speech;
   bool _isListening = false;
-  double _confidence = 1.0;
-  // Detect click on a button to prevent user from clicking multiple times
   bool _tappedCreateQuizButton = false;
 
 // generate a random index based on the list length
@@ -38,6 +36,14 @@ class _CreateQuizState extends State<CreateQuiz> {
 
   DatabaseService databaseService = new DatabaseService();
   static String userID = DatabaseService().getUserID();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    titleController.dispose();
+    descController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -48,8 +54,14 @@ class _CreateQuizState extends State<CreateQuiz> {
     quizImageUrl = "";
     quizTitle = "";
     quizDescription = "";
-    titleController.addListener(() => setState(() {}));
-    descController.addListener(() => setState(() {}));
+    titleController.addListener(() {
+      quizTitle = titleController.text;
+      setState(() {});
+    });
+    descController.addListener(() {
+      quizDescription = descController.text;
+      setState(() {});
+    });
     _speech = stt.SpeechToText();
   }
 
@@ -126,8 +138,8 @@ class _CreateQuizState extends State<CreateQuiz> {
                 ),
                 TextFormField(
                   controller: titleController,
-                  // validator: (val) =>
-                  //     val!.isEmpty ? "Quiz title must not empty" : null,
+                  validator: (val) =>
+                      val!.isEmpty ? "Quiz title must not empty" : null,
                   decoration: InputDecoration(
                     hintText: "Quiz title",
                     suffixIcon: titleController.text.isEmpty
@@ -150,8 +162,8 @@ class _CreateQuizState extends State<CreateQuiz> {
                 ),
                 TextFormField(
                   controller: descController,
-                  // validator: (val) =>
-                  //     val!.isEmpty ? "Quiz description must not empty" : null,
+                  validator: (val) =>
+                      val!.isEmpty ? "Quiz description must not empty" : null,
                   decoration: InputDecoration(
                     hintText: "Quiz description",
                     suffixIcon: descController.text.isEmpty
@@ -203,9 +215,10 @@ class _CreateQuizState extends State<CreateQuiz> {
         setState(() => _isListening = true);
         _speech.listen(
           onResult: (val) => setState(() {
-            if (label == "quizTitle") quizTitle = val.recognizedWords;
+            if (label == "quizTitle")
+              titleController.text = val.recognizedWords;
 
-            if (label == "quizDesc") quizDescription = val.recognizedWords;
+            if (label == "quizDesc") descController.text = val.recognizedWords;
           }),
         );
       }
