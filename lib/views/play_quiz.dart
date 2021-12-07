@@ -427,11 +427,21 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
 
                   /// Update title and description
                   Map<String, String> newQuestionData = {
-                    "question": newQuestion,
-                    "option1": newOption1,
-                    "option2": newOption2,
-                    "option3": newOption3,
-                    "option4": newOption4,
+                    "question": newQuestion == ""
+                        ? widget.questionModel.question
+                        : newQuestion,
+                    "option1": newOption1 == ""
+                        ? widget.questionModel.option1
+                        : newOption1,
+                    "option2": newOption2 == ""
+                        ? widget.questionModel.option2
+                        : newOption2,
+                    "option3": newOption3 == ""
+                        ? widget.questionModel.option3
+                        : newOption3,
+                    "option4": newOption4 == ""
+                        ? widget.questionModel.option4
+                        : newOption4,
                   };
                   print("newQuizName: $newQuestionData");
 
