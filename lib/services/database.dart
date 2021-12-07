@@ -118,4 +118,15 @@ class DatabaseService {
         .doc(quizId)
         .get();
   }
+
+  // Update quiz title and description
+  Future<void> updateQuizName(
+      {required Map<String, String> newQuizName,
+      required String quizId}) async {
+    await quizCollectionRef
+        .doc(getAppUserId())
+        .collection(USER_QUIZ_DATA_NAME)
+        .doc(quizId)
+        .update(newQuizName);
+  }
 }

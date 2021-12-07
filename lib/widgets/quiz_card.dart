@@ -16,16 +16,16 @@ import 'package:share/share.dart';
 class QuizCard extends StatelessWidget {
   //final QuizModel quizModel;
   final String userId;
-  final String imageUrl;
-  final String title;
-  final String description;
+  final String quizImageUrl;
+  final String quizTitle;
+  final String quizDescription;
   final String quizId;
 
   QuizCard({
     required this.userId,
-    required this.imageUrl,
-    required this.title,
-    required this.description,
+    required this.quizImageUrl,
+    required this.quizTitle,
+    required this.quizDescription,
     required this.quizId,
   });
 
@@ -33,6 +33,8 @@ class QuizCard extends StatelessWidget {
 
   final DatabaseService databaseService = new DatabaseService();
   late String quizToken;
+  String newTitle = "";
+  String newDescription = "";
 
   /// Show a alert dialog to delete a quiz when
   /// the user has a long press on the quiz card
@@ -53,21 +55,6 @@ class QuizCard extends StatelessWidget {
                   onPressed: () {
                     Navigator.pop(context);
                   }),
-              // ElevatedButton(
-              //   style: ElevatedButton.styleFrom(
-              //       shape: RoundedRectangleBorder(
-              //           borderRadius: BorderRadius.circular(50))),
-              //   onPressed: () {
-              //     databaseService.deleteQuizData(userId, quizId);
-              //
-              //     /// Pop to hide the dialog
-              //     Navigator.pop(context);
-              //
-              //     /// Show confirmation
-              //     showGoodMessage(context, "Deleted quiz successfully");
-              //   },
-              //   child: Text("DELETE"),
-              // ),
               TextButton(
                   child: Text(
                     "DELETE",
@@ -81,6 +68,82 @@ class QuizCard extends StatelessWidget {
 
                     /// Show confirmation
                     showGoodMessage(context, "Deleted quiz successfully");
+                  }),
+            ],
+          );
+        });
+  }
+
+  showEditQuizNameAlert(
+      {required BuildContext context,
+      required String quizId,
+      required String quizTitle,
+      required String quizDescription}) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Rename quiz"),
+            content: Form(
+              child: Wrap(
+                children: [
+                  Text("Title"),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  TextFormField(
+                    initialValue: quizTitle,
+                    onChanged: (value) {
+                      newTitle = value;
+                    },
+                  ),
+                  SizedBox(
+                    width: 200.0,
+                    height: 24.0,
+                  ),
+                  Text("Description"),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  TextFormField(
+                    onChanged: (value) {
+                      newDescription = value;
+                    },
+                    initialValue: quizDescription,
+                  )
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                  child: Text(
+                    "CANCEL",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+              TextButton(
+                  child: Text(
+                    "UPDATE",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    /// Pop to hide the dialog
+                    Navigator.pop(context);
+
+                    /// Update title and description
+                    Map<String, String> newQuizName = {
+                      "quizTitle": newTitle,
+                      "quizDescription": newDescription
+                    };
+                    print("newQuizName: $newQuizName");
+
+                    databaseService.updateQuizName(
+                        newQuizName: newQuizName, quizId: quizId);
+
+                    /// Show confirmation
+                    showGoodMessage(context, "Renamed quiz successfully");
                   }),
             ],
           );
@@ -101,7 +164,7 @@ class QuizCard extends StatelessWidget {
                 Icons.auto_stories,
                 color: kPrimaryColor,
               ),
-              title: Text(title),
+              title: Text(quizTitle),
             ),
             Divider(thickness: 1.0),
             ListTile(
@@ -137,6 +200,15 @@ class QuizCard extends StatelessWidget {
               title: Text('Copy token'),
             ),
             ListTile(
+              onTap: () {
+                /// Hide the bottom sheet
+                Navigator.pop(context);
+                showEditQuizNameAlert(
+                    context: context,
+                    quizId: quizId,
+                    quizTitle: quizTitle,
+                    quizDescription: quizDescription);
+              },
               leading: Icon(
                 Icons.edit,
                 color: kPrimaryColor,
@@ -176,7 +248,7 @@ class QuizCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(9.0),
             child: FadeInImage.assetNetwork(
               placeholder: kLoadingImage,
-              image: imageUrl,
+              image: quizImageUrl,
               width: MediaQuery.of(context).size.width,
               fit: BoxFit.cover,
             ),
@@ -195,7 +267,7 @@ class QuizCard extends StatelessWidget {
                         builder: (context) => PlayQuiz(
                               quizId: quizId,
                               userId: userId,
-                              quizTitle: title,
+                              quizTitle: quizTitle,
                             )));
               },
               onLongPress: () {
@@ -214,7 +286,7 @@ class QuizCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        title,
+                        quizTitle,
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -227,7 +299,7 @@ class QuizCard extends StatelessWidget {
                         height: 6,
                       ),
                       Text(
-                        description,
+                        quizDescription,
                         style: TextStyle(color: Colors.white, fontSize: 14),
                         maxLines: 1,
                         textAlign: TextAlign.center,

@@ -14,11 +14,6 @@ class SharedQuizList extends StatefulWidget {
 }
 
 class _SharedQuizListState extends State<SharedQuizList> {
-  // late String userId;
-  // late String quizImageUrl;
-  // late String quizTitle;
-  // late String quizDescription;
-  // late String quizId;
   final DatabaseService databaseService = new DatabaseService();
   List<dynamic> _sharedQuizTokenList = [];
   List<QuizModel> _sharedQuizInfoList = <QuizModel>[];

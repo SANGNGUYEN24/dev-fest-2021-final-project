@@ -140,10 +140,10 @@ class _HomeState extends State<Home> {
                         itemBuilder: (context, index) {
                           return QuizCard(
                             userId: userId,
-                            imageUrl: snapshot.data!.docs[index]
+                            quizImageUrl: snapshot.data!.docs[index]
                                 ["quizImageUrl"],
-                            title: snapshot.data!.docs[index]["quizTitle"],
-                            description: snapshot.data!.docs[index]
+                            quizTitle: snapshot.data!.docs[index]["quizTitle"],
+                            quizDescription: snapshot.data!.docs[index]
                                 ["quizDescription"],
                             quizId: snapshot.data!.docs[index]["quizId"],
                           );
