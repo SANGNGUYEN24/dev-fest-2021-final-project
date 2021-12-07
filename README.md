@@ -5,6 +5,7 @@ This is an application for making quizzes, playing with them, sharing with your 
 ## Built with
 
 - Flutter
+- Firebase
 
 ## Features
 
