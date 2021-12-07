@@ -30,7 +30,7 @@ class _CreateQuizState extends State<CreateQuiz> {
   late stt.SpeechToText _speech;
   bool _isListening = false;
   bool _tappedCreateQuizButton = false;
-
+  var _localeId = '';
 // generate a random index based on the list length
 // and use it to retrieve the element
 
@@ -145,17 +145,19 @@ class _CreateQuizState extends State<CreateQuiz> {
                     suffixIcon: titleController.text.isEmpty
                         ? IconButton(
                             onPressed: () => _listen("quizTitle"),
-                            icon: Icon(Icons.mic_none_rounded),
+                            icon: Icon(_isListening
+                                ? Icons.mic
+                                : Icons.mic_none_rounded),
                           )
                         : IconButton(
                             icon: Icon(Icons.close),
                             onPressed: () => titleController.clear(),
                           ),
                   ),
-                  onChanged: (val) {
-                    quizTitle = val;
-                    print(quizTitle);
-                  },
+                  // onChanged: (val) {
+                  //   quizTitle = val;
+                  //   print(quizTitle);
+                  // },
                 ),
                 SizedBox(
                   height: 8,
@@ -176,9 +178,9 @@ class _CreateQuizState extends State<CreateQuiz> {
                             onPressed: () => descController.clear(),
                           ),
                   ),
-                  onChanged: (val) {
-                    quizDescription = val;
-                  },
+                  // onChanged: (val) {
+                  //   quizDescription = val;
+                  // },
                 ),
                 SizedBox(
                   height: 48,
@@ -213,6 +215,8 @@ class _CreateQuizState extends State<CreateQuiz> {
       );
       if (available) {
         setState(() => _isListening = true);
+        var systemLocale = await _speech.systemLocale();
+        _localeId = systemLocale.localeId;
         _speech.listen(
           onResult: (val) => setState(() {
             if (label == "quizTitle")
@@ -220,6 +224,11 @@ class _CreateQuizState extends State<CreateQuiz> {
 
             if (label == "quizDesc") descController.text = val.recognizedWords;
           }),
+          localeId: _localeId,
+          cancelOnError: true,
+          partialResults: true,
+          onSoundLevelChange: null,
+          listenFor: Duration(minutes: 1),
         );
       }
     } else {
