@@ -119,7 +119,18 @@ class DatabaseService {
         .get();
   }
 
-  // Update quiz title and description
+  Future<void> updateQuestionData(Map<String, dynamic> questionData,
+      String quizId, String questionId) async {
+    await quizCollectionRef
+        .doc(getAppUserId())
+        .collection(USER_QUIZ_DATA_NAME)
+        .doc(quizId)
+        .collection(QNA_SUB_COLLECTION_NAME)
+        .doc(questionId)
+        .update(questionData)
+        .catchError((err) => print(err.toString()));
+  }
+
   Future<void> updateQuizName(
       {required Map<String, String> newQuizName,
       required String quizId}) async {
@@ -128,5 +139,16 @@ class DatabaseService {
         .collection(USER_QUIZ_DATA_NAME)
         .doc(quizId)
         .update(newQuizName);
+  }
+
+  Future<void> deleteQuestionData(String quizId, String questionId) async {
+    await quizCollectionRef
+        .doc(getAppUserId())
+        .collection(USER_QUIZ_DATA_NAME)
+        .doc(quizId)
+        .collection(QNA_SUB_COLLECTION_NAME)
+        .doc(questionId)
+        .delete()
+        .catchError((err) => print(err.toString()));
   }
 }
