@@ -13,6 +13,7 @@ import 'package:quiz_maker_app/views/result.dart';
 import 'package:quiz_maker_app/widgets/quiz_play_widgets.dart';
 
 import 'add_question.dart';
+import 'update_question.dart';
 import 'home.dart';
 
 class PlayQuiz extends StatefulWidget {
@@ -79,6 +80,7 @@ class _PlayQuizState extends State<PlayQuiz> {
     QuestionModel questionModel = new QuestionModel();
 
     questionModel.question = questionSnapshot["question"];
+
     List<String> options = [
       questionSnapshot["option1"],
       questionSnapshot["option2"],
@@ -236,10 +238,12 @@ class _PlayQuizState extends State<PlayQuiz> {
                       itemCount: docs.length,
                       itemBuilder: (context, index) {
                         return QuizPlayTile(
-                          questionModel:
-                              getQuestionModelFromSnapshot(docs[index]),
-                          index: index,
-                        );
+                            questionModel:
+                                getQuestionModelFromSnapshot(docs[index]),
+                            index: index,
+                            questionId: docs[index].id,
+                            userId: widget.userId,
+                            quizId: widget.quizId);
                       }),
         ),
       ),
@@ -274,8 +278,17 @@ class _PlayQuizState extends State<PlayQuiz> {
 class QuizPlayTile extends StatefulWidget {
   final QuestionModel questionModel;
   final int index;
+  final String userId;
+  final String quizId;
+  final String questionId;
 
-  QuizPlayTile({required this.questionModel, required this.index});
+  QuizPlayTile({
+    required this.questionModel,
+    required this.index,
+    required this.questionId,
+    required this.userId,
+    required this.quizId,
+  });
 
   @override
   _QuizPlayTileState createState() => _QuizPlayTileState();
@@ -313,12 +326,30 @@ class _QuizPlayTileState extends State<QuizPlayTile> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Q${widget.index + 1}/$total: ${widget.questionModel.question}",
-            style: TextStyle(
-                fontSize: 18,
-                color: Colors.black87,
-                fontWeight: FontWeight.bold),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Q${widget.index + 1}/$total: ${widget.questionModel.question}",
+                style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold),
+              ),
+              IconButton(
+                  onPressed: () {
+                    print('questionId ${widget.questionId}');
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UpdateQuestion(
+                                widget.userId,
+                                widget.quizId,
+                                widget.questionId,
+                                widget.questionModel)));
+                  },
+                  icon: Icon(Icons.edit))
+            ],
           ),
           SizedBox(
             height: 14,

@@ -64,6 +64,29 @@ class DatabaseService {
     });
   }
 
+  Future<void> updateQuestionData(Map<String, dynamic> questionData,
+      String quizId, String questionId) async {
+    await quizCollectionRef
+        .doc(getUserID())
+        .collection("User quiz data")
+        .doc(quizId)
+        .collection("QNA")
+        .doc(questionId)
+        .update(questionData)
+        .catchError((err) => print(err.toString()));
+  }
+
+  Future<void> deleteQuestionData(String quizId, String questionId) async {
+    await quizCollectionRef
+        .doc(getUserID())
+        .collection("User quiz data")
+        .doc(quizId)
+        .collection("QNA")
+        .doc(questionId)
+        .delete()
+        .catchError((err) => print(err.toString()));
+  }
+
   getQuizDataToPlay(String quizId) async {
     print("[----userId: ${getUserID()}----]");
     return await quizCollectionRef
