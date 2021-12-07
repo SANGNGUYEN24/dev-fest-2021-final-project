@@ -132,8 +132,10 @@ class QuizCard extends StatelessWidget {
 
                     /// Update title and description
                     Map<String, String> newQuizName = {
-                      "quizTitle": newTitle,
-                      "quizDescription": newDescription
+                      "quizTitle": newTitle == "" ? quizTitle : newTitle,
+                      "quizDescription": newDescription == ""
+                          ? quizDescription
+                          : newDescription,
                     };
                     print("newQuizName: $newQuizName");
 
