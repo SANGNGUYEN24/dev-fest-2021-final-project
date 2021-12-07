@@ -30,6 +30,11 @@ class _AddQuestionState extends State<AddQuestion> {
   bool _isLoading = false;
   late stt.SpeechToText _speech;
   bool _isListening = false;
+  bool _isListening1 = false;
+  bool _isListening2 = false;
+  bool _isListening3 = false;
+  bool _isListening4 = false;
+  bool _isListening5 = false;
   var _localeId = '';
 
   @override
@@ -210,7 +215,12 @@ class _AddQuestionState extends State<AddQuestion> {
                             suffixIcon: questionController.text.isEmpty
                                 ? IconButton(
                                     onPressed: () => _listen('question'),
-                                    icon: Icon(Icons.mic_none_rounded),
+                                    icon: Icon(_isListening1
+                                        ? Icons.mic
+                                        : Icons.mic_none_rounded),
+                                    color: _isListening1
+                                        ? Colors.red
+                                        : kSecondaryColor,
                                   )
                                 : IconButton(
                                     icon: Icon(Icons.close),
@@ -235,7 +245,12 @@ class _AddQuestionState extends State<AddQuestion> {
                             suffixIcon: option1Controller.text.isEmpty
                                 ? IconButton(
                                     onPressed: () => _listen('option1'),
-                                    icon: Icon(Icons.mic_none_rounded),
+                                    icon: Icon(_isListening2
+                                        ? Icons.mic
+                                        : Icons.mic_none_rounded),
+                                    color: _isListening2
+                                        ? Colors.red
+                                        : kSecondaryColor,
                                   )
                                 : IconButton(
                                     icon: Icon(Icons.close),
@@ -260,7 +275,12 @@ class _AddQuestionState extends State<AddQuestion> {
                             suffixIcon: option2Controller.text.isEmpty
                                 ? IconButton(
                                     onPressed: () => _listen('option2'),
-                                    icon: Icon(Icons.mic_none_rounded),
+                                    icon: Icon(_isListening3
+                                        ? Icons.mic
+                                        : Icons.mic_none_rounded),
+                                    color: _isListening3
+                                        ? Colors.red
+                                        : kSecondaryColor,
                                   )
                                 : IconButton(
                                     icon: Icon(Icons.close),
@@ -285,7 +305,12 @@ class _AddQuestionState extends State<AddQuestion> {
                             suffixIcon: option3Controller.text.isEmpty
                                 ? IconButton(
                                     onPressed: () => _listen('option3'),
-                                    icon: Icon(Icons.mic_none_rounded),
+                                    icon: Icon(_isListening4
+                                        ? Icons.mic
+                                        : Icons.mic_none_rounded),
+                                    color: _isListening4
+                                        ? Colors.red
+                                        : kSecondaryColor,
                                   )
                                 : IconButton(
                                     icon: Icon(Icons.close),
@@ -310,7 +335,12 @@ class _AddQuestionState extends State<AddQuestion> {
                             suffixIcon: option4Controller.text.isEmpty
                                 ? IconButton(
                                     onPressed: () => _listen('option4'),
-                                    icon: Icon(Icons.mic_none_rounded),
+                                    icon: Icon(_isListening5
+                                        ? Icons.mic
+                                        : Icons.mic_none_rounded),
+                                    color: _isListening5
+                                        ? Colors.red
+                                        : kSecondaryColor,
                                   )
                                 : IconButton(
                                     icon: Icon(Icons.close),
@@ -375,7 +405,18 @@ class _AddQuestionState extends State<AddQuestion> {
         onError: (val) => print('onError: $val'),
       );
       if (available) {
-        setState(() => _isListening = true);
+        setState(() {
+          _isListening = true;
+          if (label == "question")
+            _isListening1 = true;
+          else if (label == "option1")
+            _isListening2 = true;
+          else if (label == "option2")
+            _isListening3 = true;
+          else if (label == "option3")
+            _isListening4 = true;
+          else if (label == "option4") _isListening5 = true;
+        });
         var systemLocale = await _speech.systemLocale();
         var s = _localeId = systemLocale!.localeId;
         _speech.listen(
@@ -399,7 +440,18 @@ class _AddQuestionState extends State<AddQuestion> {
         );
       }
     } else {
-      setState(() => _isListening = false);
+      setState(() {
+        _isListening = false;
+        if (label == "question")
+          _isListening1 = false;
+        else if (label == "option1")
+          _isListening2 = false;
+        else if (label == "option2")
+          _isListening3 = false;
+        else if (label == "option3")
+          _isListening4 = false;
+        else if (label == "option4") _isListening5 = false;
+      });
       _speech.stop();
     }
   }
