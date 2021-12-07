@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_maker_app/helper/functions.dart';
 import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/shared_quiz/components/shared_quiz_card.dart';
@@ -18,6 +19,22 @@ class _BodyState extends State<Body> {
   late String quizId;
   late bool _searched = false;
   late bool _validToken = false;
+  String _appUserId = ""; // userId of the user using the app
+
+  @override
+  void initState() {
+    /// Get userId of the user using the app for saving shared quiz
+    getAppUserId();
+  }
+
+  void getAppUserId() async {
+    await HelperFunctions.getUserId().then((value) {
+      setState(() {
+        print("Value $value");
+        _appUserId = value!;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +43,7 @@ class _BodyState extends State<Body> {
       padding: EdgeInsets.all(24.0),
       child: Column(
         children: [
+          /// Search field
           Container(
             decoration: BoxDecoration(
               color: kSecondaryColor.withOpacity(0.1),
@@ -63,6 +81,8 @@ class _BodyState extends State<Body> {
                   prefixIcon: Icon(Icons.search)),
             ),
           ),
+
+          /// Handle errors
           Container(
             padding: EdgeInsets.only(top: 24.0),
 
@@ -72,6 +92,7 @@ class _BodyState extends State<Body> {
                 /// and token is valid
                 ? (_validToken
                     ? SharedQuizCard(
+                        appUserId: _appUserId,
                         quizId: quizId,
                         imageUrl: quizImageUrl,
                         userId: userId,

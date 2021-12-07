@@ -34,7 +34,7 @@ class _CreateQuizState extends State<CreateQuiz> {
 // and use it to retrieve the element
 
   DatabaseService databaseService = new DatabaseService();
-  static String userID = DatabaseService().getUserID();
+  static String userID = DatabaseService().getAppUserId();
 
   @override
   void initState() {

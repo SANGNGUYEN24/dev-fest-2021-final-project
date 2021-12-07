@@ -26,7 +26,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   FirebaseAuth _user = FirebaseAuth.instance;
   DatabaseService databaseService = DatabaseService();
-  String userId = DatabaseService().getUserID();
+  String userId = DatabaseService().getAppUserId();
   Stream<QuerySnapshot<Object?>>? _stream;
 
   /// At the beginning, create a stream for query user's quiz data

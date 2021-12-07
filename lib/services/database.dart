@@ -29,7 +29,7 @@ class DatabaseService {
 
   //TODO timestamp for quiz
 
-  String getUserID() {
+  String getAppUserId() {
     final User? user = _auth.currentUser;
     String userId = user!.uid;
     return userId;
@@ -37,12 +37,12 @@ class DatabaseService {
 
   Future<void> addUserInfo(String? userName) async {
     Map<String, String?> userInfo = {"name": userName};
-    await quizCollectionRef.doc(getUserID()).set(userInfo);
+    await quizCollectionRef.doc(getAppUserId()).update(userInfo);
   }
 
   Future<void> addQuizData(Map<String, dynamic> quizData, String quizId) async {
     await quizCollectionRef
-        .doc(getUserID())
+        .doc(getAppUserId())
         .collection(USER_QUIZ_DATA_NAME)
         .doc(quizId)
         .set(quizData)
@@ -53,7 +53,7 @@ class DatabaseService {
 
   Future<void> deleteQuizData(String userID, String quizId) async {
     await quizCollectionRef
-        .doc(getUserID())
+        .doc(getAppUserId())
         .collection(USER_QUIZ_DATA_NAME)
         .doc(quizId)
         .delete();
@@ -62,7 +62,7 @@ class DatabaseService {
   Future<void> addQuestionData(
       Map<String, dynamic> questionData, String quizId) async {
     await quizCollectionRef
-        .doc(getUserID())
+        .doc(getAppUserId())
         .collection(USER_QUIZ_DATA_NAME)
         .doc(quizId)
         .collection(QNA_SUB_COLLECTION_NAME)
@@ -79,6 +79,14 @@ class DatabaseService {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  // Add quiz token to the db
+  Future<void> saveSharedQuiz(
+      {required String appUserId, required String quizToken}) async {
+    await quizCollectionRef.doc(appUserId).update({
+      "sharedQuiz": FieldValue.arrayUnion([quizToken])
+    });
   }
 
   // Search quiz data with quizToken

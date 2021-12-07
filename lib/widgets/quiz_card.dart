@@ -42,7 +42,8 @@ class QuizCard extends StatelessWidget {
         builder: (context) {
           return AlertDialog(
             title: Text("Are you sure?"),
-            content: Text("This action cannot be undone."),
+            content: Text(
+                "Your quiz is going to be deleted permanently and this action cannot be undone"),
             actions: <Widget>[
               TextButton(
                   child: Text(
