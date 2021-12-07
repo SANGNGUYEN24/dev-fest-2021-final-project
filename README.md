@@ -2,6 +2,10 @@
 
 This is an application for making quizzes, playing with them, sharing with your friends!
 
+## Release
+
+You can download the app [here](https://appdistribution.firebase.dev/i/83bec178745c2adf)
+
 ## Built with
 
 - Flutter
