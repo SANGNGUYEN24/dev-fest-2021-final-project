@@ -59,7 +59,9 @@ class SharedQuizCard extends StatelessWidget {
 
                 /// Share token to global
                 /// TODO: write description for sharing token
-                await Share.share(quizToken);
+                final String messageToShare =
+                    "Copy and paste this token into your app, you will have access to the quiz's contents:\n $quizToken";
+                await Share.share(messageToShare);
               },
               leading: Icon(
                 Icons.share,
