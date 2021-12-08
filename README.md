@@ -4,9 +4,11 @@ This is an application for making quizzes, playing with them, sharing with your 
 
 ## Release
 
-You can download the app [here](https://appdistribution.firebase.dev/i/83bec178745c2adf)
+- You can download the app [here](https://appdistribution.firebase.dev/i/83bec178745c2adf)
 
-Slide [here](https://docs.google.com/presentation/d/1sbUyGr60d9gUb1tmYMZqeiaNdH1oWQG5ZEEqy63KCxM/edit?usp=sharing)
+- Demo video [here](https://drive.google.com/file/d/1R8OTszvSRrlgqH4qDzqJaVcOS-cByaVq/view?usp=sharing)
+
+- Slide [here](https://docs.google.com/presentation/d/1sbUyGr60d9gUb1tmYMZqeiaNdH1oWQG5ZEEqy63KCxM/edit?usp=sharing)
 
 ## Built with
 
