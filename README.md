@@ -73,3 +73,5 @@ This is an application for making quizzes, playing with them, sharing with your 
 - Nguyễn Việt Đức
 - Lê Thành Dinh
 - Nguyễn Quang Khánh
+
+**Metor: Vũ Tuấn Minh**
