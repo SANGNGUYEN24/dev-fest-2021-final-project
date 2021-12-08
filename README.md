@@ -27,10 +27,6 @@ This is an application for making quizzes, playing with them, sharing with your 
 - Share quiz
 - Import quiz using token
 
-## UI/UX
-
-- We considerd about UI/UX for this app, we 
-
 ## Screenshots
 
 - Sign in/up with email, Google account and reset password
@@ -70,3 +66,10 @@ This is an application for making quizzes, playing with them, sharing with your 
 
 
 [App wiki](https://github.com/SANGNGUYEN24/dev-fest-2021-final-project/wiki)
+
+## Team members
+
+- Nguyễn Đình Sáng
+- Nguyễn Việt Đức
+- Lê Thành Dinh
+- Nguyễn Quang Khánh
