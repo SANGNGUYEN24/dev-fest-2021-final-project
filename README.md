@@ -26,18 +26,52 @@ This is an application for making quizzes, playing with them, sharing with your 
 - Share quiz
 - Import quiz using token
 
+## UI/UX
+
+- We considerd about UI/UX for this app, we 
+
 ## Screenshots
 
-<img src="/assets/screenshots/Screenshot_1638891296.png" width="414" height="896">
-<img src="/assets/screenshots/Screenshot_1638891302.png" width="414" height="896">
-<img src="/assets/screenshots/Screenshot_1638891452.png" width="414" height="896">
-<img src="/assets/screenshots/Screenshot_1638891518.png" width="414" height="896">
-<img src="/assets/screenshots/Screenshot_1638891537.png" width="414" height="896">
-<img src="/assets/screenshots/Screenshot_1638891557.png" width="414" height="896">
-<img src="/assets/screenshots/Screenshot_1638891572.png" width="414" height="896">
-<img src="/assets/screenshots/Screenshot_1638891578.png" width="414" height="896">
-<img src="/assets/screenshots/Screenshot_1638891589.png" width="414" height="896">
-<img src="/assets/screenshots/Screenshot_1638891609.png" width="414" height="896">
-<img src="/assets/screenshots/Screenshot_1638891614.png" width="414" height="896">
-<img src="/assets/screenshots/Screenshot_1638891631.png" width="414" height="896">
-<img src="/assets/screenshots/Screenshot_1638891667.png" width="414" height="896">
+- Sign in/up with email, Google account and reset password
+
+<img src="/assets/screenshots/Screenshot_1638891296.png" width="300"> <img src="/assets/screenshots/Screenshot_1638891302.png" width="300"> <img src="/assets/screenshots/Screenshot_1638891452.png" width="300">
+
+- Create quiz
+ 
+<img src="/assets/screenshots/Screenshot_1638891518.png" width="300"> <img src="/assets/screenshots/Screenshot_1638891537.png" width="300">
+
+- Show home screen
+> Dont care about the quiz title :v
+
+<img src="/assets/screenshots/Screenshot_1638891557.png" width="300">
+
+- Show bottom sheet for quiz
+
+<img src="/assets/screenshots/long-press-quiz" width="300">
+
+- CRUD on quiz
+
+<img src="/assets/screenshots/Screenshot_1638891572.png" width="300">
+
+- Delete quiz
+
+<img src="/assets/screenshots/Screenshot_1638891578.png" width="300">
+
+- Play quiz
+
+<img src="/assets/screenshots/Screenshot_1638891589.png" width="300">
+
+- Edit question
+
+<img src="/assets/screenshots/Screenshot_1638891609.png" width="300">
+
+- Delete question
+
+<img src="/assets/screenshots/Screenshot_1638891614.png" width="300">
+
+- Share quiz token with other apps
+
+<img src="/assets/screenshots/Screenshot_1638891631.png" width="300">
+
+- Show shared quizzes screen
+<img src="/assets/screenshots/Screenshot_1638891667.png" width="300">
