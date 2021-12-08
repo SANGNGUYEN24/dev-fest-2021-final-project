@@ -1,4 +1,5 @@
 # BKQuiz
+<img src="/assets/foreground.png" width=64>
 
 This is an application for making quizzes, playing with them, sharing with your friends!
 
@@ -36,42 +37,35 @@ This is an application for making quizzes, playing with them, sharing with your 
 
 <img src="/assets/screenshots/Screenshot_1638891296.png" width="300"> <img src="/assets/screenshots/Screenshot_1638891302.png" width="300"> <img src="/assets/screenshots/Screenshot_1638891452.png" width="300">
 
-- Create quiz
- 
-<img src="/assets/screenshots/Screenshot_1638891518.png" width="300"> <img src="/assets/screenshots/Screenshot_1638891537.png" width="300">
-
 - Show home screen
 > Dont care about the quiz title :v
 
 <img src="/assets/screenshots/Screenshot_1638891557.png" width="300">
 
+- CRUD on quiz
+ 
+<img src="/assets/screenshots/Screenshot_1638891518.png" width="300"> <img src="/assets/screenshots/Screenshot_1638891537.png" width="300"> <img src="/assets/screenshots/rename-quiz.png" width="300"> <img src="/assets/screenshots/Screenshot_1638891578.png" width="300">
+
+
 - Show bottom sheet for quiz
 
-<img src="/assets/screenshots/long-press-quiz" width="300">
+<img src="/assets/screenshots/long-press-quiz.png" width="300">
 
-- CRUD on quiz
+- Share quiz token to other apps
 
-<img src="/assets/screenshots/Screenshot_1638891572.png" width="300">
+<img src="/assets/screenshots/share-to-global.png" width="300"> <img src="/assets/screenshots/quiz-token-global.png" width="300">
 
-- Delete quiz
+- Play quiz and get results
+> User can answer a question to find the right choice but the result records the first try
 
-<img src="/assets/screenshots/Screenshot_1638891578.png" width="300">
+<img src="/assets/screenshots/long-press-question.png" width="300"> <img src="/assets/screenshots/Screenshot_1638891589.png" width="300"> <img src="/assets/screenshots/result.png" width="300"> 
 
-- Play quiz
+- CRUD question on a quiz's questions
 
-<img src="/assets/screenshots/Screenshot_1638891589.png" width="300">
+<img src="/assets/screenshots/Screenshot_1638891614.png" width="300"> <img src="/assets/screenshots/edit-question.png" width="300">
 
-- Edit question
+- Show shared quizzes screen, find quiz with token, save to "Your saved quizzes"
 
-<img src="/assets/screenshots/Screenshot_1638891609.png" width="300">
+<img src="/assets/screenshots/show-saved-shared-quiz.png" width="300"> <img src="/assets/screenshots/find-quiz-with-token.png" width="300"> <img src="https://user-images.githubusercontent.com/78266241/145134059-6ac688b2-728c-482d-8160-56aaf86e95d3.png" width=300>
 
-- Delete question
 
-<img src="/assets/screenshots/Screenshot_1638891614.png" width="300">
-
-- Share quiz token with other apps
-
-<img src="/assets/screenshots/Screenshot_1638891631.png" width="300">
-
-- Show shared quizzes screen
-<img src="/assets/screenshots/Screenshot_1638891667.png" width="300">
