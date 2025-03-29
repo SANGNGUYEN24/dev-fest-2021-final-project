@@ -89,7 +89,7 @@ class _AddQuestionState extends State<AddQuestion> {
                   }),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.black87,
+                    backgroundColor: Colors.black87,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50))),
                 onPressed: () {
@@ -165,7 +165,7 @@ class _AddQuestionState extends State<AddQuestion> {
               SizedBox(height: 16),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.black87,
+                    backgroundColor: Colors.black87,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50))),
                 onPressed: () => Navigator.of(context).pop(true),
@@ -380,7 +380,7 @@ class _AddQuestionState extends State<AddQuestion> {
                             style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
                           style: ElevatedButton.styleFrom(
-                              primary: Colors.black87,
+                              backgroundColor: Colors.black87,
                               fixedSize: Size(
                                   MediaQuery.of(context).size.width - 100, 54),
                               shape: RoundedRectangleBorder(

@@ -69,7 +69,7 @@ class _State extends State<SignIn> {
             actions: <Widget>[
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.black87,
+                    backgroundColor: Colors.black87,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50))),
                 onPressed: () {
@@ -273,7 +273,7 @@ class _State extends State<SignIn> {
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
-                          primary: Colors.black87,
+                          backgroundColor: Colors.black87,
                           fixedSize:
                               Size(MediaQuery.of(context).size.width - 48, 54),
                           shape: RoundedRectangleBorder(

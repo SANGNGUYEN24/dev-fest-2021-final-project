@@ -67,7 +67,7 @@ class _ResultsState extends State<Results> {
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
-                    primary: Colors.black87,
+                    backgroundColor: Colors.black87,
                     fixedSize:
                         Size(MediaQuery.of(context).size.width - 100, 54),
                     shape: RoundedRectangleBorder(

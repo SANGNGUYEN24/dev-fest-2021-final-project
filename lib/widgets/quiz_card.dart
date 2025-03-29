@@ -9,7 +9,7 @@ import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/play_quiz.dart';
 import 'package:quiz_maker_app/widgets/widgets.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 /// The information of each quiz is got here and displayed as a clickable card
 /// When user click a quiz card, navigate to [PlayQuiz]

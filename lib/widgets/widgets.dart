@@ -4,6 +4,7 @@
 /// This file contains widgets that are used in many places in the application
 ///=============================================================================
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:quiz_maker_app/styles/constants.dart';
 
 AppBar buildAppBar(BuildContext context) {
@@ -12,8 +13,7 @@ AppBar buildAppBar(BuildContext context) {
     title: buildAppBarTitle(context),
     backgroundColor: Colors.white,
     elevation: 0.0,
-    iconTheme: IconThemeData(color: kSecondaryColor),
-    brightness: Brightness.light,
+    iconTheme: IconThemeData(color: kSecondaryColor), systemOverlayStyle: SystemUiOverlayStyle.dark,
   );
 }
 

@@ -229,7 +229,7 @@ class _SignUpState extends State<SignUp> {
                         style: TextStyle(fontSize: 16, color: Colors.white),
                       ),
                       style: ElevatedButton.styleFrom(
-                          primary: Colors.black87,
+                          backgroundColor: Colors.black87,
                           fixedSize:
                               Size(MediaQuery.of(context).size.width - 48, 54),
                           shape: RoundedRectangleBorder(

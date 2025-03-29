@@ -8,6 +8,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:quiz_maker_app/services/database.dart';
 import 'package:quiz_maker_app/styles/constants.dart';
 import 'package:quiz_maker_app/views/add_question.dart';
@@ -110,7 +111,6 @@ class _CreateQuizState extends State<CreateQuiz> {
         title: buildAppBarTitle(context),
         backgroundColor: Colors.white,
         elevation: 0.0,
-        brightness: Brightness.light,
         actions: <Widget>[
           IconButton(
             tooltip: "Upload a photo",
@@ -119,7 +119,7 @@ class _CreateQuizState extends State<CreateQuiz> {
               Icons.upload_outlined,
             ),
           ),
-        ],
+        ], systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(
@@ -198,7 +198,7 @@ class _CreateQuizState extends State<CreateQuiz> {
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                   style: ElevatedButton.styleFrom(
-                      primary: Colors.black87,
+                      backgroundColor: Colors.black87,
                       fixedSize:
                           Size(MediaQuery.of(context).size.width - 48, 54),
                       shape: RoundedRectangleBorder(
